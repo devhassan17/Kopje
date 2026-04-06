@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Paper Flick</title>
+	<title>Kopje gooien</title>
 	
 	<link rel="shortcut icon" href="favicon.ico" />
 
@@ -16,11 +16,173 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	
 	<link rel="stylesheet" type="text/css" href="game.css">	
+	<!-- API Backend Link -->
+	<script type="text/javascript" src="api-config.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 	
 <!-- AnalyticsCode -->	
 
 <!-- APICode -->
+<style>
+/* Leaderboard Modal Styles */
+#leaderboard-modal, #name-entry-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(9, 18, 17, 0.95);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    font-family: 'Outfit', sans-serif;
+    color: white;
+}
+
+.modal-content {
+    background: #091211;
+    padding: 2.5rem;
+    border-radius: 0; 
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    border: 4px solid #E5007D;
+    text-align: center;
+    animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-logo {
+    width: 120px;
+    margin-bottom: 2rem;
+    filter: invert(1) brightness(1.5); 
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    color: #E5007D;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+}
+
+#leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(229, 0, 125, 0.3);
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(229, 0, 125, 0.1);
+}
+
+.leaderboard-item:hover {
+    background: rgba(229, 0, 125, 0.1);
+}
+
+.rank {
+    font-weight: 900;
+    width: 40px;
+    color: #E5007D;
+    font-size: 1.2rem;
+}
+
+.player-name {
+    flex: 1;
+    text-align: left;
+    padding-left: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.player-score {
+    font-weight: 900;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.rank-1 {
+    background: rgba(229, 0, 125, 0.15);
+    border-left: 4px solid #E5007D;
+}
+
+.rank-1 .rank {
+    color: #E5007D;
+}
+
+.btn-primary {
+    background: #E5007D;
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 0;
+    font-weight: 900;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 1rem;
+    letter-spacing: 0.1em;
+    box-shadow: 0 4px 0 #b00060;
+}
+
+.btn-primary:hover {
+    background: #ff1a8c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #b00060;
+}
+
+.btn-primary:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #b00060;
+}
+
+.input-field {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #E5007D;
+    border-radius: 0;
+    padding: 1rem;
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    outline: none;
+    text-transform: uppercase;
+}
+
+.input-field:focus {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Scrollbar */
+#leaderboard-list::-webkit-scrollbar {
+    width: 6px;
+}
+#leaderboard-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+</style>
 <!-- Local web audio patch is disabled because no local copy is available -->
 </head>
 
@@ -33,6 +195,31 @@
 	
 		<div id="orientate"><img src="media/graphics/orientate/landscape.jpg" /></div>
 		<div id="play" class="play" onclick=""><img src="media/graphics/splash/mobile/cover-start.jpg" /></div>	
+
+		<!-- Leaderboard Modal -->
+		<div id="leaderboard-modal">
+			<div class="modal-content">
+				<img src="branding/logo.png" class="modal-logo" alt="Moyee Coffee">
+				<div class="modal-header">Global<br>Leaderboard</div>
+				<div id="leaderboard-list">
+					<div class="leaderboard-item">
+						<span>Fetching scores...</span>
+					</div>
+				</div>
+				<button class="btn-primary" onclick="closeLeaderboard()">Back to Game</button>
+			</div>
+		</div>
+
+		<!-- Name Entry Modal -->
+		<div id="name-entry-modal">
+			<div class="modal-content">
+				<img src="branding/logo.png" class="modal-logo" alt="Moyee Coffee">
+				<div class="modal-header">New High Score!</div>
+				<p style="margin-bottom: 1.5rem; font-weight: 700;">YOU SCORED <span id="final-score-display" style="color: #E5007D; font-size: 1.5rem;">0</span> POINTS!</p>
+				<input type="text" id="player-name-input" class="input-field" placeholder="Enter Name" maxlength="15">
+				<button class="btn-primary" onclick="submitScore()">Submit Score</button>
+			</div>
+		</div>
 		<!--<img id="scrollDown" width="220" height="277"></img>-->
 		
 		<!-- SECTION GENERATED BY CODE -->

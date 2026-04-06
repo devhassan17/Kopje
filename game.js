@@ -1633,11 +1633,11 @@ ig.module("game.entities.button-medium").requires("impact.entity", "plugins.dire
 }); ig.baked = !0;
 ig.module("game.entities.button-hard").requires("impact.entity", "plugins.director").defines(function () { EntityButtonHard = ig.Entity.extend({ size: { x: 130, y: 45 }, offset: { x: 8, y: 8 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-hard.png", 150, 73), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevel05) }, draw: function () { this.parent() } }) });
 ig.baked = !0;
-ig.module("game.entities.button-highscore").requires("impact.entity", "plugins.director").defines(function () { EntityButtonHighscore = ig.Entity.extend({ size: { x: 155, y: 50 }, offset: { x: 5, y: 5 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-highscore.png", 174, 64), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevelHighscore) }, draw: function () { this.parent() } }) });
+ig.module("game.entities.button-highscore").requires("impact.entity", "plugins.director").defines(function () { EntityButtonHighscore = ig.Entity.extend({ size: { x: 155, y: 50 }, offset: { x: 5, y: 5 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-highscore.png", 174, 64), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); if (typeof openLeaderboard === "function") { openLeaderboard(); } else { ig.game.director.jumpTo(LevelLevelHighscore); } }, draw: function () { this.parent() } }) });
 ig.baked = !0;
 ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.button-easy", "game.entities.button-medium", "game.entities.button-hard", "game.entities.button-highscore", "game.entities.button-more-games", "game.entities.pointer").defines(function () {
     LevelTestDesktop = {
-        entities: [{ type: "EntityButtonEasy", x: 178, y: 225 }, { type: "EntityButtonMedium", x: 170, y: 300 }, { type: "EntityButtonHard", x: 178, y: 373 }, { type: "EntityButtonHighscore", x: 166, y: 445 }, { type: "EntityButtonMoreGames", x: 8, y: 572, settings: { div_layer_name: "layer_moregames_mainmenu" } }, {
+        entities: [{ type: "EntityButtonEasy", x: 178, y: 225 }, { type: "EntityButtonMedium", x: 170, y: 300 }, { type: "EntityButtonHard", x: 178, y: 373 }, { type: "EntityButtonHighscore", x: 166, y: 445 }, {
             type: "EntityPointer",
             x: 80, y: -28
         }], layer: [{
@@ -1657,7 +1657,7 @@ ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.bu
 }); ig.baked = !0;
 ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.button-easy", "game.entities.button-medium", "game.entities.button-hard", "game.entities.button-highscore", "game.entities.button-more-games", "game.entities.pointer").defines(function () {
     LevelTestMobile = {
-        entities: [{ type: "EntityButtonEasy", x: 178, y: 225 }, { type: "EntityButtonMedium", x: 170, y: 300 }, { type: "EntityButtonHard", x: 178, y: 373 }, { type: "EntityButtonHighscore", x: 166, y: 445 }, { type: "EntityButtonMoreGames", x: 0, y: 576, settings: { div_layer_name: "layer_moregames_mainmenu" } },
+        entities: [{ type: "EntityButtonEasy", x: 178, y: 225 }, { type: "EntityButtonMedium", x: 170, y: 300 }, { type: "EntityButtonHard", x: 178, y: 373 }, { type: "EntityButtonHighscore", x: 166, y: 445 },
         { type: "EntityPointer", x: 444, y: 192 }], layer: [{
             name: "background", width: 30, height: 40, linkWithCollision: !1, visible: 1, tilesetName: "media/graphics/backgrounds/mobile/background.jpg", repeat: !1, preRender: !0, distance: "1", tilesize: 16, foreground: !1, data: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88,
                 89, 90], [91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150], [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180], [181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210], [211, 212, 213, 214,
@@ -1751,7 +1751,7 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 } catch (c) {
                     3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreEasy && 0 != ig.global.highscoreEasy && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) :
                         5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreNormal && 0 != ig.global.highscoreNormal && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) : 7 == ig.game.director.currentLevel && 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreHard && 0 != ig.global.highscoreHard && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww)
-                } ig.global.score = 0
+                } if (ig.global.score > 0 && typeof showNameEntry === "function") { showNameEntry(ig.global.score); } ig.global.score = 0
             }
         }, spawnFloor: function () {
             try {

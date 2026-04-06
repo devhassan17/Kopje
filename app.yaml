@@ -1,0 +1,14 @@
+runtime: nodejs20
+env: standard
+
+instance_class: F1
+
+handlers:
+  # Serve static game files
+  - url: /(.*\.js|.*\.css|.*\.html|.*\.png|.*\.jpg|.*\.ttf|.*\.ico)$
+    static_files: \1
+    upload: (.*\.js|.*\.css|.*\.html|.*\.png|.*\.jpg|.*\.ttf|.*\.ico)$
+
+  # Proxy all other requests to the Express server
+  - url: /.*
+    script: auto
