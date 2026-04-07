@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Leaderboard | Paper Flick</title>
+  <link rel="stylesheet" href="leaderboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1>Global Champions</h1>
+    <div id="loader" class="loader"></div>
+    <ul id="score-list" class="score-list">
+      <!-- Scores will be injected here -->
+    </ul>
+    <div style="text-align: center;">
+      <a href="index.html" class="back-btn">RETURN TO GAME</a>
+    </div>
+  </div>
+
+  <script>
+    async function fetchScores() {
+      try {
+        const response = await fetch('/api/scores');
+        const scores = await response.json();
+        
+        const list = document.getElementById('score-list');
+        const loader = document.getElementById('loader');
+        loader.style.display = 'none';
+
+        if (scores.length === 0) {
+          list.innerHTML = '<p style="text-align:center;">No scores yet. Be the first!</p>';
+          return;
+        }
+
+        list.innerHTML = scores.map((s, index) => `
+          <li class="score-item ${index < 3 ? 'top-three' : ''}">
+            <div class="rank">#${index + 1}</div>
+            <div class="player-name">${s.name}</div>
+            <div class="player-score">${s.score}</div>
+          </li>
+        `).join('');
+      } catch (error) {
+        console.error('Error fetching scores:', error);
+        document.getElementById('score-list').innerHTML = '<p style="color:red; text-align:center;">Error loading scores.</p>';
+      }
+    }
+
+    fetchScores();
+  </script>
+</body>
+</html>

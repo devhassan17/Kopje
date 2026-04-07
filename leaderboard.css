@@ -1,0 +1,119 @@
+:root {
+  --primary-pink: #E5007D;
+  --accent-yellow: #FFD900;
+  --dark-bg: #091211;
+  --white: #FFFFFF;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--dark-bg);
+  font-family: 'Outfit', 'Inter', sans-serif; /* High-aesthetic fonts */
+  color: var(--white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.leaderboard-container {
+  width: 90%;
+  max-width: 600px;
+  margin-top: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 4px solid var(--primary-pink);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 0 30px rgba(229, 0, 125, 0.3);
+}
+
+h1 {
+  text-align: center;
+  color: var(--primary-pink);
+  font-size: 3rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px var(--accent-yellow);
+}
+
+.score-list {
+  list-style: none;
+  padding: 0;
+}
+
+.score-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.score-item:hover {
+  transform: scale(1.02);
+  background: rgba(229, 0, 125, 0.2);
+}
+
+.score-item.top-three {
+  border-left: 5px solid var(--accent-yellow);
+}
+
+.rank {
+  font-weight: bold;
+  color: var(--accent-yellow);
+  margin-right: 15px;
+}
+
+.player-name {
+  flex-grow: 1;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.player-score {
+  font-weight: bold;
+  color: var(--primary-pink);
+  font-size: 1.4rem;
+}
+
+.back-btn {
+  margin-top: 30px;
+  padding: 12px 30px;
+  background: var(--primary-pink);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(229, 0, 125, 0.4);
+}
+
+.back-btn:hover {
+  background: var(--white);
+  color: var(--primary-pink);
+  transform: translateY(-2px);
+}
+
+/* Loading Spinner */
+.loader {
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-top: 5px solid var(--primary-pink);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 50px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
