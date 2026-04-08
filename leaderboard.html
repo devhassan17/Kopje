@@ -3,48 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Leaderboard | Paper Flick</title>
+  <title>Global Champions | Kopje Gooien</title>
   <link rel="stylesheet" href="leaderboard.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
-  <div class="leaderboard-container">
-    <h1>Global Champions</h1>
+<body class="leaderboard-page">
+  <div class="leaderboard-container glass-morphism">
+    <h1 class="premium-title">GLOBAL CHAMPIONS</h1>
     <div id="loader" class="loader"></div>
     <ul id="score-list" class="score-list">
       <!-- Scores will be injected here -->
     </ul>
-    <div style="text-align: center;">
-      <a href="index.html" class="back-btn">RETURN TO GAME</a>
+    <div class="footer-buttons">
+      <a href="index.html" class="back-btn">RETURN TO CAFE</a>
     </div>
   </div>
 
   <script>
     async function fetchScores() {
+      const list = document.getElementById('score-list');
+      const loader = document.getElementById('loader');
+      
+      let allScores = [];
+
+      // 1. Fetch from Local Storage (Fallback)
+      const localScores = JSON.parse(localStorage.getItem('kopje_scores') || '[]');
+      
+      // 2. Fetch from API
       try {
         const response = await fetch('/api/scores');
-        const scores = await response.json();
-        
-        const list = document.getElementById('score-list');
-        const loader = document.getElementById('loader');
-        loader.style.display = 'none';
-
-        if (scores.length === 0) {
-          list.innerHTML = '<p style="text-align:center;">No scores yet. Be the first!</p>';
-          return;
+        if (response.ok) {
+          const apiScores = await response.json();
+          allScores = [...apiScores, ...localScores];
+        } else {
+          console.warn('API unavailable, using local scores only.');
+          allScores = localScores;
         }
-
-        list.innerHTML = scores.map((s, index) => `
-          <li class="score-item ${index < 3 ? 'top-three' : ''}">
-            <div class="rank">#${index + 1}</div>
-            <div class="player-name">${s.name}</div>
-            <div class="player-score">${s.score}</div>
-          </li>
-        `).join('');
       } catch (error) {
-        console.error('Error fetching scores:', error);
-        document.getElementById('score-list').innerHTML = '<p style="color:red; text-align:center;">Error loading scores.</p>';
+        console.error('Network error fetching scores:', error);
+        allScores = localScores;
       }
+
+      loader.style.display = 'none';
+
+      // 3. Remove duplicates (by name/score/date if available) and sort
+      // Simple merge and sort by score for results
+      allScores.sort((a, b) => b.score - a.score);
+      
+      // Top 10 only
+      const topScores = allScores.slice(0, 10);
+
+      if (topScores.length === 0) {
+        list.innerHTML = '<div class="empty-state"><p>No scores yet.</p><p>Be the first champion! 🏆</p></div>';
+        return;
+      }
+
+      list.innerHTML = topScores.map((s, index) => `
+        <li class="score-item ${index < 3 ? 'top-three' : ''}" style="animation-delay: ${index * 0.1}s">
+          <div class="rank">#${index + 1}</div>
+          <div class="player-info">
+             <span class="player-name">${s.name}</span>
+             ${s.date ? '<span class="score-date">' + new Date(s.date).toLocaleDateString() + '</span>' : ''}
+          </div>
+          <div class="player-score">${s.score}</div>
+        </li>
+      `).join('');
     }
 
     fetchScores();

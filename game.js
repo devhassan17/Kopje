@@ -1,4 +1,4 @@
-var _STRINGS = { Ad: { Mobile: { Preroll: { ReadyIn: "The game is ready in ", Loading: "Your game is loading...", Close: "Close" }, Header: { ReadyIn: "The game is ready in ", Loading: "Your game is loading...", Close: "Close" }, End: { ReadyIn: "Advertisement ends in ", Loading: "Please wait ...", Close: "Close" } } }, Splash: { Loading: "Loading ...", LogoLine1: "Some text here", LogoLine2: "powered by MarketJS", LogoLine3: "none" }, Game: { SelectPlayer: "Select Player", Win: "You win!", Lose: "You lose!", Score: "Score", Time: "Time" }, Results: { Title: "High score" } }; var _SETTINGS = {
+var _STRINGS = { Ad: { Mobile: { Preroll: { ReadyIn: "The game is ready in ", Loading: "Your game is loading...", Close: "Close" }, Header: { ReadyIn: "The game is ready in ", Loading: "Your game is loading...", Close: "Close" }, End: { ReadyIn: "Advertisement ends in ", Loading: "Please wait ...", Close: "Close" } } }, Splash: { Loading: "Loading ...", LogoLine1: "Kopje Gooien", LogoLine2: "Designed by Moyee Coffee", LogoLine3: "none" }, Game: { SelectPlayer: "Select Player", Win: "You win!", Lose: "You lose!", Score: "Score", Time: "Time" }, Results: { Title: "High score" } }; var _SETTINGS = {
     API: { Enabled: !0, Log: { Events: { InitializeGame: !0, EndGame: !0, Level: { Begin: !0, End: !0, Win: !0, Lose: !0, Draw: !0 } } } }, Ad: {
         Mobile: {
             Preroll: { Enabled: !0, Duration: 5, Width: 300, Height: 250, Rotation: { Enabled: !1, Weight: { MobileAdInGamePreroll: 40, MobileAdInGamePreroll2: 40, MobileAdInGamePreroll3: 20 } } }, Header: { Enabled: !1, Duration: 5, Width: 320, Height: 50, Rotation: { Enabled: !1, Weight: { MobileAdInGameHeader: 40, MobileAdInGameHeader2: 40, MobileAdInGameHeader3: 20 } } }, Footer: {
@@ -11,7 +11,7 @@ var _STRINGS = { Ad: { Mobile: { Preroll: { ReadyIn: "The game is ready in ", Lo
             Enabled: !1, Link: "http://google.com", LinkEnabled: !0, NewWindow: !0,
             Width: 280, Height: 34
         }
-    }, MoreGames: { Enabled: !0, Link: "http://www.marketjs.com/game/links/mobile", NewWindow: !0 }, Gamecenter: { Enabled: !0 }
+    }, MoreGames: { Enabled: !1, Link: "http://www.marketjs.com/game/links/mobile", NewWindow: !0 }, Gamecenter: { Enabled: !0 }
 }; var MobileAdInGamePreroll = {
     ad_duration: _SETTINGS.Ad.Mobile.Preroll.Duration, ad_width: _SETTINGS.Ad.Mobile.Preroll.Width, ad_height: _SETTINGS.Ad.Mobile.Preroll.Height, ready_in: _STRINGS.Ad.Mobile.Preroll.ReadyIn, loading: _STRINGS.Ad.Mobile.Preroll.Loading, close: _STRINGS.Ad.Mobile.Preroll.Close + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Initialize: function () {
         if (_SETTINGS.Ad.Mobile.Preroll.Rotation.Enabled) {
@@ -1135,47 +1135,187 @@ ig.module("impact.input").defines(function () {
 }); ig.baked = !0;
 ig.module("impact.sound-handler").defines(function () {
     ig.SoundHandler = ig.Class.extend({
-        formats: { ogg: ".ogg", mp3: ".mp3", wav: ".wav" }, jukebox: null, pausePosition: null, globalMute: !1, forceMuted: !1, muted: !1, bgmStarted: !1, bgmPlaying: !1, soundPlaying: !1, currentSoundPlaying: null, soundBuffer: [], voSoundLoaded: [], sfxSoundLoaded: [], SOUNDID: {}, voSoundsToLoad: [], sfxSoundsToLoad: [{ name: "staticSound", path: "media/audio/play/static" }, { name: "openingSound", path: "media/audio/opening/opening" }, { name: "kittyopeningSound", path: "media/audio/opening/kittyopening" },
-        { name: "click", path: "media/audio/game/click" }, { name: "hit", path: "media/audio/game/hit" }, { name: "hitIn", path: "media/audio/game/metal" }, { name: "clap", path: "media/audio/game/clapping" }, { name: "ohww", path: "media/audio/game/ohww" }, { name: "threw", path: "media/audio/game/throw" }, { name: "paper", path: "media/audio/game/paper" }, { name: "comp2", path: "media/audio/game/comp2" }, { name: "comp3", path: "media/audio/game/comp3" }, { name: "comp4", path: "media/audio/game/comp4" }, { name: "comp5", path: "media/audio/game/comp5" }, {
-            name: "comp6",
-            path: "media/audio/game/comp6"
-        }], debug: !1, audioDisabled: !0, init: function () { this.setupWindowHandler() }, allVoSoundLoaded: function () {
+        formats: { ogg: ".ogg", mp3: ".mp3", wav: ".wav" },
+        jukebox: null,
+        pausePosition: null,
+        globalMute: false,
+        forceMuted: false,
+        muted: false,
+        bgmStarted: false,
+        bgmPlaying: false,
+        soundPlaying: false,
+        currentSoundPlaying: null,
+        soundBuffer: [],
+        voSoundLoaded: [],
+        sfxSoundLoaded: [],
+        SOUNDID: {},
+        voSoundsToLoad: [],
+        sfxSoundsToLoad: [
+            { name: "staticSound", path: "media/audio/play/static" },
+            { name: "openingSound", path: "media/audio/opening/opening" },
+            { name: "kittyopeningSound", path: "media/audio/opening/kittyopening" },
+            { name: "click", path: "media/audio/game/click" },
+            { name: "hit", path: "media/audio/game/hit" },
+            { name: "hitIn", path: "media/audio/game/metal" },
+            { name: "clap", path: "media/audio/game/clapping" },
+            { name: "ohww", path: "media/audio/game/ohww" },
+            { name: "threw", path: "media/audio/game/threw" },
+            { name: "paper", path: "media/audio/game/paper" },
+            { name: "comp2", path: "media/audio/game/comp2" },
+            { name: "comp3", path: "media/audio/game/comp3" },
+            { name: "comp4", path: "media/audio/game/comp4" },
+            { name: "comp5", path: "media/audio/game/comp5" },
+            { name: "comp6", path: "media/audio/game/comp6" }
+        ],
+        debug: false,
+        audioDisabled: true,
+        init: function () { this.setupWindowHandler(); this.setupJukebox(); },
+        allVoSoundLoaded: function () {
             if (this.voSoundLoaded.length >= this.voSoundsToLoad.length) {
-                this.debug && console.log("Vo ready"); for (index = 0; index < this.voSoundLoaded.length; index++)this.voSoundLoaded[index].on("end", function (b) { b.isPlaying = !1; this.soundBuffer.pop() }.bind(this, this.voSoundLoaded[index])), this.voSoundLoaded[index].on("play",
-                    function (b) { b.isPlaying = !0 }.bind(this, this.voSoundLoaded[index])); return !0
-            } return !1
-        }, allSfxSoundLoaded: function () { return this.sfxSoundLoaded.length >= this.sfxSoundsToLoad.length ? !0 : !1 }, stopBackgroundMusic: function () { ig.ua.mobile ? this.pausePosition = this.jukebox.player.pause() : ig.music.pause(); this.bgmPlaying = !1 }, playBackgroundMusic: function () {
-            this.bgmPlaying || (this.bgmStarted = !0, ig.ua.mobile ? this.pausePosition ? this.jukebox.player.resume(this.pausePosition) : this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start,
-                !0) : ig.music.play(), this._unMuteBackgroundMusic(), this.bgmPlaying = !0)
-        }, playSound: function (b) { if ((b = this[b]) && (!this.forceMuted || !this.muted) && !b.isPlaying) this.soundBuffer.push(b), b.play() }, stopAllAndPlaySound: function (b) { this.stopAllSounds(); this.playSound(b) }, stopAllSounds: function () { for (index = 0; index < this.soundBuffer.length; index++)this.soundBuffer[index].isPlaying = !1, this.soundBuffer.splice(0, 1)[0].stop() }, addSound: function (b, c, d) {
-            var g = c + this.formats.ogg; c += this.formats.mp3; this.SOUNDID[b] = b;
-            this[b] = d ? new Howl({ urls: [g, c], onload: d }) : new Howl({ urls: [g, c] })
-        }, _muteSounds: function () { for (i = 0; i < ig.resources.length; i++)ig.resources[i].multiChannel && ig.resources[i].stop(); Howler.mute(); this.debug && console.log("Sounds muted") }, _unMuteSounds: function () { Howler.unmute(); ig.Sound.enabled = !0; this.debug && console.log("Sounds can play") }, _muteBackgroundMusic: function () {
-            ig.ua.mobile ? (this.stopBackgroundMusic(), this.jukebox.player.setVolume(0)) : ig.music.volume = 0; this.debug && console.log("BGM muted"); this.bgmPlaying =
-                !1
-        }, _unMuteBackgroundMusic: function () { this.bgmStarted && (ig.ua.mobile ? (this.pausePosition ? this.jukebox.player.resume(this.pausePosition) : this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start, !0), this.jukebox.player.setVolume(1)) : ig.music.volume = 1, this.debug && console.log("BGM can play"), this.bgmPlaying = !0) }, focusBlurMute: function () { this.forceMuted || this.mute() }, focusBlurUnmute: function () { this.forceMuted || this.unmute() }, setForceMuted: function (b) { this.forceMuted = b }, mute: function () {
-            this.muted ||
-                (this._muteSounds(), this._muteBackgroundMusic(), this.muted = !0)
-        }, unmute: function () { this.muted && (this._unMuteSounds(), this._unMuteBackgroundMusic(), this.muted = !1) }, setupWindowHandler: function () {
-            "true" === getQueryVariable("webview") ? ($(window).focus(function () { ig.ua.mobile && ig.game && ig.game.resumeGame(); ig.soundHandler && ig.soundHandler.focusBlurUnmute() }), $(window).blur(function () { ig.soundHandler && ig.soundHandler.focusBlurMute() })) : (window.onfocus = function () {
-                ig.ua.mobile && ig.game && ig.game.resumeGame();
-                ig.soundHandler && ig.soundHandler.focusBlurUnmute()
-            }, window.onblur = function () { ig.soundHandler && ig.soundHandler.focusBlurMute() })
-        }, initSfx: function () { for (index = 0; index < this.sfxSoundsToLoad.length; index++) { var b = function (b) { this.sfxSoundLoaded.push(this[b]) }.bind(this, this.sfxSoundsToLoad[index].name); this.addSound(this.sfxSoundsToLoad[index].name, this.sfxSoundsToLoad[index].path, b) } }, initVoSfx: function () {
-            for (index = 0; index < this.voSoundsToLoad.length; index++) {
-                var b = function (b) { this.voSoundLoaded.push(this[b]) }.bind(this,
-                    this.voSoundsToLoad[index].name); this.addSound(this.voSoundsToLoad[index].name, this.voSoundsToLoad[index].path, b)
+                for (var i = 0; i < this.voSoundLoaded.length; i++) {
+                    this.voSoundLoaded[i].on("end", function (b) { b.isPlaying = false; this.soundBuffer.pop() }.bind(this, this.voSoundLoaded[i]));
+                    this.voSoundLoaded[i].on("play", function (b) { b.isPlaying = true }.bind(this, this.voSoundLoaded[i]));
+                }
+                return true;
             }
-        }, setupDesktopMusic: function () { if (!this.audioDisabled) { ig.music.add("media/audio/background.*", "background") } }, setupJukebox: function () { if (!this.audioDisabled && ig.ua.mobile) { this.jukebox = new ig.Jukebox; this.pausePosition = this.jukebox.player.settings.spritemap.music.start } }, forceLoopBGM: function () {
+            return false;
+        },
+        allSfxSoundLoaded: function () { return this.sfxSoundLoaded.length >= this.sfxSoundsToLoad.length; },
+        stopBackgroundMusic: function () {
+            if (ig.ua.mobile && this.jukebox && this.jukebox.player) {
+                try { this.pausePosition = this.jukebox.player.pause(); } catch(e) {}
+            } else if (ig.music) {
+                ig.music.pause();
+            }
+            this.bgmPlaying = false;
+        },
+        playBackgroundMusic: function () {
+            if (!this.bgmPlaying) {
+                this.bgmStarted = true;
+                if (ig.ua.mobile) {
+                    if (this.jukebox && this.jukebox.player) {
+                        try {
+                            if (this.pausePosition) this.jukebox.player.resume(this.pausePosition);
+                            else this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start, true);
+                        } catch(e) {}
+                    }
+                } else if (ig.music) {
+                    ig.music.play();
+                }
+                this._unMuteBackgroundMusic();
+                this.bgmPlaying = true;
+            }
+        },
+        playSound: function (b) {
+            var s = this[b];
+            if (s && (!this.forceMuted || !this.muted) && !s.isPlaying) {
+                this.soundBuffer.push(s);
+                s.play();
+            }
+        },
+        stopAllAndPlaySound: function (b) { this.stopAllSounds(); this.playSound(b); },
+        stopAllSounds: function () {
+            for (var i = 0; i < this.soundBuffer.length; i++) {
+                this.soundBuffer[i].isPlaying = false;
+                this.soundBuffer.splice(0, 1)[0].stop();
+            }
+        },
+        addSound: function (name, path, onload) {
+            var ogg = path + this.formats.ogg;
+            var mp3 = path + this.formats.mp3;
+            this.SOUNDID[name] = name;
+            this[name] = new Howl({ urls: [ogg, mp3], onload: onload });
+        },
+        _muteSounds: function () {
+            for (var i = 0; i < ig.resources.length; i++) {
+                if (ig.resources[i].multiChannel) ig.resources[i].stop();
+            }
+            Howler.mute();
+        },
+        _unMuteSounds: function () {
+            Howler.unmute();
+            ig.Sound.enabled = true;
+        },
+        _muteBackgroundMusic: function () {
+            if (ig.ua.mobile && this.jukebox && this.jukebox.player) {
+                try {
+                    this.stopBackgroundMusic();
+                    this.jukebox.player.setVolume(0);
+                } catch(e) {}
+            } else if (ig.music) {
+                ig.music.volume = 0;
+            }
+            this.bgmPlaying = false;
+        },
+        _unMuteBackgroundMusic: function () {
+            if (this.bgmStarted) {
+                if (ig.ua.mobile) {
+                    if (this.jukebox && this.jukebox.player && this.jukebox.player.settings.spritemap.music) {
+                        try {
+                            if (this.pausePosition) this.jukebox.player.resume(this.pausePosition);
+                            else if (this.jukebox.player.settings.spritemap.music) this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start, true);
+                            this.jukebox.player.setVolume(1);
+                        } catch(e) {}
+                    }
+                } else if (ig.music) {
+                    ig.music.volume = 1;
+                }
+                this.bgmPlaying = true;
+            }
+        },
+        focusBlurMute: function () { if (!this.forceMuted) this.mute(); },
+        focusBlurUnmute: function () { if (!this.forceMuted) this.unmute(); },
+        setForceMuted: function (b) { this.forceMuted = b; },
+        mute: function () { if (!this.muted) { this._muteSounds(); this._muteBackgroundMusic(); this.muted = true; } },
+        unmute: function () { if (this.muted) { this._unMuteSounds(); this._unMuteBackgroundMusic(); this.muted = false; } },
+        setupWindowHandler: function () {
+            var self = this;
+            window.onfocus = function () { if (ig.ua.mobile && ig.game) ig.game.resumeGame(); self.focusBlurUnmute(); };
+            window.onblur = function () { self.focusBlurMute(); };
+        },
+        initSfx: function () {
+            for (var i = 0; i < this.sfxSoundsToLoad.length; i++) {
+                var name = this.sfxSoundsToLoad[i].name;
+                var path = this.sfxSoundsToLoad[i].path;
+                var callback = function (n) { this.sfxSoundLoaded.push(this[n]); }.bind(this, name);
+                this.addSound(name, path, callback);
+            }
+        },
+        initVoSfx: function () {
+            for (var i = 0; i < this.voSoundsToLoad.length; i++) {
+                var name = this.voSoundsToLoad[i].name;
+                var callback = function (n) { this.voSoundLoaded.push(this[n]); }.bind(this, name);
+                this.addSound(name, this.voSoundsToLoad[i].path, callback);
+            }
+        },
+        setupDesktopMusic: function () { if (!this.audioDisabled && ig.music) ig.music.add("media/audio/background.*", "background"); },
+        setupJukebox: function () {
+            if (ig.ua.mobile) {
+                try {
+                    this.jukebox = new ig.Jukebox();
+                    if (this.jukebox && this.jukebox.player && this.jukebox.player.settings.spritemap.music) {
+                        this.pausePosition = this.jukebox.player.settings.spritemap.music.start;
+                    }
+                    this.audioDisabled = false;
+                } catch (e) { console.error("Jukebox error:", e); }
+            }
+        },
+        forceLoopBGM: function () {
             if (ig.ua.winPhone && !this.forceMuted && this.bgmPlaying && this.jukebox && this.jukebox.player && this.jukebox.player.settings.spritemap.music && this.jukebox.player.settings.spritemap.music.loop) {
-                if (0 <=
-                    this.prevTime) if (this.jukebox.player.getCurrentTime() === this.prevTime) { if (this.silentCounter || (this.silentCounter = 0), this.silentCounter++, this.jukebox.player.getCurrentTime() >= this.jukebox.player.settings.spritemap.music.end || this.silentCounter > 0.0010 * ig.soundHandler.jukebox.player.settings.timeout * ig.system.fps) this.jukebox.player.pause(), this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start, !0), this.silentCounter = null } else this.silentCounter = null; this.prevTime = this.jukebox.player.getCurrentTime()
+                if (this.prevTime && this.jukebox.player.getCurrentTime() === this.prevTime) {
+                    this.silentCounter = (this.silentCounter || 0) + 1;
+                    if (this.jukebox.player.getCurrentTime() >= this.jukebox.player.settings.spritemap.music.end || this.silentCounter > 0.001 * ig.soundHandler.jukebox.player.settings.timeout * ig.system.fps) {
+                        this.jukebox.player.pause();
+                        this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start, true);
+                        this.silentCounter = null;
+                    }
+                } else { this.silentCounter = null; }
+                this.prevTime = this.jukebox.player.getCurrentTime();
             }
         }
     })
 });
-function getHiddenProp() { var b = ["webkit", "moz", "ms", "o"]; if ("hidden" in document) return "hidden"; for (var c = 0; c < b.length; c++)if (b[c] + "Hidden" in document) return b[c] + "Hidden"; return null } function isHidden() { var b = getHiddenProp(); return !b ? !1 : document[b] } var visProp = getHiddenProp(); if (visProp) { var evtname = visProp.replace(/[H|h]idden/, "") + "visibilitychange"; document.addEventListener(evtname, visChange) } window.addEventListener("pagehide", function () { ig.soundHandler && ig.soundHandler.focusBlurMute() }, !1);
-window.addEventListener("pageshow", function () { ig.ua.mobile && ig.game && ig.game.resumeGame(); ig.soundHandler && ig.soundHandler.focusBlurUnmute() }, !1); function visChange() { isHidden() ? ig.soundHandler && ig.soundHandler.focusBlurMute() : (ig.ua.mobile && ig.game && ig.game.resumeGame(), ig.soundHandler && ig.soundHandler.focusBlurUnmute()) } ig.baked = !0;
+
 ig.module("impact.impact").requires("dom.ready", "impact.loader", "impact.system", "impact.input", "impact.sound", "impact.sound-handler").defines(function () { ig.main = function (b, c, d, g, l, p, y) { ig.system = new ig.System(b, d, g, l, p || 1); ig.input = new ig.Input; ig.soundManager = new ig.SoundManager; ig.music = new ig.Music; ig.ready = !0; ig.soundHandler = new ig.SoundHandler; (new (y || ig.Loader)(c, ig.resources)).load() } }); ig.baked = !0;
 ig.module("impact.animation").requires("impact.timer", "impact.image").defines(function () {
     ig.AnimationSheet = ig.Class.extend({ width: 8, height: 8, image: null, init: function (b, c, d) { this.width = c; this.height = d; this.image = new ig.Image(b) } }); ig.Animation = ig.Class.extend({
@@ -1447,7 +1587,7 @@ ig.module("game.entities.button-more-games").requires("impact.entity").defines(f
 }); ig.baked = !0;
 ig.module("game.entities.opening-shield").requires("impact.entity").defines(function () {
     EntityOpeningShield = ig.Entity.extend({
-        size: { x: 48, y: 48 }, move: 0, mIconAnim: 0, shieldAnim: 0, titleAnim: 0, shieldImage: new ig.Image("media/graphics/opening/shield.png"), mIconImage: new ig.Image("media/graphics/opening/m_icon.png"), titleImage: new ig.Image("media/graphics/opening/title.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
+        size: { x: 48, y: 48 }, move: 0, mIconAnim: 0, shieldAnim: 0, titleAnim: 0, shieldImage: new ig.Image("media/graphics/opening/shield.png"), mIconImage: new ig.Image("media/graphics/opening/m_icon.png"), titleImage: new ig.Image("media/graphics/opening/title.png"), moyeeLogo: new ig.Image("media/graphics/opening/moyee_logo_white_final.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
             if (!ig.wm) if (_SETTINGS.DeveloperBranding.Splash.Enabled) {
                 this.initTimer = new ig.Timer(0.1);
                 try { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.openingSound) } catch (b) { console.log(b) }
@@ -1461,21 +1601,20 @@ ig.module("game.entities.opening-shield").requires("impact.entity").defines(func
                 var b = ig.system.context; b.save(); var c = ig.system.width / 2, d = ig.system.height / 2; b.translate(c, d); b.rotate(this.move * Math.PI / 180); b.beginPath();
                 b.moveTo(0, 0); for (var g = 0, l = 1; 48 >= l; l += 1)b.lineTo(0 + 800 * Math.cos(2 * l * Math.PI / 48), 0 + 800 * Math.sin(2 * l * Math.PI / 48)), g++, 2 == g && (g = 0, b.lineTo(0, 0)); b.translate(-c, -d); c = b.createRadialGradient(c, d, 100, c, d, 250); c.addColorStop(0, "rgba(255,255,255,0.1)"); c.addColorStop(1, "rgba(0,0,0,0)"); b.fillStyle = c; b.fill(); b.restore()
             } this.shieldImage.drawTile(ig.system.width / 2 - 91, 0 - (768 - ig.system.height) / 2, this.shieldAnim, 182, 768); this.moveTimer && (this.mIconImage.drawTile(ig.system.width / 2 - 96, ig.system.height / 2 - 70, this.mIconAnim,
-                166, 160), this.titleImage.drawTile(ig.system.width / 2 - 204, ig.system.height / 2 + 100, this.titleAnim, 409, 76)); ig.system.context.globalAlpha = 1
+                166, 160)); if (this.moyeeLogo) { var mSize = 60; ig.system.context.drawImage(this.moyeeLogo.data, 20, 20, mSize, mSize); } ig.system.context.globalAlpha = 1
         }
     })
 }); ig.baked = !0;
 ig.module("game.entities.opening-kitty").requires("impact.entity").defines(function () {
     EntityOpeningKitty = ig.Entity.extend({
-        size: { x: 48, y: 48 }, kittyAnim: -1, kittyImage: new ig.Image("media/graphics/opening/kitty.png"), kittyTitleImage: new ig.Image("media/graphics/opening/kittytitle.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
+        size: { x: 218, y: 325 }, kittyAnim: 0, kittyImage: new ig.Image("media/graphics/opening/moyee_logo_white_final.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
             if (!ig.wm) if (_SETTINGS.DeveloperBranding.Splash.Enabled) { this.initTimer = new ig.Timer(0.1); try { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.kittyopeningSound) } catch (b) { console.log(b) } } else ig.game.director.nextLevel(),
                 ig.system.context.globalAlpha = 1, this.kill()
         }, update: function () { this.parent(); this.updateKittyOpening() }, draw: function () { this.parent(); ig.global.wm || (this.nextLevelTimer && 0 > this.nextLevelTimer.delta() && (ig.system.context.globalAlpha = -this.nextLevelTimer.delta()), this.drawKittyOpening()) }, updateKittyOpening: function () {
-            this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15)); this.kittyTimer && 0 < this.kittyTimer.delta() && (7 > this.kittyAnim ? (this.kittyAnim++, this.kittyTimer.reset()) :
+            this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15)); this.kittyTimer && 0 < this.kittyTimer.delta() && (0 == this.kittyAnim ? (this.kittyAnim = 1, this.kittyTimer.reset()) :
                 (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(2))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, ig.game.director.nextLevel(), ig.system.context.globalAlpha = 1)
         }, drawKittyOpening: function () {
-            var b = ig.system.context.createLinearGradient(0, 0, 0, ig.system.height); b.addColorStop(0, "#ffed94"); b.addColorStop(1, "#ffcd85"); ig.system.context.fillStyle = b; ig.system.context.fillRect(0, 0, ig.system.width, ig.system.height); 0 <= this.kittyAnim && (this.kittyImage.drawTile(ig.system.width /
-                2 - this.kittyImage.width / 8, ig.system.height / 2 - this.kittyImage.height / 4, this.kittyAnim, 218, 325), this.kittyTitleImage.drawTile(ig.system.width / 2 - this.kittyTitleImage.width / 2, ig.system.height / 2 + this.kittyImage.height / 4 + 10, this.kittyAnim, 380, 37)); ig.system.context.globalAlpha = 1
+            var b = ig.system.context.createLinearGradient(0, 0, 0, ig.system.height); b.addColorStop(0, "#091211"); b.addColorStop(1, "#000000"); ig.system.context.fillStyle = b; ig.system.context.fillRect(0, 0, ig.system.width, ig.system.height); if (0 <= this.kittyAnim) { var targetW = 250; var targetH = targetW * (this.kittyImage.height / this.kittyImage.width); ig.system.context.drawImage(this.kittyImage.data, ig.system.width / 2 - targetW / 2, ig.system.height / 2 - targetH / 2, targetW, targetH); } ig.system.context.globalAlpha = 1
         }
     })
 }); ig.baked = !0;
@@ -1496,7 +1635,7 @@ ig.module("game.entities.ingame-fan").requires("impact.entity", "plugins.directo
         size: { x: 88.5, y: 95 }, offset: { x: 0, y: 0 }, zIndex: 15E3, animSheet: new ig.AnimationSheet("media/graphics/game/ingame/fan.png", 88.5, 95), init: function (b, c, d) { this.addAnim("left", 0.02, [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]); this.addAnim("right", 0.02, [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25]); this.parent(b, c, d) }, update: function () {
             this.currentAnim = "left" == this.side ? this.anims.left : this.anims.right;
             this.parent()
-        }, clicked: function () { console.log("I'm a fan") }, draw: function () { this.parent() }
+        }, clicked: function () { console.log("I'm a fan") }, 
     })
 }); ig.baked = !0;
 ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.director").defines(function () {
@@ -1507,7 +1646,7 @@ ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.directo
                     63); this.size.x = 51; this.size.y = 57; this.offset.y = 6; this.addAnim("idle", 0.2, [0]); break; case 5: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/bin2.png", 64, 66); this.size.x = 54; this.size.y = 66; this.offset.x = 10; this.addAnim("idle", 0.2, [0]); break; case 6: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/bin4.png", 46, 57); this.size.x = 46; this.size.y = 57; this.addAnim("idle", 0.2, [0]); break; case 7: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/bin3.png", 45, 41); this.size.x =
                         30; this.size.y = 41; this.addAnim("idle", 0.2, [0]); this.offset.x = 15; break; default: console.log("level default")
             }this.parent(b, c, d)
-        }, update: function () { this.parent() }, clicked: function () { }, draw: function () { this.parent() }
+        }, update: function () { this.parent() }, clicked: function () { }, 
     })
 }); ig.baked = !0;
 ig.module("game.entities.paper-ball").requires("impact.entity", "plugins.director").defines(function () {
@@ -1551,7 +1690,7 @@ ig.module("game.entities.arrow").requires("impact.entity", "plugins.director").d
 }); ig.baked = !0;
 ig.module("game.entities.floor").requires("impact.entity", "plugins.director").defines(function () {
     EntityFloor = ig.Entity.extend({
-        size: { x: 480, y: 10 }, offset: { x: 0, y: 0 }, checkAgainst: ig.Entity.TYPE.B, coli: !1, name: "floor", init: function (b, c, d) { this.parent(b, c, d); this.coliTimer = new ig.Timer }, update: function () { this.coli && 0 < this.coliTimer.delta() && (this.collides = ig.Entity.COLLIDES.FIXED, this.type = ig.Entity.TYPE.A); this.parent() }, clicked: function () { }, draw: function () { this.parent() }, check: function () {
+        size: { x: 480, y: 10 }, offset: { x: 0, y: 0 }, checkAgainst: ig.Entity.TYPE.B, coli: !1, name: "floor", init: function (b, c, d) { this.parent(b, c, d); this.coliTimer = new ig.Timer }, update: function () { this.coli && 0 < this.coliTimer.delta() && (this.collides = ig.Entity.COLLIDES.FIXED, this.type = ig.Entity.TYPE.A); this.parent() }, clicked: function () { }, check: function () {
             this.coliTimer.set(1.2);
             this.coli = !0; this.parent()
         }
@@ -1611,37 +1750,19 @@ ig.module("game.entities.select").requires("impact.entity").defines(function () 
             }
     })
 }); ig.baked = !0; ig.module("game.levels.opening").requires("impact.image", "game.entities.opening-kitty").defines(function () { LevelOpening = { entities: [{ type: "EntityOpeningKitty", x: 520, y: 212 }], layer: [] } }); ig.baked = !0;
-ig.module("game.entities.button-easy").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonEasy = ig.Entity.extend({
-        size: { x: 110, y: 50 }, offset: { x: 10, y: 13 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-easy.png", 130, 76), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () {
-            ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); switch (Math.floor(2 * Math.random() + 1)) {
-                case 1: ig.game.director.jumpTo(LevelLevel01);
-                    break; case 2: ig.game.director.jumpTo(LevelLevel02)
-            }
-        }, draw: function () { this.parent() }
-    })
-}); ig.baked = !0;
-ig.module("game.entities.button-medium").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonMedium = ig.Entity.extend({
-        size: { x: 135, y: 52 }, offset: { x: 10, y: 0 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-medium.png", 161, 67), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () {
-            ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); switch (Math.floor(2 * Math.random() + 1)) {
-                case 1: ig.game.director.jumpTo(LevelLevel03);
-                    break; case 2: ig.game.director.jumpTo(LevelLevel04)
-            }
-        }, draw: function () { this.parent() }
-    })
-}); ig.baked = !0;
-ig.module("game.entities.button-hard").requires("impact.entity", "plugins.director").defines(function () { EntityButtonHard = ig.Entity.extend({ size: { x: 130, y: 45 }, offset: { x: 8, y: 8 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-hard.png", 150, 73), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevel05) }, draw: function () { this.parent() } }) });
-ig.baked = !0;
-ig.module("game.entities.button-highscore").requires("impact.entity", "plugins.director").defines(function () { EntityButtonHighscore = ig.Entity.extend({ size: { x: 155, y: 50 }, offset: { x: 5, y: 5 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-highscore.png", 174, 64), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevelHighscore) }, draw: function () { this.parent() } }) });
-ig.baked = !0;
-ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.button-easy", "game.entities.button-medium", "game.entities.button-hard", "game.entities.button-highscore", "game.entities.button-more-games", "game.entities.pointer").defines(function () {
+ig.module("game.entities.button-easy").requires("impact.entity", "plugins.director").defines(function () { EntityButtonEasy = ig.Entity.extend({ size: { x: 130, y: 40 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 12px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("☕ " + "EASY", x + w/2, y + h/2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); switch (Math.floor(2 * Math.random() + 1)) { case 1: ig.game.director.jumpTo(LevelLevel01); break; case 2: ig.game.director.jumpTo(LevelLevel02) } } }); }); ig.baked = !0;
+ig.module("game.entities.button-medium").requires("impact.entity", "plugins.director").defines(function () { EntityButtonMedium = ig.Entity.extend({ size: { x: 130, y: 40 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 12px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🥛 " + "MEDIUM", x + w/2, y + h/2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); switch (Math.floor(2 * Math.random() + 1)) { case 1: ig.game.director.jumpTo(LevelLevel03); break; case 2: ig.game.director.jumpTo(LevelLevel04) } } }); }); ig.baked = !0;
+ig.module("game.entities.button-hard").requires("impact.entity", "plugins.director").defines(function () { EntityButtonHard = ig.Entity.extend({ size: { x: 130, y: 40 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 12px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🔥 " + "HARD", x + w/2, y + h/2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevel05) } });
+EntityButtonHighscore = ig.Entity.extend({ size: { x: 130, y: 40 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 12px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🏆 " + "HIGH SCORE", x + w/2, y + h/2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevelHighscore) } });
+EntityButtonLeaderboard = ig.Entity.extend({ size: { x: 280, y: 44 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 13px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🌐 " + "GLOBAL LEADERBOARD", x + w/2, y + h/2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); window.location.href = "leaderboard.html"; } }); }); ig.baked = !0;
+
+ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.button-easy", "game.entities.button-medium", "game.entities.button-hard", "game.entities.button-more-games", "game.entities.pointer").defines(function () {
     LevelTestDesktop = {
-        entities: [{ type: "EntityButtonEasy", x: 178, y: 225 }, { type: "EntityButtonMedium", x: 170, y: 300 }, { type: "EntityButtonHard", x: 178, y: 373 }, { type: "EntityButtonHighscore", x: 166, y: 445 }, { type: "EntityButtonMoreGames", x: 8, y: 572, settings: { div_layer_name: "layer_moregames_mainmenu" } }, {
+        entities: [{ type: "EntityButtonEasy", x: 95, y: 340 }, { type: "EntityButtonMedium", x: 255, y: 340 }, { type: "EntityButtonHard", x: 95, y: 395 }, { type: "EntityButtonHighscore", x: 255, y: 395 }, { type: "EntityButtonMoreGames", x: 8, y: 572, settings: { div_layer_name: "layer_moregames_mainmenu" } }, {
             type: "EntityPointer",
             x: 80, y: -28
-        }], layer: [{
-            name: "background", width: 30, height: 40, linkWithCollision: !1, visible: 1, tilesetName: "media/graphics/backgrounds/desktop/background.jpg", repeat: !1, preRender: !0, distance: "1", tilesize: 16, foreground: !1, data: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90], [91, 92, 93, 94,
+        }, { type: "EntityButtonLeaderboard", x: 100, y: 455 }], layer: [{
+            name: "background", width: 30, height: 40, linkWithCollision: !1, visible: 1, tilesetName: "media/graphics/backgrounds/moyee_cafe_hd.jpg", repeat: !1, preRender: !0, distance: "1", tilesize: 16, foreground: !1, data: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90], [91, 92, 93, 94,
                 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150], [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180], [181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210], [211, 212, 213, 214, 215, 216, 217, 218, 219,
                 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240], [241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270], [271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300], [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330], [331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343,
                 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360], [361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390], [391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420], [421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450], [451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467,
@@ -1653,13 +1774,13 @@ ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.bu
                 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080], [1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110], [1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1120, 1121, 1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1135, 1136, 1137, 1138, 1139, 1140], [1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1152, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1160, 1161, 1162, 1163, 1164, 1165, 1166, 1167, 1168,
                 1169, 1170], [1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1197, 1198, 1199, 1200]]
         }]
-    }; LevelTestDesktopResources = [new ig.Image("media/graphics/backgrounds/desktop/background.jpg")]
+    }; LevelTestDesktopResources = [new ig.Image("media/graphics/backgrounds/moyee_cafe_hd.jpg")]
 }); ig.baked = !0;
-ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.button-easy", "game.entities.button-medium", "game.entities.button-hard", "game.entities.button-highscore", "game.entities.button-more-games", "game.entities.pointer").defines(function () {
+ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.button-easy", "game.entities.button-medium", "game.entities.button-hard", "game.entities.button-more-games", "game.entities.pointer").defines(function () {
     LevelTestMobile = {
-        entities: [{ type: "EntityButtonEasy", x: 178, y: 225 }, { type: "EntityButtonMedium", x: 170, y: 300 }, { type: "EntityButtonHard", x: 178, y: 373 }, { type: "EntityButtonHighscore", x: 166, y: 445 }, { type: "EntityButtonMoreGames", x: 0, y: 576, settings: { div_layer_name: "layer_moregames_mainmenu" } },
-        { type: "EntityPointer", x: 444, y: 192 }], layer: [{
-            name: "background", width: 30, height: 40, linkWithCollision: !1, visible: 1, tilesetName: "media/graphics/backgrounds/mobile/background.jpg", repeat: !1, preRender: !0, distance: "1", tilesize: 16, foreground: !1, data: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88,
+        entities: [{ type: "EntityButtonEasy", x: 95, y: 340 }, { type: "EntityButtonMedium", x: 255, y: 340 }, { type: "EntityButtonHard", x: 95, y: 395 }, { type: "EntityButtonHighscore", x: 255, y: 395 }, { type: "EntityButtonMoreGames", x: 0, y: 576, settings: { div_layer_name: "layer_moregames_mainmenu" } },
+        { type: "EntityPointer", x: 444, y: 192 }, { type: "EntityButtonLeaderboard", x: 100, y: 455 }], layer: [{
+            name: "background", width: 30, height: 40, linkWithCollision: !1, visible: 1, tilesetName: "media/graphics/backgrounds/moyee_cafe_hd.jpg", repeat: !1, preRender: !0, distance: "1", tilesize: 16, foreground: !1, data: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88,
                 89, 90], [91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150], [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180], [181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210], [211, 212, 213, 214,
                 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240], [241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270], [271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300], [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330], [331, 332, 333, 334, 335, 336, 337, 338,
                 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360], [361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390], [391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420], [421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450], [451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462,
@@ -1671,27 +1792,70 @@ ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.but
                 1066, 1067, 1068, 1069, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080], [1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110], [1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1120, 1121, 1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1135, 1136, 1137, 1138, 1139, 1140], [1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1152, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1160, 1161, 1162, 1163, 1164,
                 1165, 1166, 1167, 1168, 1169, 1170], [1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1197, 1198, 1199, 1200]]
         }]
-    }; LevelTestMobileResources = [new ig.Image("media/graphics/backgrounds/mobile/background.jpg")]
+    }; LevelTestMobileResources = [new ig.Image("media/graphics/backgrounds/moyee_cafe_hd.jpg")]
 }); ig.baked = !0;
 ig.module("game.entities.button-back").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonBack = ig.Entity.extend({
-        size: { x: 100, y: 53 }, offset: { x: 10, y: 10 }, type: ig.Entity.TYPE.B, zIndex: 1E3, animSheet: new ig.AnimationSheet("media/graphics/game/button-back.png", 120, 73), init: function (b, c, d) {
-            this.addAnim("idle", 1, [0]); try {
-                this.storage = new ig.Storage, this.storage.initUnset("paper-flick-easy-highscore", 0), this.storage.initUnset("paper-flick-normal-highscore", 0), this.storage.initUnset("paper-flick-hard-highscore",
-                    0)
-            } catch (g) { } this.parent(b, c, d)
-        }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) }, draw: function () {
-            this.parent(); ig.system.context.font = "25pt sassy"; ig.system.context.fillStyle = "#000000"; ig.system.context.textAlign = "left"; try {
-                localStorage.local_storage_test = !0, ig.system.context.fillText(this.storage.get("paper-flick-easy-highscore"), 240, 235), ig.system.context.fillText(this.storage.get("paper-flick-normal-highscore"),
-                    240, 275), ig.system.context.fillText(this.storage.get("paper-flick-hard-highscore"), 240, 315)
-            } catch (b) { ig.system.context.fillText(ig.global.highscoreEasy, 240, 235), ig.system.context.fillText(ig.global.highscoreNormal, 240, 275), ig.system.context.fillText(ig.global.highscoreHard, 240, 315) }
-        }
-    })
+    EntityButtonBack = ig.Entity.extend({ size: { x: 140, y: 50 }, type: ig.Entity.TYPE.B, init: function (b, c, d) { try { this.storage = new ig.Storage } catch (g) { } this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) }, draw: function () {
+            var ctx = ig.system.context;
+            var bx = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
+            var by = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
+            var bw = ig.system.getDrawPos(this.size.x);
+            var bh = ig.system.getDrawPos(this.size.y);
+            
+            // Draw premium Back button
+            ctx.fillStyle = "#ff1493";
+            ctx.beginPath();
+            if(ctx.roundRect) { ctx.roundRect(bx, by, bw, bh, 20); } else { ctx.rect(bx, by, bw, bh); }
+            ctx.fill();
+            ctx.fillStyle = "white";
+            ctx.font = "bold 16px Montserrat, sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("BACK", bx + bw/2, by + bh/2);
+
+            // Draw High Scores Table
+            var tx = 240; // Center X
+            var ty = 180; // Start Y
+            
+            // Draw Glass Background for table
+            ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+            ctx.beginPath();
+            if(ctx.roundRect) { ctx.roundRect(40, 100, 400, 320, 30); } else { ctx.rect(40, 100, 400, 320); }
+            ctx.fill();
+            ctx.strokeStyle = "#ff1493";
+            ctx.stroke();
+
+            ctx.fillStyle = "#ff1493";
+            ctx.font = "800 24px Montserrat, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("LOCAL CHAMPIONS", tx, 150);
+
+            ctx.fillStyle = "white";
+            ctx.font = "600 18px Montserrat, sans-serif";
+            ctx.textAlign = "left";
+            
+            const scores = [
+                { label: "☕ EASY", key: "paper-flick-easy-highscore", global: ig.global.highscoreEasy },
+                { label: "🥛 MEDIUM", key: "paper-flick-normal-highscore", global: ig.global.highscoreNormal },
+                { label: "🔥 HARD", key: "paper-flick-hard-highscore", global: ig.global.highscoreHard }
+            ];
+
+            scores.forEach((s, i) => {
+                var val = 0;
+                try { val = this.storage.get(s.key) || s.global || 0; } catch(e) { val = s.global || 0; }
+                ctx.fillStyle = "white";
+                ctx.fillText(s.label, 80, 220 + (i * 60));
+                ctx.fillStyle = "#ff1493";
+                ctx.textAlign = "right";
+                ctx.fillText(val, 400, 220 + (i * 60));
+                ctx.textAlign = "left";
+            });
+        } })
 }); ig.baked = !0;
 ig.module("game.levels.level-highscore").requires("impact.image", "game.entities.button-back", "game.entities.pointer-selector").defines(function () {
     LevelLevelHighscore = {
         entities: [{ type: "EntityButtonBack", x: 18, y: 514 }, { type: "EntityPointerSelector", x: 336, y: -4 }], layer: [{
-            name: "background_higscore", width: 30, height: 40, linkWithCollision: !1, visible: 1, tilesetName: "media/graphics/game/background-game/back-highscore.png", repeat: !1, preRender: !0, distance: "1", tilesize: 16, foreground: !1, data: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            name: "background_higscore", width: 30, height: 40, linkWithCollision: !1, visible: 1, tilesetName: "media/graphics/backgrounds/moyee_cafe_hd.jpg", repeat: !1, preRender: !0, distance: "1", tilesize: 16, foreground: !1, data: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90], [91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150], [151, 152, 153, 154, 155,
                 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180], [181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210], [211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240], [241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270], [271, 272, 273, 274, 275, 276, 277, 278, 279,
                 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300], [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330], [331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360], [361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390], [391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403,
@@ -1703,26 +1867,60 @@ ig.module("game.levels.level-highscore").requires("impact.image", "game.entities
                 1019, 1020], [1021, 1022, 1023, 1024, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 1041, 1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050], [1051, 1052, 1053, 1054, 1055, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1063, 1064, 1065, 1066, 1067, 1068, 1069, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080], [1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110], [1111, 1112, 1113, 1114, 1115, 1116, 1117,
                 1118, 1119, 1120, 1121, 1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1135, 1136, 1137, 1138, 1139, 1140], [1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1152, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1160, 1161, 1162, 1163, 1164, 1165, 1166, 1167, 1168, 1169, 1170], [1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1197, 1198, 1199, 1200]]
         }]
-    }; LevelLevelHighscoreResources = [new ig.Image("media/graphics/game/background-game/back-highscore.png")]
+    }; LevelLevelHighscoreResources = [new ig.Image("media/graphics/backgrounds/moyee_cafe_hd.jpg")]
 });
 ig.baked = !0;
 ig.module("game.entities.button-ingame-menu").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonIngameMenu = ig.Entity.extend({
-        size: { x: 80, y: 37 }, offset: { x: 20, y: 20 }, type: ig.Entity.TYPE.B, animSheet: new ig.AnimationSheet("media/graphics/game/button-ingamemenu.png", 101, 77), init: function (b, c, d) { this.addAnim("idle", 1, [0]); this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) },
-        draw: function () { this.parent() }
-    })
+    EntityButtonIngameMenu = ig.Entity.extend({ size: { x: 74, y: 36 }, type: ig.Entity.TYPE.B, draw: function () {
+            var ctx = ig.system.context;
+            var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
+            var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
+            var w = ig.system.getDrawPos(this.size.x);
+            var h = ig.system.getDrawPos(this.size.y);
+            ctx.fillStyle = "#ff1493";
+            ctx.beginPath();
+            if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 12); } else { ctx.rect(x, y, w, h); }
+            ctx.fill();
+            ctx.fillStyle = "white";
+            ctx.font = "bold 14px Montserrat, sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("MENU", x + w/2, y + h/2);
+        }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) } })
 }); ig.baked = !0;
 ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonIngameScore = ig.Entity.extend({
-        size: { x: 123, y: 123 }, offset: { x: 0, y: 0 }, animSheet: new ig.AnimationSheet("media/graphics/game/button-ingame-score.png", 123, 123), init: function (b, c, d) { this.addAnim("idle", 1, [0]); try { this.storage = new ig.Storage } catch (g) { } this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { }, draw: function () {
-            this.parent(); ig.system.context.font = "23pt sassy";
-            ig.system.context.fillStyle = "#000000"; ig.system.context.textAlign = "left"; 100 <= ig.global.score && (ig.system.context.font = "18pt sassy"); ig.system.context.fillText("Score: " + ig.global.score, this.pos.x + 8, this.pos.y + 42); try {
-                localStorage.local_storage_test = !0, 3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? (100 <= this.storage.get("paper-flick-easy-highscore") && (ig.system.context.font = "18pt sassy"), ig.system.context.fillText("Best: " + this.storage.get("paper-flick-easy-highscore"), this.pos.x +
-                    8, this.pos.y + 92)) : 5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? (100 <= this.storage.get("paper-flick-normal-highscore") && (ig.system.context.font = "18pt sassy"), ig.system.context.fillText("Best: " + this.storage.get("paper-flick-normal-highscore"), this.pos.x + 8, this.pos.y + 92)) : 7 == ig.game.director.currentLevel && (100 <= this.storage.get("paper-flick-hard-highscore") && (ig.system.context.font = "18pt sassy"), ig.system.context.fillText("Best: " + this.storage.get("paper-flick-hard-highscore"),
-                        this.pos.x + 8, this.pos.y + 92))
-            } catch (b) { try { 3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? ig.system.context.fillText("Best: " + ig.global.highscoreEasy, this.pos.x + 8, this.pos.y + 92) : 5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? ig.system.context.fillText("Best: " + ig.global.highscoreNormal, this.pos.x + 8, this.pos.y + 92) : 7 == ig.game.director.currentLevel && ig.system.context.fillText("Best: " + ig.global.highscoreHard, this.pos.x + 8, this.pos.y + 92) } catch (c) { } }
-        }
-    })
+    EntityButtonIngameScore = ig.Entity.extend({ size: { x: 160, y: 100 }, init: function (b, c, d) { try { this.storage = new ig.Storage } catch (g) { } this.parent(b, c, d) }, update: function () { this.parent() }, draw: function () {
+            var ctx = ig.system.context;
+            var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
+            var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
+            
+            // Draw a glass background for the score
+            ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+            ctx.beginPath();
+            if(ctx.roundRect) { ctx.roundRect(x+10, y+10, 140, 70, 15); } else { ctx.rect(x+10, y+10, 140, 70); }
+            ctx.fill();
+            ctx.strokeStyle = "rgba(255, 20, 147, 0.4)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = "white";
+            ctx.textAlign = "left";
+            ctx.font = "600 13px Montserrat, sans-serif";
+            ctx.fillText("SCORE ", x + 25, y + 35);
+            ctx.font = "800 24px Montserrat, sans-serif";
+            ctx.fillText(ig.global.score, x + 25, y + 60);
+            
+            try {
+                var best = 0;
+                if (3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel) best = this.storage.get("paper-flick-easy-highscore");
+                else if (5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel) best = this.storage.get("paper-flick-normal-highscore");
+                else if (7 == ig.game.director.currentLevel) best = this.storage.get("paper-flick-hard-highscore");
+                
+                ctx.fillStyle = "#ff1493";
+                ctx.font = "600 10px Montserrat, sans-serif";
+                ctx.fillText("BEST: " + best, x + 90, y + 60);
+            } catch (e) { }
+        } })
 });
 ig.baked = !0;
 ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.director").defines(function () {
@@ -1734,7 +1932,7 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
             ig.global.finishShoot && (this.bin && this.bin.kill(), ig.ua.mobile ? 0 < this.miniPause.delta() && ig.input.released("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1) : 0 < this.miniPause.delta() && 50 < ig.input.mouse.y &&
                 ig.input.pressed("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1)); ig.global.spawnBall && (this.getScore(), ig.global.killByNote && (this.scoreNote = !0), ig.global.killByNote || (this.obj && this.obj.kill(), this.spawnBall(), this.fan.kill(), this.spawnFan(), ig.global.spawnBall = !1, ig.global.finishShoot = !0, this.miniPause.set(0.2), this.arrow.kill(), this.spawnArrow(), this.bin && this.bin.kill(), this.scoreNote = !1)); ig.global.spawnBin && (this.testCount++, this.spawnBin(),
                     this.spawnObject(), ig.global.spawnBin = !1); this.parent()
-        }, clicked: function () { }, draw: function () { this.parent() }, getScore: function () {
+        }, clicked: function () { }, getScore: function () {
             if (ig.global.isScore) {
                 ig.global.score += 1; ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
                     localStorage.local_storage_test = !0, 3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? ig.global.score >= this.storage.get("paper-flick-easy-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap),
