@@ -1,4 +1,14 @@
 {
   "version": 2,
-  "name": "kopje-paper-flick"
+  "name": "kopje-paper-flick",
+  "cleanUrls": true,
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
 }
