@@ -1,14 +1,4 @@
 {
   "version": 2,
-  "name": "kopje-paper-flick",
-  "framework": null,
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs20.x"
-    }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/$1" }
-  ]
+  "name": "kopje-paper-flick"
 }

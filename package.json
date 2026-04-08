@@ -1,6 +1,9 @@
 {
   "name": "kopje-paper-flick",
   "version": "1.0.0",
+  "engines": {
+    "node": "20.x"
+  },
   "description": "Paper Flick game with global leaderboard on Vercel",
   "main": "index.html",
   "scripts": {
