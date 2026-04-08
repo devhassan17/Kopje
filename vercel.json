@@ -2,6 +2,7 @@
   "version": 2,
   "name": "kopje-paper-flick",
   "framework": null,
+  "outputDirectory": ".",
   "functions": {
     "api/scores.js": {
       "memory": 1024
