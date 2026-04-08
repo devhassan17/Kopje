@@ -1,207 +1,176 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Kopje Gooien | Moyee Coffee Toss</title>
+	<!-- Force Hide Ads & Anti-Piracy -->
+	<style>
+		#anti-piracy, 
+		div[id^="MobileAd"], 
+		div[id$="-Box"], 
+		div[id$="-Close"],
+		#ad-container,
+		.marketjs-ad {
+			display: none !important;
+			visibility: hidden !important;
+			pointer-events: none !important;
+			opacity: 0 !important;
+			z-index: -9999 !important;
+			width: 0 !important;
+			height: 0 !important;
+		}
+	</style>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-	<meta name="apple-mobile-web-app-capable" content="yes"/>
-	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="game.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ff1493">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Kopje Gooien">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <link rel="icon" type="image/png" href="favicon.png">
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#ff1493">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Kopje Gooien">
+	<link rel="apple-touch-icon" href="icon-192.png">
+	<link rel="icon" type="image/png" href="favicon.png">
 
-	
-	<script type="text/javascript" src="game.js"></script>
-	
+
+	<script type="text/javascript" src="game.js?v=stabilized"></script>
+
 	<!-- Global Leaderboard & Modal Styles -->
 	<style>
-		:root { --primary-pink: #E5007D; --accent-yellow: #FFD900; }
-		#leaderboard-btn {
-			position: fixed; top: 20px; right: 20px; z-index: 1000;
-			background: var(--primary-pink); color: white; padding: 10px 20px;
-			border-radius: 50px; text-decoration: none; font-family: sans-serif;
-			font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-			transition: all 0.3s; border: 2px solid white;
+		:root {
+			--primary-pink: #E5007D;
+			--accent-yellow: #FFD900;
 		}
-		#leaderboard-btn:hover { background: white; color: var(--primary-pink); transform: scale(1.05); }
+
+		#leaderboard-btn {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			z-index: 1000;
+			background: var(--primary-pink);
+			color: white;
+			padding: 10px 20px;
+			border-radius: 50px;
+			text-decoration: none;
+			font-family: sans-serif;
+			font-weight: bold;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+			transition: all 0.3s;
+			border: 2px solid white;
+		}
+
+		#leaderboard-btn:hover {
+			background: white;
+			color: var(--primary-pink);
+			transform: scale(1.05);
+		}
 
 		/* High Score Modal */
 		#score-modal {
-			display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-			background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.8);
+			z-index: 2000;
+			justify-content: center;
+			align-items: center;
 			backdrop-filter: blur(5px);
 		}
-		.modal-content {
-			background: #091211; border: 4px solid var(--primary-pink);
-			padding: 40px; border-radius: 20px; text-align: center; color: white;
-			width: 90%; max-width: 400px; box-shadow: 0 0 30px rgba(229, 0, 125, 0.4);
-		}
-		.modal-content h2 { color: var(--primary-pink); margin-top: 0; font-size: 2rem; }
-		.modal-content input {
-			width: 100%; padding: 15px; margin: 20px 0; border-radius: 10px;
-			border: 2px solid var(--primary-pink); background: rgba(255,255,255,0.1);
-			color: white; font-size: 1.2rem; text-align: center; outline: none;
-		}
-		.modal-content button {
-			background: var(--primary-pink); color: white; border: none;
-			padding: 15px 40px; border-radius: 50px; font-weight: bold;
-			cursor: pointer; font-size: 1.1rem; transition: all 0.3s;
-		}
-		.modal-content button:hover { background: white; color: var(--primary-pink); }
-	</style>
-	
-<!-- AnalyticsCode -->	
 
-<!-- APICode -->
-<!-- Local web audio patch is disabled because no local copy is available -->
+		.modal-content {
+			background: #091211;
+			border: 4px solid var(--primary-pink);
+			padding: 40px;
+			border-radius: 20px;
+			text-align: center;
+			color: white;
+			width: 90%;
+			max-width: 400px;
+			box-shadow: 0 0 30px rgba(229, 0, 125, 0.4);
+		}
+
+		.modal-content h2 {
+			color: var(--primary-pink);
+			margin-top: 0;
+			font-size: 2rem;
+		}
+
+		.modal-content input {
+			width: 100%;
+			padding: 15px;
+			margin: 20px 0;
+			border-radius: 10px;
+			border: 2px solid var(--primary-pink);
+			background: rgba(255, 255, 255, 0.1);
+			color: white;
+			font-size: 1.2rem;
+			text-align: center;
+			outline: none;
+		}
+
+		.modal-content button {
+			background: var(--primary-pink);
+			color: white;
+			border: none;
+			padding: 15px 40px;
+			border-radius: 50px;
+			font-weight: bold;
+			cursor: pointer;
+			font-size: 1.1rem;
+			transition: all 0.3s;
+		}
+
+		.modal-content button:hover {
+			background: white;
+			color: var(--primary-pink);
+		}
+	</style>
+
+	<!-- AnalyticsCode -->
+
+	<!-- APICode -->
+	<!-- Local web audio patch is disabled because no local copy is available -->
 </head>
 
 <div class="gamecenter-activator"></div>
 
 <body onload="setTimeout(function(){window.scrollTo(0,1)},1);">
-<!--body-->
+	<!--body-->
 	<div id="ajaxbar">
 		<div id="game"><canvas id="canvas"></canvas></div>
-	
+
 		<div id="orientate"><img src="media/graphics/orientate/landscape.jpg" /></div>
 		<div id="play" class="play">
 			<div class="glass-container">
 				<div class="character-wrapper">
 					<img src="media/graphics/opening/moyee_cup_final.png" alt="Moyee Cup" class="premium-cup" />
 				</div>
-				<button id="start-btn" class="premium-btn" onclick="ig.game.pressPlay();ig.soundHandler.staticSound.play();">
+				<button id="start-btn" class="premium-btn"
+					onclick="if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();">
 					START GAME
 				</button>
 				<div class="footer-branding">
 					<h2 id="designed-heading">Designed by Moyee Coffee</h2>
 				</div>
 			</div>
-		</div>	
+		</div>
 		<!--<img id="scrollDown" width="220" height="277"></img>-->
+
 		
-		<!-- SECTION GENERATED BY CODE -->
-		<div id="MobileAdInGamePreroll">
-			<div id="MobileAdInGamePreroll-Box">
-				<div id="MobileAdInGamePreroll-Box-Header"></div>
-								
-				<div id="MobileAdInGamePreroll-Box-Body">
-					<center>												
-<!-- MobileAdInGamePreroll -->	
-<!-- AdTest-MobileAdInGamePreroll -->
-<img src="media/graphics/misc/generic.png" alt="Ad placeholder">
-<!-- EndOfAdTest-MobileAdInGamePreroll -->
-					</center>
-				</div>
-				<div id='MobileAdInGamePreroll-Box-Footer'></div>				
-			</div>
-		</div>
-
-		<!-- SECOND AD (ROTATION) -->
-		<div id="MobileAdInGamePreroll2">
-			<div id="MobileAdInGamePreroll2-Box">
-				<div id="MobileAdInGamePreroll2-Box-Header"></div>
-								
-				<div id="MobileAdInGamePreroll2-Box-Body">
-					<center>												
-<!-- MobileAdInGamePreroll2 -->	
-					</center>
-				</div>
-				<div id='MobileAdInGamePreroll2-Box-Footer'></div>				
-			</div>
-		</div>
-
-		<!-- THIRD AD (ROTATION) -->
-		<div id="MobileAdInGamePreroll3">
-			<div id="MobileAdInGamePreroll3-Box">
-				<div id="MobileAdInGamePreroll3-Box-Header"></div>
-								
-				<div id="MobileAdInGamePreroll3-Box-Body">
-					<center>												
-<!-- MobileAdInGamePreroll3 -->	
-					</center>
-				</div>
-				<div id='MobileAdInGamePreroll3-Box-Footer'></div>				
-			</div>
-		</div>
-
-		<div id="MobileAdInGameHeader">
-<!-- MobileAdInGameHeader -->
-		</div>
-		<div id="MobileAdInGameHeader2">
-<!-- MobileAdInGameHeader2 -->
-		</div>
-		<div id="MobileAdInGameHeader3">
-<!-- MobileAdInGameHeader3 -->
-		</div>
-
-		<div id="MobileAdInGameFooter">
-<!-- MobileAdInGameFooter -->
-		</div>
-		<div id="MobileAdInGameFooter2">
-<!-- MobileAdInGameFooter2 -->
-		</div>
-		<div id="MobileAdInGameFooter3">
-<!-- MobileAdInGameFooter3 -->
-		</div>	
-
-
-		<div id="MobileAdInGameEnd">
-			<div id="MobileAdInGameEnd-Box">
-				<div id="MobileAdInGameEnd-Box-Header"></div>
-								
-				<div id="MobileAdInGameEnd-Box-Body">
-					<center>												
-<!-- MobileAdInGameEnd -->
-					</center>
-				</div>
-				<div id='MobileAdInGameEnd-Box-Footer'></div>				
-			</div>
-		</div>
-
-		<!-- SECOND AD (ROTATION) -->
-		<div id="MobileAdInGameEnd2">
-			<div id="MobileAdInGameEnd2-Box">
-				<div id="MobileAdInGameEnd2-Box-Header"></div>
-								
-				<div id="MobileAdInGameEnd2-Box-Body">
-					<center>												
-<!-- MobileAdInGameEnd2 -->
-					</center>
-				</div>
-				<div id='MobileAdInGameEnd2-Box-Footer'></div>				
-			</div>
-		</div>
-
-		<!-- THIRD AD (ROTATION) -->
-		<div id="MobileAdInGameEnd3">
-			<div id="MobileAdInGameEnd3-Box">
-				<div id="MobileAdInGameEnd3-Box-Header"></div>
-								
-				<div id="MobileAdInGameEnd3-Box-Body">
-					<center>												
-<!-- MobileAdInGameEnd3 -->
-					</center>
-				</div>
-				<div id='MobileAdInGameEnd3-Box-Footer'></div>				
-			</div>
-		</div>	
-
-		<!-- END OF SECTION GENERATED BY CODE -->
 
 	</div>
 	<!-- <div id="tempdiv"><br><br><br></div> -->
-<!-- APICode2 -->
+	<!-- APICode2 -->
 
 
-<!-- END OF TEST -->
-	
+	<!-- END OF TEST -->
+
 	<div id="score-modal">
 		<div class="modal-content glass-morphism">
 			<h2 class="premium-text">NEW HIGH SCORE!</h2>
@@ -212,7 +181,8 @@
 			<input type="text" id="player-name" placeholder="Enter Your Nickname" maxlength="15" class="premium-input">
 			<div class="modal-buttons">
 				<button onclick="submitGlobalScore()" class="submit-btn">SUBMIT SCORE</button>
-				<button onclick="document.getElementById('score-modal').style.display = 'none'" class="skip-btn">SKIP</button>
+				<button onclick="document.getElementById('score-modal').style.display = 'none'"
+					class="skip-btn">SKIP</button>
 			</div>
 		</div>
 	</div>
@@ -221,7 +191,7 @@
 
 	<script>
 		let pendingScore = 0;
-		window.showScoreModal = function(score) {
+		window.showScoreModal = function (score) {
 			pendingScore = score;
 			document.getElementById('display-score').innerText = score;
 			document.getElementById('score-modal').style.display = 'flex';
@@ -241,7 +211,7 @@
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(scoreData)
 				});
-				
+
 				if (res.ok) {
 					window.location.href = 'leaderboard.html';
 					return;
@@ -254,7 +224,7 @@
 				localScores.push(scoreData);
 				localScores.sort((a, b) => b.score - a.score);
 				localStorage.setItem('kopje_scores', JSON.stringify(localScores.slice(0, 10)));
-				
+
 				setTimeout(() => {
 					alert('Score saved locally! (Server currently unavailable)');
 					window.location.href = 'leaderboard.html';
@@ -263,16 +233,14 @@
 		}
 	</script>
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(reg => {
-                    console.log('SW registered:', reg);
-                }).catch(err => {
-                    console.log('SW registration failed:', err);
-                });
-            });
-        }
-    </script>
+	<!-- Service Worker Disabled for Cache Stability -->
+	<script>
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.getRegistrations().then(regs => {
+				for(let reg of regs) reg.unregister();
+			});
+		}
+	</script>
 </body>
+
 </html>

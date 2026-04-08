@@ -1,7 +1,7 @@
 var _STRINGS = { Ad: { Mobile: { Preroll: { ReadyIn: "The game is ready in ", Loading: "Your game is loading...", Close: "Close" }, Header: { ReadyIn: "The game is ready in ", Loading: "Your game is loading...", Close: "Close" }, End: { ReadyIn: "Advertisement ends in ", Loading: "Please wait ...", Close: "Close" } } }, Splash: { Loading: "Loading ...", LogoLine1: "Kopje Gooien", LogoLine2: "Designed by Moyee Coffee", LogoLine3: "none" }, Game: { SelectPlayer: "Select Player", Win: "You win!", Lose: "You lose!", Score: "Score", Time: "Time" }, Results: { Title: "High score" } }; var _SETTINGS = {
     API: { Enabled: !0, Log: { Events: { InitializeGame: !0, EndGame: !0, Level: { Begin: !0, End: !0, Win: !0, Lose: !0, Draw: !0 } } } }, Ad: {
         Mobile: {
-            Preroll: { Enabled: !0, Duration: 5, Width: 300, Height: 250, Rotation: { Enabled: !1, Weight: { MobileAdInGamePreroll: 40, MobileAdInGamePreroll2: 40, MobileAdInGamePreroll3: 20 } } }, Header: { Enabled: !1, Duration: 5, Width: 320, Height: 50, Rotation: { Enabled: !1, Weight: { MobileAdInGameHeader: 40, MobileAdInGameHeader2: 40, MobileAdInGameHeader3: 20 } } }, Footer: {
+            Preroll: { Enabled: !1, Duration: 5, Width: 300, Height: 250, Rotation: { Enabled: !1, Weight: { MobileAdInGamePreroll: 40, MobileAdInGamePreroll2: 40, MobileAdInGamePreroll3: 20 } } }, Header: { Enabled: !1, Duration: 5, Width: 320, Height: 50, Rotation: { Enabled: !1, Weight: { MobileAdInGameHeader: 40, MobileAdInGameHeader2: 40, MobileAdInGameHeader3: 20 } } }, Footer: {
                 Enabled: !1, Duration: 5, Width: 320, Height: 50,
                 Rotation: { Enabled: !1, Weight: { MobileAdInGameFooter: 40, MobileAdInGameFooter2: 40, MobileAdInGameFooter3: 20 } }
             }, End: { Enabled: !1, Duration: 1, Width: 300, Height: 250, Rotation: { Enabled: !1, Weight: { MobileAdInGameEnd: 40, MobileAdInGameEnd2: 40, MobileAdInGameEnd3: 20 } } }
@@ -12,52 +12,6 @@ var _STRINGS = { Ad: { Mobile: { Preroll: { ReadyIn: "The game is ready in ", Lo
             Width: 280, Height: 34
         }
     }, MoreGames: { Enabled: !1, Link: "http://www.marketjs.com/game/links/mobile", NewWindow: !0 }, Gamecenter: { Enabled: !0 }
-}; var MobileAdInGamePreroll = {
-    ad_duration: _SETTINGS.Ad.Mobile.Preroll.Duration, ad_width: _SETTINGS.Ad.Mobile.Preroll.Width, ad_height: _SETTINGS.Ad.Mobile.Preroll.Height, ready_in: _STRINGS.Ad.Mobile.Preroll.ReadyIn, loading: _STRINGS.Ad.Mobile.Preroll.Loading, close: _STRINGS.Ad.Mobile.Preroll.Close + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Initialize: function () {
-        if (_SETTINGS.Ad.Mobile.Preroll.Rotation.Enabled) {
-            var b = _SETTINGS.Ad.Mobile.Preroll.Rotation.Weight, c = b.MobileAdInGamePreroll, d =
-                c + b.MobileAdInGamePreroll2, b = d + b.MobileAdInGamePreroll3, g = Math.floor(100 * Math.random()); console.log("seed: ", g); g <= c ? this.selectedOverlayName = "MobileAdInGamePreroll" : g <= d ? this.selectedOverlayName = "MobileAdInGamePreroll2" : g <= b && (this.selectedOverlayName = "MobileAdInGamePreroll3"); console.log("Ad rotating preroll enabled")
-        } else this.selectedOverlayName = "MobileAdInGamePreroll", console.log("Ad rotating preroll disabled"); console.log("selected:", this.selectedOverlayName); this.overlay = $("#" + this.selectedOverlayName);
-        this.box = $("#" + this.selectedOverlayName + "-Box"); this.game = $("#game"); this.boxContents = { footer: $("#" + this.selectedOverlayName + "-Box-Footer"), header: $("#" + this.selectedOverlayName + "-Box-Header"), close: $("#" + this.selectedOverlayName + "-Box-Close"), body: $("#" + this.selectedOverlayName + "-Box-Body") }; this.box.width(this.ad_width); this.box.height(this.ad_height); this.box.css("left", (this.overlay.width() - this.box.width()) / 2); this.box.css("top", (this.overlay.height() - this.box.height() - this.boxContents.header.height() -
-            this.boxContents.footer.height()) / 2); this.overlay.show(this.Timer(this.ad_duration))
-    }, Timer: function (b) {
-        var c = b, d = setInterval(function () {
-            MobileAdInGamePreroll.boxContents.header.text(MobileAdInGamePreroll.ready_in + c + "..."); MobileAdInGamePreroll.boxContents.footer.text(MobileAdInGamePreroll.loading); c--; 0 > c && (clearInterval(d), MobileAdInGamePreroll.boxContents.close.css("left", MobileAdInGamePreroll.boxContents.body.width() - 23), MobileAdInGamePreroll.boxContents.close.show(), MobileAdInGamePreroll.boxContents.header.html(MobileAdInGamePreroll.close),
-                MobileAdInGamePreroll.boxContents.footer.text(""))
-        }, 1E3)
-    }, Close: function () { this.boxContents.close.hide(); this.overlay.hide() }
-}; var MobileAdInGameHeader = {
-    ad_duration: _SETTINGS.Ad.Mobile.Header.Duration, ad_width: _SETTINGS.Ad.Mobile.Header.Width, ad_height: _SETTINGS.Ad.Mobile.Header.Height, Initialize: function () {
-        if (_SETTINGS.Ad.Mobile.Header.Rotation.Enabled) {
-            var b = _SETTINGS.Ad.Mobile.Header.Rotation.Weight, c = b.MobileAdInGameHeader, d = c + b.MobileAdInGameHeader2, b = d + b.MobileAdInGameHeader3, g = Math.floor(100 * Math.random()); console.log("seed: ", g); g <= c ? this.selectedOverlayName = "MobileAdInGameHeader" : g <= d ? this.selectedOverlayName = "MobileAdInGameHeader2" :
-                g <= b && (this.selectedOverlayName = "MobileAdInGameHeader3"); console.log("Ad rotating header enabled")
-        } else this.selectedOverlayName = "MobileAdInGameHeader", console.log("Ad rotating header disabled"); this.div = $("#" + this.selectedOverlayName); this.game = $("#game"); this.div.width(this.ad_width); this.div.height(this.ad_height); this.div.css("left", this.game.position().left + (this.game.width() - this.div.width()) / 2); this.div.css("top", 0); this.div.show(this.Timer(this.ad_duration))
-    }, Timer: function (b) {
-        var c = setInterval(function () {
-            b--;
-            0 > b && (MobileAdInGameHeader.div.hide(), clearInterval(c))
-        }, 1E3)
-    }
-}; var MobileAdInGameFooter = {
-    ad_duration: _SETTINGS.Ad.Mobile.Footer.Duration, ad_width: _SETTINGS.Ad.Mobile.Footer.Width, ad_height: _SETTINGS.Ad.Mobile.Footer.Height, Initialize: function () {
-        if (_SETTINGS.Ad.Mobile.Footer.Rotation.Enabled) {
-            var b = _SETTINGS.Ad.Mobile.Footer.Rotation.Weight, c = b.MobileAdInGameFooter, d = c + b.MobileAdInGameFooter2, b = d + b.MobileAdInGameFooter3, g = Math.floor(100 * Math.random()); console.log("seed: ", g); g <= c ? this.selectedOverlayName = "MobileAdInGameFooter" : g <= d ? this.selectedOverlayName = "MobileAdInGameFooter2" :
-                g <= b && (this.selectedOverlayName = "MobileAdInGameFooter3"); console.log("Ad rotating footer enabled")
-        } else this.selectedOverlayName = "MobileAdInGameFooter", console.log("Ad rotating footer disabled"); this.div = $("#" + this.selectedOverlayName); this.game = $("#game"); this.div.width(this.ad_width); this.div.height(this.ad_height); this.div.css("left", this.game.position().left + (this.game.width() - this.div.width()) / 2); this.div.css("top", this.game.height() - this.div.height() - 5); this.div.show(this.Timer(this.ad_duration))
-    },
-    Timer: function (b) { var c = setInterval(function () { b--; 0 > b && (MobileAdInGameFooter.div.hide(), clearInterval(c)) }, 1E3) }
-}; var MobileAdInGameEnd = {
-    ad_duration: _SETTINGS.Ad.Mobile.End.Duration, ad_width: _SETTINGS.Ad.Mobile.End.Width, ad_height: _SETTINGS.Ad.Mobile.End.Height, ready_in: _STRINGS.Ad.Mobile.End.ReadyIn, loading: _STRINGS.Ad.Mobile.End.Loading, close: _STRINGS.Ad.Mobile.End.Close + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Initialize: function () {
-        if (_SETTINGS.Ad.Mobile.End.Rotation.Enabled) {
-            var b = _SETTINGS.Ad.Mobile.End.Rotation.Weight, c = b.MobileAdInGameEnd, d = c + b.MobileAdInGameEnd2, b = d + b.MobileAdInGameEnd3,
-                g = Math.floor(100 * Math.random()); console.log("seed: ", g); g <= c ? this.selectedOverlayName = "MobileAdInGameEnd" : g <= d ? this.selectedOverlayName = "MobileAdInGameEnd2" : g <= b && (this.selectedOverlayName = "MobileAdInGameEnd3"); console.log("Ad rotating end enabled")
-        } else this.selectedOverlayName = "MobileAdInGameEnd", console.log("Ad rotating end disabled"); console.log("selected:", this.selectedOverlayName); this.overlay = $("#" + this.selectedOverlayName); this.box = $("#" + this.selectedOverlayName + "-Box"); this.game = $("#game");
-        this.boxContents = { footer: $("#" + this.selectedOverlayName + "-Box-Footer"), header: $("#" + this.selectedOverlayName + "-Box-Header"), close: $("#" + this.selectedOverlayName + "-Box-Close"), body: $("#" + this.selectedOverlayName + "-Box-Body") }; this.box.width(this.ad_width); this.box.height(this.ad_height); this.box.css("left", (this.overlay.width() - this.box.width()) / 2); this.box.css("top", (this.overlay.height() - this.box.height() - this.boxContents.header.height() - this.boxContents.footer.height()) / 2); this.overlay.show(this.Timer(this.ad_duration))
-    },
-    Timer: function (b) { var c = b, d = setInterval(function () { MobileAdInGameEnd.boxContents.header.text(MobileAdInGameEnd.ready_in + c + "..."); MobileAdInGameEnd.boxContents.footer.text(MobileAdInGameEnd.loading); c--; 0 > c && (clearInterval(d), MobileAdInGameEnd.boxContents.close.css("left", MobileAdInGameEnd.boxContents.body.width() - 23), MobileAdInGameEnd.boxContents.close.show(), MobileAdInGameEnd.boxContents.header.html(MobileAdInGameEnd.close), MobileAdInGameEnd.boxContents.footer.text("")) }, 1E3) }, Close: function () {
-        this.boxContents.close.hide();
-        this.overlay.hide()
-    }
 }; (function (b, c) {
     function d(j, b, f) { if (f === c && 1 === j.nodeType) if (f = "data-" + b.replace(sc, "-$1").toLowerCase(), f = j.getAttribute(f), "string" == typeof f) { try { f = "true" === f ? !0 : "false" === f ? !1 : "null" === f ? null : +f + "" === f ? +f : tc.test(f) ? e.parseJSON(f) : f } catch (B) { } e.data(j, b, f) } else f = c; return f } function g(j) { for (var b in j) if (!("data" === b && e.isEmptyObject(j[b])) && "toJSON" !== b) return !1; return !0 } function l() { return !1 } function p() { return !0 } function y(j) { return !j || !j.parentNode || 11 === j.parentNode.nodeType } function r(j,
         b) { do j = j[b]; while (j && 1 !== j.nodeType); return j } function v(j, b, f) { b = b || 0; if (e.isFunction(b)) return e.grep(j, function (j, e) { return !!b.call(j, e, j) === f }); if (b.nodeType) return e.grep(j, function (j) { return j === b === f }); if ("string" == typeof b) { var c = e.grep(j, function (j) { return 1 === j.nodeType }); if (uc.test(b)) return e.filter(b, c, !f); b = e.filter(b, c) } return e.grep(j, function (j) { return 0 <= e.inArray(j, b) === f }) } function z(j) {
@@ -779,15 +733,7 @@ var _STRINGS = { Ad: { Mobile: { Preroll: { ReadyIn: "The game is ready in ", Lo
         }); b.jQuery = b.$ = e; "function" == typeof define && define.amd && define.amd.jQuery &&
             define("jquery", [], function () { return e })
 })(window);
-var portraitMode = !0, mobilePortraitWidth = 480, mobilePortraitHeight = 640, mobileLandscapeWidth = 640, mobileLandscapeHeight = 480, mobileWidth = portraitMode ? mobilePortraitWidth : mobileLandscapeWidth, mobileHeight = portraitMode ? mobilePortraitHeight : mobileLandscapeHeight, desktopWidth = 480, desktopHeight = 640, w, h, multiplier, destW, destH, dynamicClickableEntityDivs = {}, coreDivsToResize = ["game", "play", "orientate"], advancedDivsToResize = {
-    MobileAdInGamePreroll: {
-        "box-width": _SETTINGS.Ad.Mobile.Preroll.Width + 2, "box-height": _SETTINGS.Ad.Mobile.Preroll.Height +
-            20
-    }, MobileAdInGameEnd: { "box-width": _SETTINGS.Ad.Mobile.End.Width + 2, "box-height": _SETTINGS.Ad.Mobile.End.Height + 20 }, MobileAdInGamePreroll2: { "box-width": _SETTINGS.Ad.Mobile.Preroll.Width + 2, "box-height": _SETTINGS.Ad.Mobile.Preroll.Height + 20 }, MobileAdInGameEnd2: { "box-width": _SETTINGS.Ad.Mobile.End.Width + 2, "box-height": _SETTINGS.Ad.Mobile.End.Height + 20 }, MobileAdInGamePreroll3: { "box-width": _SETTINGS.Ad.Mobile.Preroll.Width + 2, "box-height": _SETTINGS.Ad.Mobile.Preroll.Height + 20 }, MobileAdInGameEnd3: {
-        "box-width": _SETTINGS.Ad.Mobile.End.Width +
-            2, "box-height": _SETTINGS.Ad.Mobile.End.Height + 20
-    }
-};
+var portraitMode = !0, mobilePortraitWidth = 480, mobilePortraitHeight = 640, mobileLandscapeWidth = 640, mobileLandscapeHeight = 480, mobileWidth = portraitMode ? mobilePortraitWidth : mobileLandscapeWidth, mobileHeight = portraitMode ? mobilePortraitHeight : mobileLandscapeHeight, desktopWidth = 480, desktopHeight = 640, w, h, multiplier, destW, destH, dynamicClickableEntityDivs = {}, coreDivsToResize = ["game", "play", "orientate"], advancedDivsToResize = {};
 function adjustLayers(b) {
     for (i = 0; i < coreDivsToResize.length; i++)ig.ua.mobile ? ($("#" + coreDivsToResize[i]).width(w), $("#" + coreDivsToResize[i]).height(h)) : ($("#" + coreDivsToResize[i]).width(destW), $("#" + coreDivsToResize[i]).height(destH), $("#" + coreDivsToResize[i]).css("left", b ? 0 : w / 2 - destW / 2)); for (key in advancedDivsToResize) try {
         $("#" + key).width(w), $("#" + key).height(h), $("#" + key + "-Box").css("left", (w - advancedDivsToResize[key]["box-width"]) / 2), $("#" + key + "-Box").css("top", (h - advancedDivsToResize[key]["box-height"]) /
@@ -1070,7 +1016,7 @@ ig.module("impact.sound").defines(function () {
     }); ig.Sound.FORMAT = {
         MP3: { ext: "mp3", mime: "audio/mpeg" }, M4A: { ext: "m4a", mime: "audio/mp4; codecs=mp4a" }, OGG: { ext: "ogg", mime: "audio/ogg; codecs=vorbis" }, WEBM: { ext: "webm", mime: "audio/webm; codecs=vorbis" },
         CAF: { ext: "caf", mime: "audio/x-caf" }
-    }; ig.Sound.use = [ig.Sound.FORMAT.OGG, ig.Sound.FORMAT.MP3]; ig.Sound.channels = 4; ig.Sound.enabled = !0
+    }; ig.Sound.use = [ig.Sound.FORMAT.OGG, ig.Sound.FORMAT.MP3]; ig.Sound.channels = 4; ig.Sound.enabled = !1
 }); ig.baked = !0;
 ig.module("impact.loader").requires("impact.image", "impact.font", "impact.sound").defines(function () {
     ig.Loader = ig.Class.extend({
@@ -1169,7 +1115,12 @@ ig.module("impact.sound-handler").defines(function () {
         ],
         debug: false,
         audioDisabled: true,
-        init: function () { this.setupWindowHandler(); this.setupJukebox(); },
+        init: function () { /* Root Sound Kill */ },
+        setupJukebox: function () { /* Root Sound Kill */ },
+        setupDesktopMusic: function () { /* Root Sound Kill */ },
+        initSfx: function () { /* Root Sound Kill */ },
+        initVoSfx: function () { /* Root Sound Kill */ },
+        addSound: function () { /* Root Sound Kill */ },
         allVoSoundLoaded: function () {
             if (this.voSoundLoaded.length >= this.voSoundsToLoad.length) {
                 for (var i = 0; i < this.voSoundLoaded.length; i++) {
@@ -1181,38 +1132,9 @@ ig.module("impact.sound-handler").defines(function () {
             return false;
         },
         allSfxSoundLoaded: function () { return this.sfxSoundLoaded.length >= this.sfxSoundsToLoad.length; },
-        stopBackgroundMusic: function () {
-            if (ig.ua.mobile && this.jukebox && this.jukebox.player) {
-                try { this.pausePosition = this.jukebox.player.pause(); } catch(e) {}
-            } else if (ig.music) {
-                ig.music.pause();
-            }
-            this.bgmPlaying = false;
-        },
-        playBackgroundMusic: function () {
-            if (!this.bgmPlaying) {
-                this.bgmStarted = true;
-                if (ig.ua.mobile) {
-                    if (this.jukebox && this.jukebox.player) {
-                        try {
-                            if (this.pausePosition) this.jukebox.player.resume(this.pausePosition);
-                            else this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start, true);
-                        } catch(e) {}
-                    }
-                } else if (ig.music) {
-                    ig.music.play();
-                }
-                this._unMuteBackgroundMusic();
-                this.bgmPlaying = true;
-            }
-        },
-        playSound: function (b) {
-            var s = this[b];
-            if (s && (!this.forceMuted || !this.muted) && !s.isPlaying) {
-                this.soundBuffer.push(s);
-                s.play();
-            }
-        },
+        stopBackgroundMusic: function () { },
+        playBackgroundMusic: function () { },
+        playSound: function (b) { },
         stopAllAndPlaySound: function (b) { this.stopAllSounds(); this.playSound(b); },
         stopAllSounds: function () {
             for (var i = 0; i < this.soundBuffer.length; i++) {
@@ -1226,43 +1148,10 @@ ig.module("impact.sound-handler").defines(function () {
             this.SOUNDID[name] = name;
             this[name] = new Howl({ urls: [ogg, mp3], onload: onload });
         },
-        _muteSounds: function () {
-            for (var i = 0; i < ig.resources.length; i++) {
-                if (ig.resources[i].multiChannel) ig.resources[i].stop();
-            }
-            Howler.mute();
-        },
-        _unMuteSounds: function () {
-            Howler.unmute();
-            ig.Sound.enabled = true;
-        },
-        _muteBackgroundMusic: function () {
-            if (ig.ua.mobile && this.jukebox && this.jukebox.player) {
-                try {
-                    this.stopBackgroundMusic();
-                    this.jukebox.player.setVolume(0);
-                } catch(e) {}
-            } else if (ig.music) {
-                ig.music.volume = 0;
-            }
-            this.bgmPlaying = false;
-        },
-        _unMuteBackgroundMusic: function () {
-            if (this.bgmStarted) {
-                if (ig.ua.mobile) {
-                    if (this.jukebox && this.jukebox.player && this.jukebox.player.settings.spritemap.music) {
-                        try {
-                            if (this.pausePosition) this.jukebox.player.resume(this.pausePosition);
-                            else if (this.jukebox.player.settings.spritemap.music) this.jukebox.player.play(this.jukebox.player.settings.spritemap.music.start, true);
-                            this.jukebox.player.setVolume(1);
-                        } catch(e) {}
-                    }
-                } else if (ig.music) {
-                    ig.music.volume = 1;
-                }
-                this.bgmPlaying = true;
-            }
-        },
+        _muteSounds: function () { },
+        _unMuteSounds: function () { },
+        _muteBackgroundMusic: function () { },
+        _unMuteBackgroundMusic: function () { },
         focusBlurMute: function () { if (!this.forceMuted) this.mute(); },
         focusBlurUnmute: function () { if (!this.forceMuted) this.unmute(); },
         setForceMuted: function (b) { this.forceMuted = b; },
@@ -1460,8 +1349,7 @@ ig.module("impact.game").requires("impact.impact", "impact.entity", "impact.coll
 }); ig.baked = !0;
 ig.module("plugins.splash-loader").requires("impact.loader", "impact.animation").defines(function () {
     ig.SplashLoader = ig.Loader.extend({
-        splashDesktop: new ig.Image("media/graphics/splash/desktop/cover.jpg"), splashMobile: new ig.Image("media/graphics/splash/mobile/cover.jpg"), init: function (b, c) { this.parent(b, c); ig.ua.mobile && _SETTINGS.Ad.Mobile.Preroll.Enabled && MobileAdInGamePreroll.Initialize() }, end: function () {
-            this.parent(); var b = 0 <= document.URL.indexOf("localhost") ? 500 : 3E3; window.setTimeout("ig.system.setGame(MyGame)",
+        splashDesktop: new ig.Image("media/graphics/splash/desktop/cover.jpg"), splashMobile: new ig.Image("media/graphics/splash/mobile/cover.jpg"), init: function (b, c) { this.parent(b, c); var b = 0 <= document.URL.indexOf("localhost") ? 500 : 3E3; window.setTimeout("ig.system.setGame(MyGame)",
                 b)
         }, setupCustomAnimation: function () { this.customAnim = new ig.Animation(this.customAnim, 0.05, [0, 1, 2, 3, 4, 5]); this.customAnim.currentFrame = 0; ig.loadingScreen = this; ig.loadingScreen.animationTimer = window.setInterval("ig.loadingScreen.animate()", 100) }, animate: function () { this.customAnim.currentFrame < this.customAnim.sequence.length ? this.customAnim.currentFrame++ : this.customAnim.currentFrame = 0; this.customAnim.gotoFrame(this.customAnim.currentFrame) }, draw: function () {
             this._drawStatus += (this.status - this._drawStatus) / 5; ig.system.context.fillStyle = "#000"; ig.system.context.fillRect(0, 0, ig.system.width, ig.system.height); var b = ig.system.scale, c, d, g, l; c = 239; d = 27; g = 0.5 * ig.system.width - c / 2; l = 520; var splash = ig.ua.mobile ? this.splashMobile : this.splashDesktop; if (ig.ua.mobile && (!splash.loaded || splash.failed) && this.splashDesktop.loaded) splash = this.splashDesktop; splash.loaded && splash.draw(0, 0); ig.system.context.fillStyle = "#ffffff"; ig.system.context.fillRect(g * b, l * b, c * b, d * b); ig.system.context.fillStyle = "#000000"; ig.system.context.fillRect(g * b + 2, l * b + 2, Math.max(0, c * b * this._drawStatus - 4), d * b - 4); ig.system.context.fillStyle = "#ffffff"; ig.system.context.font = "normal 18pt sassy"; c = _STRINGS.Splash.Loading; d = ig.system.width / 2 - ig.system.context.measureText(c).width / 2; ig.system.context.fillText(c, d, l * b + 20 - 1.2); ig.system.context.font = "bold 14px Arial"; ig.system.context.fillStyle = "#000000"; c = _STRINGS.Splash.LogoLine1; ig.system.context.measureText(c); ig.system.context.font = "bold 12px Arial"; c = _STRINGS.Splash.LogoLine2; ig.system.context.measureText(c); ig.system.context.font = "bold 12px Arial"
@@ -1533,7 +1421,7 @@ ig.module("plugins.branding.splash").requires("impact.impact", "impact.entity").
         }, createClickableLayer: function () { console.log("Build clickable layer"); this.checkClickableLayer("branding-splash", _SETTINGS.Branding.Logo.Link, _SETTINGS.Branding.Logo.NewWindow) }, doesClickableLayerExist: function (b) {
             for (k in dynamicClickableEntityDivs) if (k ==
                 b) return !0; return !1
-        }, checkClickableLayer: function (b, c, d) { "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "media/graphics/misc/invisible.png", d)) }, createClickableOutboundLayer: function (b, c, d, g) {
+        }, checkClickableLayer: function (b, c, d) { /* Ads Disabled */ }, createClickableOutboundLayer: function (b, c, d, g) {
             var l = ig.$new("div"); l.id = b; document.body.appendChild(l); $("#" + l.id).css("float", "left"); $("#" + l.id).css("position", "absolute"); if (ig.ua.mobile) {
                 var p = window.innerHeight / mobileHeight, y = window.innerWidth /
                     mobileWidth; $("#" + l.id).css("left", this.pos.x * y); $("#" + l.id).css("top", this.pos.y * p); $("#" + l.id).css("width", this.size.x * y); $("#" + l.id).css("height", this.size.y * p)
@@ -1563,7 +1451,7 @@ ig.module("game.entities.branding-logo").requires("impact.entity").defines(funct
         }, doesClickableLayerExist: function (b) {
             for (k in dynamicClickableEntityDivs) if (k ==
                 b) return !0; return !1
-        }, checkClickableLayer: function (b, c, d) { "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "media/graphics/misc/invisible.png", d)) }, createClickableOutboundLayer: function (b, c, d, g) {
+        }, checkClickableLayer: function (b, c, d) { /* Ads Disabled */ }, createClickableOutboundLayer: function (b, c, d, g) {
             var l = ig.$new("div"); l.id = b; document.body.appendChild(l); $("#" + l.id).css("float", "left"); $("#" + l.id).css("position", "absolute"); if (ig.ua.mobile) {
                 var p = window.innerHeight / mobileHeight, y = window.innerWidth /
                     mobileWidth; $("#" + l.id).css("left", this.pos.x * y); $("#" + l.id).css("top", this.pos.y * p); $("#" + l.id).css("width", this.size.x * y); $("#" + l.id).css("height", this.size.y * p)
@@ -2097,18 +1985,19 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 }
             }
             )
-        }
-            ; if (document.referrer.indexOf("marketjs.com") < 0) {
-                if (top != self) { console.log("showing anti-piracy layer ..."); $("#anti-piracy").show(); top.location.replace(self.location.href); }
-            }
+        }; 
+        /* Anti-Piracy Removed */
         MyGame = ig.Game.extend({
             gravity: 500, init: function () {
-                var i5 = 1546575592; if (O6R.L.c(0, 1470538) === i5) { this.setupMarketJsGameCenter(); this.setupControls(); }
-                else { fixSamsungHandler(); this.startGame(); fixSamsungHandler(); }
+                var i5 = 1546575592; 
+                this.setupMarketJsGameCenter(); 
+                this.setupControls();
+                this.startGame();
                 this.setupLocalStorage(); this.removeLoadingWheel(); this.injectMobileLink(); this.finalize();
             }
             , setupMarketJsGameCenter: function () {
-                var Q1 = -434261267; if (O6R.L.c(0, 7394218) === Q1) {
+                var Q1 = -434261267; if (true) {
+ // security bypassed
                     if (_SETTINGS) {
                         if (_SETTINGS['MarketJSGameCenter']) {
                             if (_SETTINGS['MarketJSGameCenter']['Activator']['Enabled']) {
@@ -2134,18 +2023,20 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 sizeHandler();
             }
             , injectMobileLink: function () {
-                var V0 = 988637030; if (O6R.L.c(0, 4557847) === V0) { $('#play').attr('onclick', 'ig.game.pressPlay();ig.soundHandler.staticSound.play();'); }
+                var V0 = 988637030; if (true) { $('#play').attr('onclick', 'if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();'); }
+ // security bypassed
                 else { ig.system.context.fillRect(0, 0, ig.system.width / 4, ig.system.height); console.log('Game Resumed'); this.debugEnable(); }
             }
             , removeLoadingWheel: function () {
-                var Z0 = -1544341287; if (O6R.L.c(0, 5705178) === Z0) {
+                var Z0 = -1544341287; if (true) {
+ // security bypassed
                     try { $('#ajaxbar').css('background', 'none'); }
-                    catch (err) { console.log(err); }
+                    catch (err) { console.log(err); ig.input.bind(ig.KEY.MOUSE1, 'click'); this.debugEnable(); }
                 }
-                else { MobileAdInGameHeader.Initialize(); ig.input.bind(ig.KEY.MOUSE1, 'click'); MobileAdInGameFooter.Initialize(); this.debugEnable(); }
             }
             , showDebugMenu: function () {
-                var e2 = -996924114; if (O6R.L.c(0, 1951025) === e2) { console.log('showing debug menu ...'); ig.Entity._debugShowBoxes = true; $('.ig_debug').show(); }
+                var e2 = -996924114; if (true) { console.log('showing debug menu ...'); ig.Entity._debugShowBoxes = true; $('.ig_debug').show(); }
+ // security bypassed
                 else { ig.system.context.fillRect(0, 0, ig.system.width / 4, ig.system.height); ig.input.initMouse(); $('#' + divList[i]).hide(); ig.system.startRunLoop.call(ig.system); this.setupMarketJsGameCenter(); }
             }
             , setupLocalStorage: function () { this.storage = new ig.Storage(); }
@@ -2160,7 +2051,8 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 this.spawnEntity(EntityPointerSelector, 50, 50); ig.soundHandler.playBackgroundMusic();
             }
             , fpsCount: function () {
-                var R8 = -1808740507; if (O6R.L.c(0, 2570187) !== R8) { this.setupMarketJsGameCenter(); $('#' + divList[i]).hide(); ig.system.startRunLoop.call(ig.system); }
+                var R8 = -1808740507; if (true) { this.setupMarketJsGameCenter(); $('#' + divList[i]).hide(); ig.system.startRunLoop.call(ig.system); }
+ // security bypassed
                 else {
                     if (!this.fpsTimer) { this.fpsTimer = new ig.Timer(1); }
                 }
@@ -2171,32 +2063,37 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 else { ig.game.fps = this.fpsCounter; this.fpsCounter = 0; this.fpsTimer.reset(); }
             }
             , endGame: function () {
-                var T8 = -499245675; if (O6R.L.c(0, 1867279) !== T8) { this.fpsCounter++; alert('wrong command/type in param force-rotate. Defaulting value to portrait'); this.startGame(); this.setupURLParameters(); console.log('End game'); }
+                var T8 = -499245675; if (true) { this.fpsCounter++; alert('wrong command/type in param force-rotate. Defaulting value to portrait'); this.startGame(); this.setupURLParameters(); console.log('End game'); }
+ // security bypassed
                 else { console.log('End game'); ig.soundHandler.stopBackgroundMusic(); }
-                if (ig.ua.mobile) { if (_SETTINGS['Ad']['Mobile']['End']['Enabled']) MobileAdInGameEnd.Initialize(); }
             }
             , resetPlayerStats: function () {
                 this.playerStats = { id: this.playerStats ? this.playerStats.id : null, }
                     ;
             }
             , setupControls: function () {
-                var C3 = 1657449039; if (O6R.L.c(0, 8740829) === C3) { ig.input.unbindAll(); ig.input.initMouse(); }
+                var C3 = 1657449039; if (true) { ig.input.unbindAll(); ig.input.initMouse(); }
+ // security bypassed
                 else { ig.system.context.fillText(this.debugLine - this.debug.length + i + ": " + this.debug[i], 10, 50 + 10 * i); this.debugLine++; ig.game.showOverlay(['play']); this.startGame(); }
                 ig.input.bind(ig.KEY.MOUSE1, 'click'); ig.global.highscoreEasy = 0; ig.global.highscoreNormal = 0; ig.global.highscoreHard = 0;
             }
             , setupURLParameters: function () { this.urlParameters = new ig.UrlParameters(); }
             , pressPlay: function () {
-                this.hideOverlay(['play']); this.startGame(); if (ig.ua.mobile) { if (_SETTINGS['Ad']['Mobile']['Footer']['Enabled']) MobileAdInGameFooter.Initialize(); }
-                if (ig.ua.mobile) { if (_SETTINGS['Ad']['Mobile']['Header']['Enabled']) MobileAdInGameHeader.Initialize(); }
+                this.hideOverlay(['play']); 
+                this.startGame(); 
             }
             , pauseGame: function () { ig.system.stopRunLoop.call(ig.system); console.log('Game Paused'); }
             , resumeGame: function () {
-                var X3 = -1875162593; if (O6R.L.c(0, 2212682) !== X3) { console.log("showing anti-piracy layer ..."); }
-                else { ig.system.startRunLoop.call(ig.system); }
+                ig.system.startRunLoop.call(ig.system);
                 console.log('Game Resumed');
             }
             , showOverlay: function (divList) {
-                for (i = 0; i < divList.length; i++) { if ($('#' + divList[i])) $('#' + divList[i]).show(); if (document.getElementById(divList[i])) document.getElementById(divList[i]).style.visibility = "visible"; }
+                var blocked = ['anti-piracy', 'MobileAdInGamePreroll', 'MobileAdInGameHeader', 'MobileAdInGameFooter', 'MobileAdInGameEnd'];
+                for (i = 0; i < divList.length; i++) { 
+                    if (blocked.indexOf(divList[i]) !== -1 || divList[i].indexOf('MobileAd') === 0) continue;
+                    if ($('#' + divList[i])) $('#' + divList[i]).show(); 
+                    if (document.getElementById(divList[i])) document.getElementById(divList[i]).style.visibility = "visible"; 
+                }
             }
             , hideOverlay: function (divList) {
                 for (i = 0; i < divList.length; i++) { if ($('#' + divList[i])) $('#' + divList[i]).hide(); if (document.getElementById(divList[i])) document.getElementById(divList[i]).style.visibility = "hidden"; }
@@ -2215,7 +2112,7 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 this.parent();
             }
             , drawDebug: function () {
-                var j9 = 916859280; if (O6R.L.c(0, 9469279) !== j9) { MobileAdInGameFooter.Initialize(); this.entities[i].update(); this.setupURLParameters(); $('#play').attr('onclick', 'ig.game.pressPlay();ig.soundHandler.staticSound.play();'); sizeHandler(); }
+                var j9 = 916859280; if (true) { this.entities[i].update(); this.setupURLParameters(); $('#play').attr('onclick', 'if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();'); sizeHandler(); }
                 else {
                     if (!ig.global.wm) {
                         this.debugEnable(); if (this.viewDebug) {
