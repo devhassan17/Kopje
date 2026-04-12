@@ -1539,38 +1539,39 @@ ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.directo
             this.parent();
             var ctx = ig.system.context;
             var cx = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
-            var cy = ig.system.getDrawPos(this.pos.y + this.size.y / 2 - ig.game.screen.y);
+            var cy = ig.system.getDrawPos(this.pos.y + 25 - ig.game.screen.y);
             var pulse = 1 + 0.15 * Math.sin(this._pulseTimer || 0);
-            var r = 48 * pulse;
-            // Outer glow ring
+            var rx = (this.size.x / 2.2) * pulse;
+            var ry = 10 * pulse;
+            
             ctx.save();
             ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            if(ctx.ellipse) { ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx, 0, Math.PI * 2); }
             ctx.strokeStyle = "rgba(255, 50, 50, 0.9)";
-            ctx.lineWidth = 4;
+            ctx.lineWidth = 3;
             ctx.shadowColor = "#ff3232";
-            ctx.shadowBlur = 18;
+            ctx.shadowBlur = 12;
             ctx.stroke();
-            // Inner ring
+            
             ctx.beginPath();
-            ctx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
+            if(ctx.ellipse) { ctx.ellipse(cx, cy, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx * 0.7, 0, Math.PI * 2); }
             ctx.strokeStyle = "rgba(255, 220, 0, 0.85)";
-            ctx.lineWidth = 2.5;
+            ctx.lineWidth = 2;
             ctx.shadowColor = "#ffdc00";
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 8;
             ctx.stroke();
-            // Crosshair lines
+            
             ctx.shadowBlur = 0;
             ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
             ctx.lineWidth = 1.5;
-            ctx.beginPath(); ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r); ctx.stroke();
-            // Label
+            ctx.beginPath(); ctx.moveTo(cx - rx, cy); ctx.lineTo(cx + rx, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, cy - ry*1.5); ctx.lineTo(cx, cy + ry*1.5); ctx.stroke();
+            
             ctx.shadowColor = "#000"; ctx.shadowBlur = 6;
             ctx.fillStyle = "#ffdc00";
-            ctx.font = "bold 14px Arial";
+            ctx.font = "bold 12px Montserrat, sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText("🎯 AIM HERE", cx, cy - r - 8);
+            ctx.fillText("AIM", cx, cy - ry - 6);
             ctx.restore();
         },
     })
