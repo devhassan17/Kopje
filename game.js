@@ -1540,38 +1540,38 @@ ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.directo
             var ctx = ig.system.context;
             var cx = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
             var cy = ig.system.getDrawPos(this.pos.y + 25 - ig.game.screen.y);
-            var pulse = 1 + 0.15 * Math.sin(this._pulseTimer || 0);
-            var rx = (this.size.x / 2.2) * pulse;
-            var ry = 10 * pulse;
+            var pulse = 1 + 0.08 * Math.sin(this._pulseTimer || 0);
+            var rx = (this.size.x / 4.5) * pulse;
+            var ry = 5 * pulse;
             
             ctx.save();
             ctx.beginPath();
             if(ctx.ellipse) { ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx, 0, Math.PI * 2); }
-            ctx.strokeStyle = "rgba(255, 50, 50, 0.9)";
-            ctx.lineWidth = 3;
-            ctx.shadowColor = "#ff3232";
-            ctx.shadowBlur = 12;
-            ctx.stroke();
-            
-            ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, cy, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx * 0.7, 0, Math.PI * 2); }
-            ctx.strokeStyle = "rgba(255, 220, 0, 0.85)";
+            ctx.strokeStyle = "rgba(255, 50, 50, 0.95)";
             ctx.lineWidth = 2;
-            ctx.shadowColor = "#ffdc00";
+            ctx.shadowColor = "#ff3232";
             ctx.shadowBlur = 8;
             ctx.stroke();
             
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.beginPath();
+            if(ctx.ellipse) { ctx.ellipse(cx, cy, rx * 0.5, ry * 0.5, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx * 0.5, 0, Math.PI * 2); }
+            ctx.strokeStyle = "rgba(255, 220, 0, 0.95)";
             ctx.lineWidth = 1.5;
-            ctx.beginPath(); ctx.moveTo(cx - rx, cy); ctx.lineTo(cx + rx, cy); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(cx, cy - ry*1.5); ctx.lineTo(cx, cy + ry*1.5); ctx.stroke();
+            ctx.shadowColor = "#ffdc00";
+            ctx.shadowBlur = 6;
+            ctx.stroke();
             
-            ctx.shadowColor = "#000"; ctx.shadowBlur = 6;
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(cx - rx * 0.4, cy); ctx.lineTo(cx + rx * 0.4, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, cy - ry * 1.2); ctx.lineTo(cx, cy + ry * 1.2); ctx.stroke();
+            
+            ctx.shadowColor = "#000"; ctx.shadowBlur = 4;
             ctx.fillStyle = "#ffdc00";
-            ctx.font = "bold 12px Montserrat, sans-serif";
+            ctx.font = "bold 9px Montserrat, sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText("AIM", cx, cy - ry - 6);
+            ctx.fillText("AIM", cx, cy - ry - 4);
             ctx.restore();
         },
     })
@@ -1868,7 +1868,7 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 new ig.Timer(0.2); this.spawnBin(); try { this.storage = new ig.Storage, this.storage.initUnset("paper-flick-easy-highscore", 0), this.storage.initUnset("paper-flick-normal-highscore", 0), this.storage.initUnset("paper-flick-hard-highscore", 0) } catch (g) { }
         }, update: function () {
             ig.global.finishShoot && (ig.ua.mobile ? 0 < this.miniPause.delta() && ig.input.released("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1) : 0 < this.miniPause.delta() && 50 < ig.input.mouse.y &&
-                ig.input.pressed("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1)); ig.global.spawnBall && (this.getScore(), ig.global.killByNote && (this.scoreNote = !0), ig.global.killByNote || (this.obj && this.obj.kill(), this.spawnBall(), this.fan.kill(), this.spawnFan(), ig.global.spawnBall = !1, ig.global.finishShoot = !0, this.miniPause.set(0.2), this.arrow.kill(), this.spawnArrow(), this.bin && this.bin.kill(), this.spawnBin(), this.scoreNote = !1)); ig.global.spawnBin && (ig.global.spawnBin = !1); this.parent()
+                ig.input.pressed("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1)); ig.global.spawnBall && (this.getScore(), ig.global.killByNote && (this.scoreNote = !0), ig.global.killByNote || (this.obj && this.obj.kill(), this.spawnBall(), this.fan.kill(), this.spawnFan(), ig.global.spawnBall = !1, ig.global.finishShoot = !0, this.miniPause.set(0.2), this.arrow.kill(), this.spawnArrow(), this.scoreNote ? null : (this.bin && this.bin.kill(), this.spawnBin()), this.scoreNote = !1)); ig.global.spawnBin && (ig.global.spawnBin = !1); this.parent()
         }, clicked: function () { }, getScore: function () {
             if (ig.global.isScore) {
                 ig.global.score += 1; ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
