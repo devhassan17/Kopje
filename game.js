@@ -1529,159 +1529,17 @@ ig.module("game.entities.ingame-fan").requires("impact.entity", "plugins.directo
 ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.director").defines(function () {
     EntityIngameBin = ig.Entity.extend({
         zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin", init: function (b, c, d) {
-            // Cup size: proportional to scene (was 90x108 - too large)
-            this.size.x = 54; this.size.y = 68;
-            // Dummy animSheet to prevent engine errors
-            try { this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/bin.png", 64, 81); this.addAnim("idle", 1, [0]); } catch(e) {}
-            this.parent(b, c, d)
-        }, update: function () { this._pulseTimer = (this._pulseTimer || 0) + 0.045; this.parent() }, clicked: function () { },
+            try { var g = ig.game.director.currentLevel } catch (l) { g = 0 } switch (g) {
+                case 3: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 64; this.size.y = 81; this.addAnim("idle", 0.2, [0]); break;
+                case 4: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 51; this.size.y = 57; this.offset.y = 6; this.addAnim("idle", 0.2, [0]); break;
+                case 5: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 54; this.size.y = 66; this.offset.x = 10; this.addAnim("idle", 0.2, [0]); break;
+                case 6: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 46; this.size.y = 57; this.addAnim("idle", 0.2, [0]); break;
+                case 7: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 30; this.size.y = 41; this.addAnim("idle", 0.2, [0]); this.offset.x = 15; break;
+                default: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 64; this.size.y = 81; this.addAnim("idle", 0.2, [0]);
+            }this.parent(b, c, d)
+        }, update: function () { this.parent() }, clicked: function () { },
         draw: function () {
-            var ctx = ig.system.context;
-            var sc = ig.system.scale;
-            var cx   = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
-            var base = ig.system.getDrawPos(this.pos.y + this.size.y - ig.game.screen.y);
-            var cW   = this.size.x * sc;
-            var cH   = this.size.y * sc;
-            var bW   = cW * 0.72;
-            var oTop = base - cH;
-            var oRy  = cW * 0.12;
-            var st   = this._pulseTimer || 0;
-
-            ctx.save();
-
-            ctx.shadowColor = "rgba(0,0,0,0.55)";
-            ctx.shadowBlur  = 16 * sc;
-            ctx.shadowOffsetX = 3 * sc;
-            ctx.shadowOffsetY = 5 * sc;
-
-            var bodyGrad = ctx.createLinearGradient(cx - cW/2, oTop, cx + cW/2, oTop);
-            bodyGrad.addColorStop(0,    "#d8d0c4");
-            bodyGrad.addColorStop(0.30, "#ffffff");
-            bodyGrad.addColorStop(0.65, "#f5ede4");
-            bodyGrad.addColorStop(1,    "#bdb2a2");
-
-            ctx.beginPath();
-            ctx.moveTo(cx - cW/2, oTop + oRy);
-            ctx.lineTo(cx - bW/2, base);
-            ctx.quadraticCurveTo(cx, base + bW*0.12, cx + bW/2, base);
-            ctx.lineTo(cx + cW/2, oTop + oRy);
-            ctx.closePath();
-            ctx.fillStyle = bodyGrad;
-            ctx.fill();
-            ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
-
-            var sheenGrad = ctx.createLinearGradient(cx - cW/2, oTop, cx - cW/2 + cW*0.35, oTop);
-            sheenGrad.addColorStop(0,    "rgba(255,255,255,0.0)");
-            sheenGrad.addColorStop(0.45, "rgba(255,255,255,0.40)");
-            sheenGrad.addColorStop(1,    "rgba(255,255,255,0.0)");
-            ctx.beginPath();
-            ctx.moveTo(cx - cW/2, oTop + oRy);
-            ctx.lineTo(cx - bW/2, base);
-            ctx.lineTo(cx - bW/2 + cW*0.28, base);
-            ctx.lineTo(cx - cW/2 + cW*0.28, oTop + oRy);
-            ctx.closePath();
-            ctx.fillStyle = sheenGrad;
-            ctx.fill();
-
-            ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, oTop + oRy, cW/2, oRy, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, oTop + oRy, cW/2, 0, Math.PI*2); }
-            var coff = ctx.createRadialGradient(cx - cW*0.1, oTop + oRy*0.4, 2, cx, oTop + oRy, cW/2);
-            coff.addColorStop(0,   "#8b5c30");
-            coff.addColorStop(0.5, "#4e2c12");
-            coff.addColorStop(1,   "#2a1608");
-            ctx.fillStyle = coff;
-            ctx.fill();
-
-            ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, cW/2*0.68, oRy*0.62, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, oTop+oRy, cW/2*0.68, 0, Math.PI*2); }
-            ctx.strokeStyle = "rgba(210,178,135,0.5)";
-            ctx.lineWidth = 2 * sc;
-            ctx.stroke();
-
-            var midY = oTop + cH * 0.52;
-            ctx.fillStyle = "#3a7d44";
-            ctx.font = "bold " + Math.round(10*sc) + "px Montserrat,Arial,sans-serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.shadowColor = "rgba(0,0,0,0.2)"; ctx.shadowBlur = 2;
-            ctx.fillText("Moyee", cx, midY);
-            ctx.shadowBlur = 0;
-            var tw = ctx.measureText("Moyee").width;
-            ctx.strokeStyle = "#3a7d44"; ctx.lineWidth = 1.2*sc;
-            ctx.beginPath(); ctx.moveTo(cx-tw/2, midY+6*sc); ctx.lineTo(cx+tw/2, midY+6*sc); ctx.stroke();
-
-            var hx   = cx + cW/2 - 2*sc;
-            var htop = oTop + cH * 0.22;
-            var hbot = oTop + cH * 0.68;
-            var hext = hx + cW * 0.26;
-            ctx.beginPath();
-            ctx.moveTo(hx, htop);
-            ctx.bezierCurveTo(hext+5*sc, htop, hext+5*sc, hbot, hx, hbot);
-            ctx.strokeStyle = "#bfb6a5";
-            ctx.lineWidth = 5.5 * sc;
-            ctx.lineJoin = "round"; ctx.lineCap = "round";
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(hx+1*sc, htop+4*sc);
-            ctx.bezierCurveTo(hext, htop+4*sc, hext, hbot-4*sc, hx+1*sc, hbot-4*sc);
-            ctx.strokeStyle = "rgba(255,255,255,0.28)";
-            ctx.lineWidth = 2*sc;
-            ctx.stroke();
-
-            ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, cW/2, oRy, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, oTop+oRy, cW/2, 0, Math.PI*2); }
-            ctx.strokeStyle = "#aca39a"; ctx.lineWidth = 2.5*sc; ctx.stroke();
-
-            ctx.lineCap = "round";
-            for(var si = -1; si <= 1; si++) {
-                var sx = cx + si * cW * 0.20;
-                var ph = st + si * 1.1;
-                var sa = 0.22 + 0.15*Math.sin(st*1.3 + si);
-                ctx.beginPath();
-                ctx.moveTo(sx, oTop - 1*sc);
-                ctx.bezierCurveTo(
-                    sx + 7*sc*Math.sin(ph),     oTop - 11*sc,
-                    sx - 7*sc*Math.sin(ph+1.0), oTop - 22*sc,
-                    sx + 4*sc*Math.sin(ph+2.0), oTop - 30*sc
-                );
-                ctx.strokeStyle = "rgba(255,255,255," + sa + ")";
-                ctx.lineWidth = 1.8*sc;
-                ctx.stroke();
-            }
-
-            var pulse = 1 + 0.08 * Math.sin(st);
-            var rx = (cW / 5.5) * pulse;
-            var ry = oRy * 0.70 * pulse;
-
-            ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, rx, ry, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, oTop+oRy, rx, 0, Math.PI*2); }
-            ctx.strokeStyle = "rgba(255,50,50,0.95)"; ctx.lineWidth = 2*sc;
-            ctx.shadowColor = "#ff3232"; ctx.shadowBlur = 7;
-            ctx.stroke();
-
-            ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, rx*0.44, ry*0.44, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, oTop+oRy, rx*0.44, 0, Math.PI*2); }
-            ctx.strokeStyle = "rgba(255,220,0,0.95)"; ctx.lineWidth = 1.5*sc;
-            ctx.shadowColor = "#ffdc00"; ctx.shadowBlur = 5;
-            ctx.stroke();
-
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.lineWidth = sc;
-            ctx.beginPath(); ctx.moveTo(cx-rx*0.4, oTop+oRy); ctx.lineTo(cx+rx*0.4, oTop+oRy); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(cx, oTop+oRy-ry*1.2); ctx.lineTo(cx, oTop+oRy+ry*1.2); ctx.stroke();
-
-            ctx.shadowColor = "#000"; ctx.shadowBlur = 4;
-            ctx.fillStyle = "#ffdc00";
-            ctx.font = "bold " + Math.round(9*sc) + "px Montserrat,Arial,sans-serif";
-            ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-            ctx.fillText("AIM", cx, top + oRy - ry - 4*sc);
-
-            ctx.restore();
+            this.parent();
         },
     })
 }); ig.baked = !0;
