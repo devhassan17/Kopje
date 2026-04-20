@@ -1538,156 +1538,142 @@ ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.directo
         draw: function () {
             var ctx = ig.system.context;
             var sc = ig.system.scale;
-            var cx  = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
-            var top = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
-            var cW  = this.size.x * sc;          // opening width
-            var cH  = this.size.y * sc * 0.82;   // cup body height
-            var bW  = cW * 0.74;                 // base width
-            var oRy = cW * 0.12;                 // opening ellipse minor radius
-            var st  = this._pulseTimer || 0;
+            var cx   = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
+            var base = ig.system.getDrawPos(this.pos.y + this.size.y - ig.game.screen.y);
+            var cW   = this.size.x * sc;
+            var cH   = this.size.y * sc;
+            var bW   = cW * 0.72;
+            var oTop = base - cH;
+            var oRy  = cW * 0.12;
+            var st   = this._pulseTimer || 0;
 
             ctx.save();
 
-            // ── Drop shadow behind cup ───────────────────────────────────────
-            ctx.shadowColor = "rgba(0,0,0,0.6)";
-            ctx.shadowBlur  = 22 * sc;
-            ctx.shadowOffsetX = 4 * sc;
-            ctx.shadowOffsetY = 8 * sc;
+            ctx.shadowColor = "rgba(0,0,0,0.55)";
+            ctx.shadowBlur  = 16 * sc;
+            ctx.shadowOffsetX = 3 * sc;
+            ctx.shadowOffsetY = 5 * sc;
 
-            // ── Cup body (ceramic trapezoid + rounded base) ──────────────────
-            var bodyGrad = ctx.createLinearGradient(cx - cW/2, top, cx + cW/2, top);
-            bodyGrad.addColorStop(0,    "#ddd5c8");
+            var bodyGrad = ctx.createLinearGradient(cx - cW/2, oTop, cx + cW/2, oTop);
+            bodyGrad.addColorStop(0,    "#d8d0c4");
             bodyGrad.addColorStop(0.30, "#ffffff");
-            bodyGrad.addColorStop(0.62, "#f7f0e8");
-            bodyGrad.addColorStop(1,    "#c0b5a5");
+            bodyGrad.addColorStop(0.65, "#f5ede4");
+            bodyGrad.addColorStop(1,    "#bdb2a2");
 
             ctx.beginPath();
-            ctx.moveTo(cx - cW/2, top + oRy);
-            ctx.lineTo(cx - bW/2, top + cH);
-            ctx.quadraticCurveTo(cx, top + cH + bW * 0.16, cx + bW/2, top + cH);
-            ctx.lineTo(cx + cW/2, top + oRy);
+            ctx.moveTo(cx - cW/2, oTop + oRy);
+            ctx.lineTo(cx - bW/2, base);
+            ctx.quadraticCurveTo(cx, base + bW*0.12, cx + bW/2, base);
+            ctx.lineTo(cx + cW/2, oTop + oRy);
             ctx.closePath();
             ctx.fillStyle = bodyGrad;
             ctx.fill();
             ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 
-            // ── Left highlight sheen ─────────────────────────────────────────
-            var sheenGrad = ctx.createLinearGradient(cx - cW/2, top, cx - cW/2 + cW*0.32, top);
-            sheenGrad.addColorStop(0,   "rgba(255,255,255,0.0)");
-            sheenGrad.addColorStop(0.45,"rgba(255,255,255,0.42)");
-            sheenGrad.addColorStop(1,   "rgba(255,255,255,0.0)");
+            var sheenGrad = ctx.createLinearGradient(cx - cW/2, oTop, cx - cW/2 + cW*0.35, oTop);
+            sheenGrad.addColorStop(0,    "rgba(255,255,255,0.0)");
+            sheenGrad.addColorStop(0.45, "rgba(255,255,255,0.40)");
+            sheenGrad.addColorStop(1,    "rgba(255,255,255,0.0)");
             ctx.beginPath();
-            ctx.moveTo(cx - cW/2, top + oRy);
-            ctx.lineTo(cx - bW/2, top + cH);
-            ctx.lineTo(cx - bW/2 + cW*0.30, top + cH);
-            ctx.lineTo(cx - cW/2 + cW*0.30, top + oRy);
+            ctx.moveTo(cx - cW/2, oTop + oRy);
+            ctx.lineTo(cx - bW/2, base);
+            ctx.lineTo(cx - bW/2 + cW*0.28, base);
+            ctx.lineTo(cx - cW/2 + cW*0.28, oTop + oRy);
             ctx.closePath();
             ctx.fillStyle = sheenGrad;
             ctx.fill();
 
-            // ── Coffee surface (dark fill in opening) ────────────────────────
             ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, top + oRy, cW/2, oRy, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, top + oRy, cW/2, 0, Math.PI*2); }
-            var coffeeGrad = ctx.createRadialGradient(cx - cW*0.12, top + oRy*0.4, 2*sc, cx, top + oRy, cW/2);
-            coffeeGrad.addColorStop(0,   "#8b5c30");
-            coffeeGrad.addColorStop(0.5, "#4e2c12");
-            coffeeGrad.addColorStop(1,   "#2b1608");
-            ctx.fillStyle = coffeeGrad;
+            if(ctx.ellipse) { ctx.ellipse(cx, oTop + oRy, cW/2, oRy, 0, 0, Math.PI*2); }
+            else { ctx.arc(cx, oTop + oRy, cW/2, 0, Math.PI*2); }
+            var coff = ctx.createRadialGradient(cx - cW*0.1, oTop + oRy*0.4, 2, cx, oTop + oRy, cW/2);
+            coff.addColorStop(0,   "#8b5c30");
+            coff.addColorStop(0.5, "#4e2c12");
+            coff.addColorStop(1,   "#2a1608");
+            ctx.fillStyle = coff;
             ctx.fill();
-            // Foam ring
+
             ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, top + oRy, cW/2*0.70, oRy*0.65, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, top + oRy, cW/2*0.70, 0, Math.PI*2); }
-            ctx.strokeStyle = "rgba(215,182,138,0.5)";
-            ctx.lineWidth = 2.5 * sc;
+            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, cW/2*0.68, oRy*0.62, 0, 0, Math.PI*2); }
+            else { ctx.arc(cx, oTop+oRy, cW/2*0.68, 0, Math.PI*2); }
+            ctx.strokeStyle = "rgba(210,178,135,0.5)";
+            ctx.lineWidth = 2 * sc;
             ctx.stroke();
 
-            // ── Moyee branding ───────────────────────────────────────────────
-            var logoY = top + cH * 0.44;
+            var midY = oTop + cH * 0.52;
             ctx.fillStyle = "#3a7d44";
-            ctx.font = "bold " + Math.round(11*sc) + "px Montserrat,Arial,sans-serif";
+            ctx.font = "bold " + Math.round(10*sc) + "px Montserrat,Arial,sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.shadowColor = "rgba(0,0,0,0.25)"; ctx.shadowBlur = 3;
-            ctx.fillText("Moyee", cx, logoY);
+            ctx.shadowColor = "rgba(0,0,0,0.2)"; ctx.shadowBlur = 2;
+            ctx.fillText("Moyee", cx, midY);
             ctx.shadowBlur = 0;
             var tw = ctx.measureText("Moyee").width;
             ctx.strokeStyle = "#3a7d44"; ctx.lineWidth = 1.2*sc;
-            ctx.beginPath(); ctx.moveTo(cx - tw/2, logoY + 7*sc); ctx.lineTo(cx + tw/2, logoY + 7*sc); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx-tw/2, midY+6*sc); ctx.lineTo(cx+tw/2, midY+6*sc); ctx.stroke();
 
-            // Small coffee cup icon below text
-            ctx.fillStyle = "rgba(58,125,68,0.55)";
-            ctx.font = Math.round(8*sc) + "px sans-serif";
-            ctx.fillText("☕", cx, logoY + 17*sc);
-
-            // ── Handle ───────────────────────────────────────────────────────
             var hx   = cx + cW/2 - 2*sc;
-            var htop = top + cH * 0.20;
-            var hbot = top + cH * 0.65;
-            var hext = hx + cW * 0.27;
+            var htop = oTop + cH * 0.22;
+            var hbot = oTop + cH * 0.68;
+            var hext = hx + cW * 0.26;
             ctx.beginPath();
             ctx.moveTo(hx, htop);
-            ctx.bezierCurveTo(hext+6*sc, htop, hext+6*sc, hbot, hx, hbot);
-            ctx.strokeStyle = "#bfb6a6";
-            ctx.lineWidth = 6 * sc;
+            ctx.bezierCurveTo(hext+5*sc, htop, hext+5*sc, hbot, hx, hbot);
+            ctx.strokeStyle = "#bfb6a5";
+            ctx.lineWidth = 5.5 * sc;
             ctx.lineJoin = "round"; ctx.lineCap = "round";
             ctx.stroke();
-            // Handle sheen
             ctx.beginPath();
-            ctx.moveTo(hx+1*sc, htop+5*sc);
-            ctx.bezierCurveTo(hext+1*sc, htop+5*sc, hext+1*sc, hbot-5*sc, hx+1*sc, hbot-5*sc);
-            ctx.strokeStyle = "rgba(255,255,255,0.32)";
+            ctx.moveTo(hx+1*sc, htop+4*sc);
+            ctx.bezierCurveTo(hext, htop+4*sc, hext, hbot-4*sc, hx+1*sc, hbot-4*sc);
+            ctx.strokeStyle = "rgba(255,255,255,0.28)";
             ctx.lineWidth = 2*sc;
             ctx.stroke();
 
-            // ── Cup rim ellipse ──────────────────────────────────────────────
             ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, top + oRy, cW/2, oRy, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, top + oRy, cW/2, 0, Math.PI*2); }
-            ctx.strokeStyle = "#b0a898"; ctx.lineWidth = 2.5*sc; ctx.stroke();
+            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, cW/2, oRy, 0, 0, Math.PI*2); }
+            else { ctx.arc(cx, oTop+oRy, cW/2, 0, Math.PI*2); }
+            ctx.strokeStyle = "#aca39a"; ctx.lineWidth = 2.5*sc; ctx.stroke();
 
-            // ── Steam wisps ──────────────────────────────────────────────────
             ctx.lineCap = "round";
             for(var si = -1; si <= 1; si++) {
-                var sx = cx + si * cW * 0.22;
-                var ph = st + si * 1.15;
-                var sa = 0.25 + 0.18 * Math.sin(st * 1.4 + si);
+                var sx = cx + si * cW * 0.20;
+                var ph = st + si * 1.1;
+                var sa = 0.22 + 0.15*Math.sin(st*1.3 + si);
                 ctx.beginPath();
-                ctx.moveTo(sx, top - 2*sc);
+                ctx.moveTo(sx, oTop - 1*sc);
                 ctx.bezierCurveTo(
-                    sx + 9*sc*Math.sin(ph),      top - 14*sc,
-                    sx - 9*sc*Math.sin(ph+1.0),  top - 26*sc,
-                    sx + 5*sc*Math.sin(ph+2.0),  top - 36*sc
+                    sx + 7*sc*Math.sin(ph),     oTop - 11*sc,
+                    sx - 7*sc*Math.sin(ph+1.0), oTop - 22*sc,
+                    sx + 4*sc*Math.sin(ph+2.0), oTop - 30*sc
                 );
                 ctx.strokeStyle = "rgba(255,255,255," + sa + ")";
-                ctx.lineWidth = 2*sc;
+                ctx.lineWidth = 1.8*sc;
                 ctx.stroke();
             }
 
-            // ── AIM reticle (on cup opening) ─────────────────────────────────
             var pulse = 1 + 0.08 * Math.sin(st);
             var rx = (cW / 5.5) * pulse;
-            var ry = oRy * 0.72 * pulse;
+            var ry = oRy * 0.70 * pulse;
 
             ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, top+oRy, rx, ry, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, top+oRy, rx, 0, Math.PI*2); }
+            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, rx, ry, 0, 0, Math.PI*2); }
+            else { ctx.arc(cx, oTop+oRy, rx, 0, Math.PI*2); }
             ctx.strokeStyle = "rgba(255,50,50,0.95)"; ctx.lineWidth = 2*sc;
-            ctx.shadowColor = "#ff3232"; ctx.shadowBlur = 8;
+            ctx.shadowColor = "#ff3232"; ctx.shadowBlur = 7;
             ctx.stroke();
 
             ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, top+oRy, rx*0.45, ry*0.45, 0, 0, Math.PI*2); }
-            else { ctx.arc(cx, top+oRy, rx*0.45, 0, Math.PI*2); }
+            if(ctx.ellipse) { ctx.ellipse(cx, oTop+oRy, rx*0.44, ry*0.44, 0, 0, Math.PI*2); }
+            else { ctx.arc(cx, oTop+oRy, rx*0.44, 0, Math.PI*2); }
             ctx.strokeStyle = "rgba(255,220,0,0.95)"; ctx.lineWidth = 1.5*sc;
             ctx.shadowColor = "#ffdc00"; ctx.shadowBlur = 5;
             ctx.stroke();
 
             ctx.shadowBlur = 0;
-            ctx.strokeStyle = "rgba(255,255,255,0.75)"; ctx.lineWidth = sc;
-            ctx.beginPath(); ctx.moveTo(cx-rx*0.4, top+oRy); ctx.lineTo(cx+rx*0.4, top+oRy); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(cx, top+oRy-ry*1.2); ctx.lineTo(cx, top+oRy+ry*1.2); ctx.stroke();
+            ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.lineWidth = sc;
+            ctx.beginPath(); ctx.moveTo(cx-rx*0.4, oTop+oRy); ctx.lineTo(cx+rx*0.4, oTop+oRy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, oTop+oRy-ry*1.2); ctx.lineTo(cx, oTop+oRy+ry*1.2); ctx.stroke();
 
             ctx.shadowColor = "#000"; ctx.shadowBlur = 4;
             ctx.fillStyle = "#ffdc00";
@@ -2032,11 +2018,11 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
             this.fan = { kill: function() {} }; // fan hidden - wind still active
         }, spawnBin: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 } switch (b) {
-                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 178, 158, {}); break;
-                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 218, 162, {}); break;
-                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 234, 152, {}); break;
-                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 267, 148, {}); break;
-                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 203, 160, {})
+                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 113, {}); break;
+                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 118, {}); break;
+                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 108, {}); break;
+                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 103, {}); break;
+                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 116, {})
             }
         }, spawnObject: function () { if (this.spawnobj) { try { ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) } catch (b) { } this.spawnobj = !1 } else this.obj = ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) }
     })
