@@ -1528,18 +1528,27 @@ ig.module("game.entities.ingame-fan").requires("impact.entity", "plugins.directo
 }); ig.baked = !0;
 ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.director").defines(function () {
     EntityIngameBin = ig.Entity.extend({
-        zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin", init: function (b, c, d) {
+        zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin",
+        cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
+        init: function (b, c, d) {
             try { var g = ig.game.director.currentLevel } catch (l) { g = 0 } switch (g) {
-                case 3: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 64; this.size.y = 81; this.addAnim("idle", 0.2, [0]); break;
-                case 4: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 51; this.size.y = 57; this.offset.y = 6; this.addAnim("idle", 0.2, [0]); break;
-                case 5: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 54; this.size.y = 66; this.offset.x = 10; this.addAnim("idle", 0.2, [0]); break;
-                case 6: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 46; this.size.y = 57; this.addAnim("idle", 0.2, [0]); break;
-                case 7: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 30; this.size.y = 41; this.addAnim("idle", 0.2, [0]); this.offset.x = 15; break;
-                default: this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80); this.size.x = 64; this.size.y = 81; this.addAnim("idle", 0.2, [0]);
+                case 3: this.size.x = 64; this.size.y = 81; break;
+                case 4: this.size.x = 51; this.size.y = 57; break;
+                case 5: this.size.x = 54; this.size.y = 66; break;
+                case 6: this.size.x = 46; this.size.y = 57; break;
+                case 7: this.size.x = 30; this.size.y = 41; break;
+                default: this.size.x = 64; this.size.y = 81;
             }this.parent(b, c, d)
         }, update: function () { this.parent() }, clicked: function () { },
         draw: function () {
-            this.parent();
+            if (this.cupImg && this.cupImg.data) {
+                var ctx = ig.system.context;
+                var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
+                var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
+                var w = this.size.x * ig.system.scale;
+                var h = this.size.y * ig.system.scale;
+                ctx.drawImage(this.cupImg.data, x, y, w, h);
+            }
         },
     })
 }); ig.baked = !0;
