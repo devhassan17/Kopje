@@ -1529,8 +1529,8 @@ ig.module("game.entities.ingame-fan").requires("impact.entity", "plugins.directo
 ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.director").defines(function () {
     EntityIngameBin = ig.Entity.extend({
         zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin", init: function (b, c, d) {
-            // Use unified size for all levels - large enough to see clearly
-            this.size.x = 90; this.size.y = 108;
+            // Cup size: proportional to scene (was 90x108 - too large)
+            this.size.x = 54; this.size.y = 68;
             // Dummy animSheet to prevent engine errors
             try { this.animSheet = new ig.AnimationSheet("media/graphics/game/ingame/bin.png", 64, 81); this.addAnim("idle", 1, [0]); } catch(e) {}
             this.parent(b, c, d)
@@ -2032,11 +2032,11 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
             this.fan = { kill: function() {} }; // fan hidden - wind still active
         }, spawnBin: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 } switch (b) {
-                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 113, {}); break;
-                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 118, {}); break;
-                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 108, {}); break;
-                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 103, {}); break;
-                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 116, {})
+                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 178, 158, {}); break;
+                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 218, 162, {}); break;
+                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 234, 152, {}); break;
+                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 267, 148, {}); break;
+                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 203, 160, {})
             }
         }, spawnObject: function () { if (this.spawnobj) { try { ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) } catch (b) { } this.spawnobj = !1 } else this.obj = ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) }
     })
