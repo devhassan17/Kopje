@@ -1532,20 +1532,24 @@ ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.directo
         zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin",
         init: function (b, c, d) {
             try { var g = ig.game.director.currentLevel } catch (l) { g = 0 } switch (g) {
-                case 3: this.size.x = 64; this.size.y = 81; break;
-                case 4: this.size.x = 51; this.size.y = 57; this.offset.y = 6; break;
-                case 5: this.size.x = 54; this.size.y = 66; this.offset.x = 10; break;
-                case 6: this.size.x = 46; this.size.y = 57; break;
-                case 7: this.size.x = 30; this.size.y = 41; this.offset.x = 15; break;
-                default: this.size.x = 64; this.size.y = 81;
-            }this.parent(b, c, d)
+                case 3: this.size.x = 64; break;
+                case 4: this.size.x = 51; break;
+                case 5: this.size.x = 54; break;
+                case 6: this.size.x = 46; break;
+                case 7: this.size.x = 30; break;
+                default: this.size.x = 64;
+            }
+            this.size.y = 30; // Thicker hitbox
+            this.size.y = 30;
+            this.parent(b, c, d)
         }, update: function () { this._pulseTimer = (this._pulseTimer || 0) + 0.05; this.parent() }, clicked: function () { },
         draw: function () {
             this.parent();
             var ctx = ig.system.context;
-
-            var cx = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
-            var cy = ig.system.getDrawPos(this.pos.y + 25 - ig.game.screen.y);
+            var cx = this.pos.x + this.size.x / 2;
+            var cy = this.pos.y + 15;
+            cx = ig.system.getDrawPos(cx - ig.game.screen.x);
+            cy = ig.system.getDrawPos(cy - ig.game.screen.y);
             var pulse = 1 + 0.15 * Math.sin(this._pulseTimer || 0);
             var rx = (this.size.x / 4) * pulse;
             var ry = 6 * pulse;
@@ -1592,8 +1596,9 @@ ig.module("game.entities.paper-ball").requires("impact.entity", "plugins.directo
             0 != this.vel.y && (this.currentAnim.angle += Math.PI / 9 * (this.vel.x / 500)); this.enableResize && 0 > this.resizeTimer.delta() &&
                 (this.sst *= this.imgscale, this.setScale(this.sst, this.sst)); this.startkillcenter && (this.isBroken = !1); 0 < this.windStartTimer.delta() && (0 < this.windUp ? (this.vel.x += 5, this.windUp -= 5, 0 > this.windUp && (this.windUp = 0)) : 0 > this.windUp && (this.vel.x -= 5, this.windUp += 5, 0 < this.windUp && (this.windUp = 0))); (this.startkill || this.outRange()) && 0 < this.killTimer.delta() && this.kill(); 7 == ig.game.director.currentLevel && 50 > this.pos.x && 50 < this.vel.y && (this.vel.x = 200); this.parent()
         }, check: function (b) {
+            if ("bin" == b.name && this.pos.y > b.pos.y + 20) return;
             "bin" ==
-                b.name ? this.pos.x + this.size.x / 2 > b.pos.x + b.size.x * 0.35 && this.pos.x + this.size.x / 2 < b.pos.x + b.size.x * 0.65 ? (this.vel.x = 0, this.isBroken = !1, ig.global.isScore = !0, this.startkillcenter || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hitIn), this.startkill = this.startkillcenter = !0, this.killTimer.set(0.08), this.showNote = !0)) : this.pos.x + this.size.x / 2 < b.pos.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = -50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : this.pos.x + this.size.x / 2 > b.pos.x + b.size.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = 50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : (this.pos.x + this.size.x / 2 < b.pos.x + b.size.x && this.pos.x + this.size.x / 2 > b.pos.x + b.size.x / 2 ? (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = -b.size.x / 3) : (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = b.size.x / 2), this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit),
+                b.name ? this.pos.x + this.size.x / 2 > b.pos.x + b.size.x * 0.40 && this.pos.x + this.size.x / 2 < b.pos.x + b.size.x * 0.60 ? (this.vel.x = 0, this.vel.y = 0, this.isBroken = !1, ig.global.isScore = !0, this.startkillcenter || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hitIn), this.startkill = this.startkillcenter = !0, this.killTimer.set(0.08), this.showNote = !0)) : this.pos.x + this.size.x / 2 < b.pos.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = -50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : this.pos.x + this.size.x / 2 > b.pos.x + b.size.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = 50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : (this.pos.x + this.size.x / 2 < b.pos.x + b.size.x && this.pos.x + this.size.x / 2 > b.pos.x + b.size.x / 2 ? (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = -b.size.x / 3) : (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = b.size.x / 2), this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit),
                     this.startkill = !0, this.killTimer.set(0.9))) : "floor" == b.name && (this.isBroken = !0, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.paper), this.startkill = !0, this.killTimer.set(1.0)), this.vel.x = 0)
         }, clicked: function () { }, outRange: function () { if (0 > this.pos.x || this.pos.x > ig.system.width) { this.getCompSound(); if (!this.startkill) { this.isBroken = !0; this.startkill = !0; this.killTimer.set(0.8); } return !0; } return !1; }, getCompSound: function () {
             this.getComp = Math.floor(5 * Math.random()) + 2; switch (this.getComp) {
@@ -1892,7 +1897,30 @@ ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugin
     })
 });
 ig.baked = !0;
-ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.director").defines(function () {
+ig.module("game.entities.landed-cup").requires("impact.entity").defines(function () {
+    EntityLandedCup = ig.Entity.extend({
+        size: { x: 30, y: 40 }, 
+        type: ig.Entity.TYPE.NONE,
+        collides: ig.Entity.COLLIDES.NEVER,
+        cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
+        init: function (b, c, d) {
+            this.parent(b, c, d);
+            this.zIndex = 11000;
+        },
+        draw: function () {
+            if (this.cupImg && this.cupImg.data) {
+                var ctx = ig.system.context;
+                var cx_img = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
+                var cy_img = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
+                var w_img = this.size.x * ig.system.scale;
+                var h_img = this.size.y * ig.system.scale;
+                ctx.drawImage(this.cupImg.data, cx_img, cy_img, w_img, h_img);
+            }
+        }
+    })
+}); ig.baked = !0;
+
+ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.director", "game.entities.landed-cup").defines(function () {
     EntitySpawnUnit = ig.Entity.extend({
         size: { x: 20, y: 20 }, offset: { x: 0, y: 0 }, windDirection: 0, spawnobj: !0, scoreNote: !1, testCount: 0, init: function (b, c, d) {
             this.parent(b, c, d); ig.global.spawnBall = !1; this.spawnBall(); this.spawnFan(); this.spawnObject(); this.spawnArrow(); ig.global.hitside = !1; this.spawnFloor(); ig.global.score = 0; ig.global.isScore = !1; ig.global.finishShoot = !0; this.miniSpawnPause = new ig.Timer; this.miniPause =
@@ -1902,7 +1930,17 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 ig.input.pressed("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1)); ig.global.spawnBall && (this.getScore(), ig.global.killByNote && (this.scoreNote = !0), ig.global.killByNote || (this.obj && this.obj.kill(), this.spawnBall(), this.fan.kill(), this.spawnFan(), ig.global.spawnBall = !1, ig.global.finishShoot = !0, this.miniPause.set(0.2), this.arrow.kill(), this.spawnArrow(), this.scoreNote ? null : (this.bin && this.bin.kill(), this.spawnBin()), this.scoreNote = !1)); ig.global.spawnBin && (ig.global.spawnBin = !1); this.parent()
         }, clicked: function () { }, getScore: function () {
             if (ig.global.isScore) {
-                ig.global.score += 1; ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
+                ig.global.score += 1; 
+                
+                var scoreIdx = ig.global.score - 1;
+                var offsetMultiplier = Math.ceil(scoreIdx / 2) * (scoreIdx % 2 === 0 ? -1 : 1);
+                if (scoreIdx === 0) offsetMultiplier = 0;
+                var xOffset = offsetMultiplier * 16;
+                ig.game.spawnEntity(EntityLandedCup, this.bin.pos.x + (this.bin.size.x * 0.2) + xOffset, this.bin.pos.y - 15, {
+                    size: { x: this.bin.size.x * 0.6, y: 50 }
+                });
+
+                ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
                     localStorage.local_storage_test = !0, 3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? ig.global.score >= this.storage.get("paper-flick-easy-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap),
                         this.storage.setHighest("paper-flick-easy-highscore", ig.global.score)) : 5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? ig.global.score >= this.storage.get("paper-flick-normal-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap), this.storage.setHighest("paper-flick-normal-highscore", ig.global.score)) : 7 == ig.game.director.currentLevel && ig.global.score >= this.storage.get("paper-flick-hard-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap), this.storage.setHighest("paper-flick-hard-highscore",
                             ig.global.score))
@@ -1917,7 +1955,14 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 } catch (c) {
                     3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreEasy && 0 != ig.global.highscoreEasy && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) :
                         5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreNormal && 0 != ig.global.highscoreNormal && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) : 7 == ig.game.director.currentLevel && 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreHard && 0 != ig.global.highscoreHard && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww)
-                } if (ig.global.score > 0) { window.showScoreModal(ig.global.score); } ig.global.score = 0
+                } if (ig.global.score > 0) { window.showScoreModal(ig.global.score); } ig.global.score = 0;
+                
+                var landedCups = ig.game.getEntitiesByType(EntityLandedCup);
+                if (landedCups) {
+                    for(var i=0; i<landedCups.length; i++) {
+                        landedCups[i].kill();
+                    }
+                }
             }
         }, spawnFloor: function () {
             try {
@@ -1929,22 +1974,22 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 var b =
                     ig.game.director.currentLevel
             } catch (c) { b = 0 } var d = ig.global.windrate; ig.soundHandler.playSound(ig.soundHandler.SOUNDID.threw); switch (b) {
-                case 3: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.994; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(3); break; case 4: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.993; this.ball.enableResize = !0; this.ball.gravityFactor =
-                    1; this.ball.resizeTimer.set(3); break; case 5: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.992; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 6: this.ball.windUp = this.windUp; this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.991; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 7: this.ball.windUp =
-                        this.windUp, this.ball.vel.x = d, this.ball.vel.y = -700, this.ball.accel.y = 0, this.ball.imgscale = 0.990, this.ball.enableResize = !0, this.ball.gravityFactor = 1, this.ball.resizeTimer.set(2.5)
+                case 3: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.993; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(3); break; case 4: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.992; this.ball.enableResize = !0; this.ball.gravityFactor =
+                    1; this.ball.resizeTimer.set(3); break; case 5: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.991; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 6: this.ball.windUp = this.windUp; this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.990; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 7: this.ball.windUp =
+                        this.windUp, this.ball.vel.x = d, this.ball.vel.y = -700, this.ball.accel.y = 0, this.ball.imgscale = 0.988, this.ball.enableResize = !0, this.ball.gravityFactor = 1, this.ball.resizeTimer.set(2.5)
             }
         }, spawnArrow: function () { try { this.arrow = ig.game.spawnEntity(EntityArrow, 194, 426, {}), this.arrow.windDirection = this.windDirection } catch (b) { } }, spawnFan: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 }
             this.windDirection = Math.floor(2 * Math.random() + 1);
-            this.windUp = Math.floor(451 * Math.random()) + 50; ig.global.windValue = this.windUp; 2 == this.windDirection && (this.windUp = -this.windUp, this.windUp *= 0.8);
+            this.windUp = Math.floor(800 * Math.random()) + 200; ig.global.windValue = this.windUp; 2 == this.windDirection && (this.windUp = -this.windUp, this.windUp *= 0.8);
             this.fan = { kill: function () { } }; // fan hidden - wind still active
         }, spawnBin: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 } switch (b) {
-                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 113, {}); break;
-                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 118, {}); break;
-                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 108, {}); break;
-                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 103, {}); break;
-                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 116, {})
+                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 123, {}); break;
+                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 128, {}); break;
+                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 118, {}); break;
+                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 113, {}); break;
+                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 126, {})
             }
         }, spawnObject: function () { if (this.spawnobj) { try { ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) } catch (b) { } this.spawnobj = !1 } else this.obj = ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) }
     })
