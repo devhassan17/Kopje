@@ -1349,7 +1349,8 @@ ig.module("impact.game").requires("impact.impact", "impact.entity", "impact.coll
 }); ig.baked = !0;
 ig.module("plugins.splash-loader").requires("impact.loader", "impact.animation").defines(function () {
     ig.SplashLoader = ig.Loader.extend({
-        splashDesktop: new ig.Image("media/graphics/splash/desktop/cover.jpg"), splashMobile: new ig.Image("media/graphics/splash/mobile/cover.jpg"), init: function (b, c) { this.parent(b, c); var b = 0 <= document.URL.indexOf("localhost") ? 500 : 3E3; window.setTimeout("ig.system.setGame(MyGame)",
+        splashDesktop: new ig.Image("media/graphics/splash/desktop/cover.jpg"), splashMobile: new ig.Image("media/graphics/splash/mobile/cover.jpg"), init: function (b, c) {
+            this.parent(b, c); var b = 0 <= document.URL.indexOf("localhost") ? 500 : 3E3; window.setTimeout("ig.system.setGame(MyGame)",
                 b)
         }, setupCustomAnimation: function () { this.customAnim = new ig.Animation(this.customAnim, 0.05, [0, 1, 2, 3, 4, 5]); this.customAnim.currentFrame = 0; ig.loadingScreen = this; ig.loadingScreen.animationTimer = window.setInterval("ig.loadingScreen.animate()", 100) }, animate: function () { this.customAnim.currentFrame < this.customAnim.sequence.length ? this.customAnim.currentFrame++ : this.customAnim.currentFrame = 0; this.customAnim.gotoFrame(this.customAnim.currentFrame) }, draw: function () {
             this._drawStatus += (this.status - this._drawStatus) / 5; ig.system.context.fillStyle = "#000"; ig.system.context.fillRect(0, 0, ig.system.width, ig.system.height); var b = ig.system.scale, c, d, g, l; c = 239; d = 27; g = 0.5 * ig.system.width - c / 2; l = 520; var splash = ig.ua.mobile ? this.splashMobile : this.splashDesktop; if (ig.ua.mobile && (!splash.loaded || splash.failed) && this.splashDesktop.loaded) splash = this.splashDesktop; splash.loaded && splash.draw(0, 0); ig.system.context.fillStyle = "#ffffff"; ig.system.context.fillRect(g * b, l * b, c * b, d * b); ig.system.context.fillStyle = "#000000"; ig.system.context.fillRect(g * b + 2, l * b + 2, Math.max(0, c * b * this._drawStatus - 4), d * b - 4); ig.system.context.fillStyle = "#ffffff"; ig.system.context.font = "normal 18pt sassy"; c = _STRINGS.Splash.Loading; d = ig.system.width / 2 - ig.system.context.measureText(c).width / 2; ig.system.context.fillText(c, d, l * b + 20 - 1.2); ig.system.context.font = "bold 14px Arial"; ig.system.context.fillStyle = "#000000"; c = _STRINGS.Splash.LogoLine1; ig.system.context.measureText(c); ig.system.context.font = "bold 12px Arial"; c = _STRINGS.Splash.LogoLine2; ig.system.context.measureText(c); ig.system.context.font = "bold 12px Arial"
@@ -1523,59 +1524,55 @@ ig.module("game.entities.ingame-fan").requires("impact.entity", "plugins.directo
         size: { x: 88.5, y: 95 }, offset: { x: 0, y: 0 }, zIndex: 15E3, animSheet: new ig.AnimationSheet("media/graphics/game/ingame/fan.png", 88.5, 95), init: function (b, c, d) { this.addAnim("left", 0.02, [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]); this.addAnim("right", 0.02, [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25]); this.parent(b, c, d) }, update: function () {
             this.currentAnim = "left" == this.side ? this.anims.left : this.anims.right;
             this.parent()
-        }, clicked: function () { console.log("I'm a fan") }, 
+        }, clicked: function () { console.log("I'm a fan") },
     })
 }); ig.baked = !0;
 ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.director").defines(function () {
     EntityIngameBin = ig.Entity.extend({
-        zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin", 
+        zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin",
         init: function (b, c, d) {
             try { var g = ig.game.director.currentLevel } catch (l) { g = 0 } switch (g) {
-                case 3: this.size.x = 64; break;
-                case 4: this.size.x = 51; break;
-                case 5: this.size.x = 54; break;
-                case 6: this.size.x = 46; break;
-                case 7: this.size.x = 30; break;
-                default: this.size.x = 64;
-            }
-            this.size.y = 30; // Thicker hitbox to prevent 'skipping' at high speeds
-            this.parent(b, c, d)
+                case 3: this.size.x = 64; this.size.y = 81; break;
+                case 4: this.size.x = 51; this.size.y = 57; this.offset.y = 6; break;
+                case 5: this.size.x = 54; this.size.y = 66; this.offset.x = 10; break;
+                case 6: this.size.x = 46; this.size.y = 57; break;
+                case 7: this.size.x = 30; this.size.y = 41; this.offset.x = 15; break;
+                default: this.size.x = 64; this.size.y = 81;
+            }this.parent(b, c, d)
         }, update: function () { this._pulseTimer = (this._pulseTimer || 0) + 0.05; this.parent() }, clicked: function () { },
         draw: function () {
             this.parent();
             var ctx = ig.system.context;
-            
-            var cx = this.pos.x + this.size.x / 2;
-            var cy = this.pos.y + 15; // Centered in the 30px hitbox
-            cx = ig.system.getDrawPos(cx - ig.game.screen.x);
-            cy = ig.system.getDrawPos(cy - ig.game.screen.y);
+
+            var cx = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
+            var cy = ig.system.getDrawPos(this.pos.y + 25 - ig.game.screen.y);
             var pulse = 1 + 0.15 * Math.sin(this._pulseTimer || 0);
             var rx = (this.size.x / 4) * pulse;
             var ry = 6 * pulse;
-            
+
             ctx.save();
             ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx, 0, Math.PI * 2); }
+            if (ctx.ellipse) { ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx, 0, Math.PI * 2); }
             ctx.strokeStyle = "rgba(255, 50, 50, 0.9)";
             ctx.lineWidth = 3;
             ctx.shadowColor = "#ff3232";
             ctx.shadowBlur = 12;
             ctx.stroke();
-            
+
             ctx.beginPath();
-            if(ctx.ellipse) { ctx.ellipse(cx, cy, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx * 0.7, 0, Math.PI * 2); }
+            if (ctx.ellipse) { ctx.ellipse(cx, cy, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2); } else { ctx.arc(cx, cy, rx * 0.7, 0, Math.PI * 2); }
             ctx.strokeStyle = "rgba(255, 220, 0, 0.85)";
             ctx.lineWidth = 2;
             ctx.shadowColor = "#ffdc00";
             ctx.shadowBlur = 8;
             ctx.stroke();
-            
+
             ctx.shadowBlur = 0;
             ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
             ctx.lineWidth = 1.5;
             ctx.beginPath(); ctx.moveTo(cx - rx, cy); ctx.lineTo(cx + rx, cy); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(cx, cy - ry*1.5); ctx.lineTo(cx, cy + ry*1.5); ctx.stroke();
-            
+            ctx.beginPath(); ctx.moveTo(cx, cy - ry * 1.5); ctx.lineTo(cx, cy + ry * 1.5); ctx.stroke();
+
             ctx.shadowColor = "#000"; ctx.shadowBlur = 6;
             ctx.fillStyle = "#ffdc00";
             ctx.font = "bold 12px Montserrat, sans-serif";
@@ -1588,56 +1585,55 @@ ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.directo
 ig.module("game.entities.paper-ball").requires("impact.entity", "plugins.director").defines(function () {
     EntityPaperBall = ig.Entity.extend({
         size: { x: 80, y: 80 }, offset: { x: 0, y: 0 }, type: ig.Entity.TYPE.B, checkAgainst: ig.Entity.TYPE.A, gravityFactor: 0, maxVel: { x: 1E3, y: 1E3 }, bounciness: 0.3, collides: ig.Entity.COLLIDES.ACTIVE, scale: { x: 1, y: 1 }, _offset: { x: 0, y: 0 }, _scale: { x: 1, y: 1 }, _size: { x: 0, y: 0 }, windUp: 0, imgscale: 0.985, enableResize: !1, startkill: !1, startkillcenter: !1, zIndex: 1E3, spawnBin: !1, enableResize: !1, showNote: !1, isBroken: !1,
-            animSheet: new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80),
-            cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
-            brokenImg: new ig.Image("media/graphics/game/ingame/moyee_cup_broken.png"),
-            getComp: 0, sst: 1, init: function (b, c, d) { this.addAnim("idle", 0.2, [0]); ig.global.hitside = !1; this.parent(b, c, d); this._offset.x = this.offset.x; this._offset.y = this.offset.y; this._size.x = this.size.x; this._size.y = this.size.y; this.setScale(this.scale.x, this.scale.y); this.resizeTimer = new ig.Timer; this.windStartTimer = new ig.Timer(0.3); this.killTimer = new ig.Timer; ig.global.killByNote = !1 }, update: function () {
-                0 != this.vel.y && (this.currentAnim.angle += Math.PI / 9 * (this.vel.x / 500)); this.enableResize && 0 > this.resizeTimer.delta() &&
-                    (this.sst *= this.imgscale, this.setScale(this.sst, this.sst)); this.startkillcenter && (this.isBroken = !1); 0 < this.windStartTimer.delta() && (0 < this.windUp ? (this.vel.x += 5, this.windUp -= 5, 0 > this.windUp && (this.windUp = 0)) : 0 > this.windUp && (this.vel.x -= 5, this.windUp += 5, 0 < this.windUp && (this.windUp = 0))); (this.startkill || this.outRange()) && 0 < this.killTimer.delta() && this.kill(); 7 == ig.game.director.currentLevel && 50 > this.pos.x && 50 < this.vel.y && (this.vel.x = 200); this.parent()
-            }, check: function (b) {
-                if ("bin" == b.name && this.pos.y > b.pos.y + 20) return; // Only collide at the very top of the cup
-                "bin" ==
-                    b.name ? this.pos.x + this.size.x / 2 > b.pos.x + b.size.x * 0.40 && this.pos.x + this.size.x / 2 < b.pos.x + b.size.x * 0.60 ? (this.vel.x = 0, this.vel.y = 0, this.isBroken = !1, ig.global.isScore = !0, this.startkillcenter || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hitIn), this.startkill = this.startkillcenter = !0, this.killTimer.set(0.08), this.showNote = !0)) : this.pos.x + this.size.x / 2 < b.pos.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = -50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : this.pos.x + this.size.x / 2 > b.pos.x + b.size.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = 50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : (this.pos.x + this.size.x / 2 < b.pos.x + b.size.x && this.pos.x + this.size.x / 2 > b.pos.x + b.size.x / 2 ? (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = -b.size.x / 3) : (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = b.size.x / 2), this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit),
-                            this.startkill = !0, this.killTimer.set(0.9))) : "floor" == b.name && (this.isBroken = !0, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.paper), this.startkill = !0, this.killTimer.set(1.0)), this.vel.x = 0)
-            }, clicked: function () { }, outRange: function () { if (0 > this.pos.x || this.pos.x > ig.system.width || 0 > this.pos.y) { this.getCompSound(); if (!this.startkill) { this.isBroken = !0; this.startkill = !0; this.killTimer.set(0.8); } return !0; } return !1; }, getCompSound: function () {
-                this.getComp = Math.floor(5 * Math.random()) + 2; switch (this.getComp) {
-                    case 2: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp2); break; case 3: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp3);
-                        break; case 4: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp4); break; case 5: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp5); break; case 6: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp6)
-                }
-            }, draw: function () {
-                if (this.isBroken && this.brokenImg && this.brokenImg.data) {
-                    var b = ig.system.context; b.save();
-                    b.translate(ig.system.getDrawPos(this.pos.x.round() - this.offset.x - ig.game.screen.x + this.size.x/2), ig.system.getDrawPos(this.pos.y.round() - this.offset.y - ig.game.screen.y + this.size.y/2));
-                    b.scale(this._scale.x, this._scale.y);
-                    b.drawImage(this.brokenImg.data, -50, -50, 100, 100);
-                    b.restore();
-                } else {
-                    var ctx = ig.system.context; ctx.save(); 
-                    ctx.translate(ig.system.getDrawPos(this.pos.x.round() - this.offset.x - ig.game.screen.x), ig.system.getDrawPos(this.pos.y.round() - this.offset.y - ig.game.screen.y)); 
-                    ctx.scale(this._scale.x, this._scale.y); 
-                    
-                    if (this.currentAnim && this.currentAnim.angle !== 0) {
-                        var pivotX = this.size.x / 2;
-                        var pivotY = this.size.y / 2;
-                        ctx.translate(pivotX, pivotY);
-                        ctx.rotate(this.currentAnim.angle);
-                        ctx.translate(-pivotX, -pivotY);
-                    }
-
-                    if (this.cupImg && this.cupImg.data) {
-                        ctx.drawImage(this.cupImg.data, 0, 0, this.size.x, this.size.y);
-                    } else {
-                        this.currentAnim.draw(0, 0);
-                    }
-                    ctx.restore();
-                }
-            }, kill: function () {
-                this.showNote ?
-                    (ig.global.spawnBall = !0, ig.global.killByNote = !0, this.showNote = !1) : ig.global.spawnBall = !0; this.parent()
-            }, setScale: function (b, c) {
-                var d = this.size.x, g = this.size.y; this.scale.x = b || this.scale.x; this.scale.y = c || this.scale.y; this._scale.x = this.scale.x / ig.system.scale; this._scale.y = this.scale.y / ig.system.scale; this.offset.x = this._offset.x * this._scale.x; this.offset.y = this._offset.y * this._scale.y; this.size.x = this._size.x * this._scale.x; this.size.y = this._size.y * this._scale.y; this.pos.x += (d - this.size.x) / 2; this.pos.y +=
-                    (g - this.size.y) / 2
+        animSheet: new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80),
+        cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
+        brokenImg: new ig.Image("media/graphics/game/ingame/moyee_cup_broken.png"),
+        getComp: 0, sst: 1, init: function (b, c, d) { this.addAnim("idle", 0.2, [0]); ig.global.hitside = !1; this.parent(b, c, d); this._offset.x = this.offset.x; this._offset.y = this.offset.y; this._size.x = this.size.x; this._size.y = this.size.y; this.setScale(this.scale.x, this.scale.y); this.resizeTimer = new ig.Timer; this.windStartTimer = new ig.Timer(0.3); this.killTimer = new ig.Timer; ig.global.killByNote = !1 }, update: function () {
+            0 != this.vel.y && (this.currentAnim.angle += Math.PI / 9 * (this.vel.x / 500)); this.enableResize && 0 > this.resizeTimer.delta() &&
+                (this.sst *= this.imgscale, this.setScale(this.sst, this.sst)); this.startkillcenter && (this.isBroken = !1); 0 < this.windStartTimer.delta() && (0 < this.windUp ? (this.vel.x += 5, this.windUp -= 5, 0 > this.windUp && (this.windUp = 0)) : 0 > this.windUp && (this.vel.x -= 5, this.windUp += 5, 0 < this.windUp && (this.windUp = 0))); (this.startkill || this.outRange()) && 0 < this.killTimer.delta() && this.kill(); 7 == ig.game.director.currentLevel && 50 > this.pos.x && 50 < this.vel.y && (this.vel.x = 200); this.parent()
+        }, check: function (b) {
+            "bin" ==
+                b.name ? this.pos.x + this.size.x / 2 > b.pos.x + b.size.x * 0.35 && this.pos.x + this.size.x / 2 < b.pos.x + b.size.x * 0.65 ? (this.vel.x = 0, this.isBroken = !1, ig.global.isScore = !0, this.startkillcenter || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hitIn), this.startkill = this.startkillcenter = !0, this.killTimer.set(0.08), this.showNote = !0)) : this.pos.x + this.size.x / 2 < b.pos.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = -50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : this.pos.x + this.size.x / 2 > b.pos.x + b.size.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = 50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : (this.pos.x + this.size.x / 2 < b.pos.x + b.size.x && this.pos.x + this.size.x / 2 > b.pos.x + b.size.x / 2 ? (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = -b.size.x / 3) : (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = b.size.x / 2), this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit),
+                    this.startkill = !0, this.killTimer.set(0.9))) : "floor" == b.name && (this.isBroken = !0, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.paper), this.startkill = !0, this.killTimer.set(1.0)), this.vel.x = 0)
+        }, clicked: function () { }, outRange: function () { if (0 > this.pos.x || this.pos.x > ig.system.width) { this.getCompSound(); if (!this.startkill) { this.isBroken = !0; this.startkill = !0; this.killTimer.set(0.8); } return !0; } return !1; }, getCompSound: function () {
+            this.getComp = Math.floor(5 * Math.random()) + 2; switch (this.getComp) {
+                case 2: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp2); break; case 3: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp3);
+                    break; case 4: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp4); break; case 5: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp5); break; case 6: ig.soundHandler.playSound(ig.soundHandler.SOUNDID.comp6)
             }
+        }, draw: function () {
+            if (this.isBroken && this.brokenImg && this.brokenImg.data) {
+                var b = ig.system.context; b.save();
+                b.translate(ig.system.getDrawPos(this.pos.x.round() - this.offset.x - ig.game.screen.x + this.size.x / 2), ig.system.getDrawPos(this.pos.y.round() - this.offset.y - ig.game.screen.y + this.size.y / 2));
+                b.scale(this._scale.x, this._scale.y);
+                b.drawImage(this.brokenImg.data, -50, -50, 100, 100);
+                b.restore();
+            } else {
+                var ctx = ig.system.context; ctx.save();
+                ctx.translate(ig.system.getDrawPos(this.pos.x.round() - this.offset.x - ig.game.screen.x), ig.system.getDrawPos(this.pos.y.round() - this.offset.y - ig.game.screen.y));
+                ctx.scale(this._scale.x, this._scale.y);
+
+                if (this.currentAnim && this.currentAnim.angle !== 0) {
+                    var pivotX = this.size.x / 2;
+                    var pivotY = this.size.y / 2;
+                    ctx.translate(pivotX, pivotY);
+                    ctx.rotate(this.currentAnim.angle);
+                    ctx.translate(-pivotX, -pivotY);
+                }
+
+                if (this.cupImg && this.cupImg.data) {
+                    ctx.drawImage(this.cupImg.data, 0, 0, this.size.x, this.size.y);
+                } else {
+                    this.currentAnim.draw(0, 0);
+                }
+                ctx.restore();
+            }
+        }, kill: function () {
+            this.showNote ?
+                (ig.global.spawnBall = !0, ig.global.killByNote = !0, this.showNote = !1) : ig.global.spawnBall = !0; this.parent()
+        }, setScale: function (b, c) {
+            var d = this.size.x, g = this.size.y; this.scale.x = b || this.scale.x; this.scale.y = c || this.scale.y; this._scale.x = this.scale.x / ig.system.scale; this._scale.y = this.scale.y / ig.system.scale; this.offset.x = this._offset.x * this._scale.x; this.offset.y = this._offset.y * this._scale.y; this.size.x = this._size.x * this._scale.x; this.size.y = this._size.y * this._scale.y; this.pos.x += (d - this.size.x) / 2; this.pos.y +=
+                (g - this.size.y) / 2
+        }
     })
 }); ig.baked = !0;
 ig.module("game.entities.arrow").requires("impact.entity", "plugins.director").defines(function () {
@@ -1716,11 +1712,12 @@ ig.module("game.entities.select").requires("impact.entity").defines(function () 
             }
     })
 }); ig.baked = !0; ig.module("game.levels.opening").requires("impact.image", "game.entities.opening-kitty").defines(function () { LevelOpening = { entities: [{ type: "EntityOpeningKitty", x: 520, y: 212 }], layer: [] } }); ig.baked = !0;
-ig.module("game.entities.button-easy").requires("impact.entity", "plugins.director").defines(function () { EntityButtonEasy = ig.Entity.extend({ size: { x: 200, y: 60 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); var grad = ctx.createLinearGradient(x, y, x, y+h); grad.addColorStop(0, "#ff69b4"); grad.addColorStop(1, "#c2185b"); ctx.shadowBlur = 20; ctx.shadowColor = "rgba(255, 20, 147, 0.6)"; ctx.fillStyle = grad; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 18); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = "rgba(255,255,255,0.4)"; ctx.lineWidth = 2; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x+1, y+1, w-2, h-2, 17); } else { ctx.rect(x+1, y+1, w-2, h-2); } ctx.stroke(); ctx.fillStyle = "white"; ctx.font = "bold 18px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.shadowColor = "rgba(0,0,0,0.3)"; ctx.shadowBlur = 4; ctx.fillText("☕  SPEEL!", x + w/2, y + h/2); ctx.shadowBlur = 0; }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevel01); } }); }); ig.baked = !0;
+ig.module("game.entities.button-easy").requires("impact.entity", "plugins.director").defines(function () { EntityButtonEasy = ig.Entity.extend({ size: { x: 200, y: 60 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); var grad = ctx.createLinearGradient(x, y, x, y + h); grad.addColorStop(0, "#ff69b4"); grad.addColorStop(1, "#c2185b"); ctx.shadowBlur = 20; ctx.shadowColor = "rgba(255, 20, 147, 0.6)"; ctx.fillStyle = grad; ctx.beginPath(); if (ctx.roundRect) { ctx.roundRect(x, y, w, h, 18); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = "rgba(255,255,255,0.4)"; ctx.lineWidth = 2; ctx.beginPath(); if (ctx.roundRect) { ctx.roundRect(x + 1, y + 1, w - 2, h - 2, 17); } else { ctx.rect(x + 1, y + 1, w - 2, h - 2); } ctx.stroke(); ctx.fillStyle = "white"; ctx.font = "bold 18px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.shadowColor = "rgba(0,0,0,0.3)"; ctx.shadowBlur = 4; ctx.fillText("☕  SPEEL!", x + w / 2, y + h / 2); ctx.shadowBlur = 0; }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevel01); } }); }); ig.baked = !0;
 ig.module("game.entities.button-medium").requires("impact.entity", "plugins.director").defines(function () { EntityButtonMedium = ig.Entity.extend({ size: { x: 130, y: 40 }, type: ig.Entity.TYPE.B, draw: function () { }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { } }); }); ig.baked = !0;
 ig.module("game.entities.button-hard").requires("impact.entity", "plugins.director").defines(function () {
-EntityButtonHighscore = ig.Entity.extend({ size: { x: 130, y: 40 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 12px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🏆 " + "HIGH SCORE", x + w/2, y + h/2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevelHighscore) } });
-EntityButtonLeaderboard = ig.Entity.extend({ size: { x: 280, y: 44 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 13px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🌐 " + "GLOBAL LEADERBOARD", x + w/2, y + h/2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); window.location.href = "leaderboard.html"; } }); }); ig.baked = !0;
+    EntityButtonHighscore = ig.Entity.extend({ size: { x: 130, y: 40 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if (ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 12px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🏆 " + "HIGH SCORE", x + w / 2, y + h / 2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.game.director.jumpTo(LevelLevelHighscore) } });
+    EntityButtonLeaderboard = ig.Entity.extend({ size: { x: 280, y: 44 }, type: ig.Entity.TYPE.B, draw: function () { var ctx = ig.system.context; var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x); var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y); var w = ig.system.getDrawPos(this.size.x); var h = ig.system.getDrawPos(this.size.y); ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 20, 147, 0.4)"; ctx.fillStyle = "#ff1493"; ctx.beginPath(); if (ctx.roundRect) { ctx.roundRect(x, y, w, h, 15); } else { ctx.rect(x, y, w, h); } ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "bold 13px Montserrat, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("🌐 " + "GLOBAL LEADERBOARD", x + w / 2, y + h / 2); }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); window.location.href = "leaderboard.html"; } });
+}); ig.baked = !0;
 
 ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.button-easy", "game.entities.button-hard", "game.entities.button-more-games", "game.entities.pointer").defines(function () {
     LevelTestDesktop = {
@@ -1761,32 +1758,33 @@ ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.but
     }; LevelTestMobileResources = [new ig.Image("media/graphics/backgrounds/menubackground.jpg")]
 }); ig.baked = !0;
 ig.module("game.entities.button-back").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonBack = ig.Entity.extend({ size: { x: 140, y: 50 }, type: ig.Entity.TYPE.B, init: function (b, c, d) { try { this.storage = new ig.Storage } catch (g) { } this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) }, draw: function () {
+    EntityButtonBack = ig.Entity.extend({
+        size: { x: 140, y: 50 }, type: ig.Entity.TYPE.B, init: function (b, c, d) { try { this.storage = new ig.Storage } catch (g) { } this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) }, draw: function () {
             var ctx = ig.system.context;
             var bx = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
             var by = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
             var bw = ig.system.getDrawPos(this.size.x);
             var bh = ig.system.getDrawPos(this.size.y);
-            
+
             // Draw premium Back button
             ctx.fillStyle = "#ff1493";
             ctx.beginPath();
-            if(ctx.roundRect) { ctx.roundRect(bx, by, bw, bh, 20); } else { ctx.rect(bx, by, bw, bh); }
+            if (ctx.roundRect) { ctx.roundRect(bx, by, bw, bh, 20); } else { ctx.rect(bx, by, bw, bh); }
             ctx.fill();
             ctx.fillStyle = "white";
             ctx.font = "bold 16px Montserrat, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillText("BACK", bx + bw/2, by + bh/2);
+            ctx.fillText("BACK", bx + bw / 2, by + bh / 2);
 
             // Draw High Scores Table
             var tx = 240; // Center X
             var ty = 180; // Start Y
-            
+
             // Draw Glass Background for table
             ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
             ctx.beginPath();
-            if(ctx.roundRect) { ctx.roundRect(40, 100, 400, 320, 30); } else { ctx.rect(40, 100, 400, 320); }
+            if (ctx.roundRect) { ctx.roundRect(40, 100, 400, 320, 30); } else { ctx.rect(40, 100, 400, 320); }
             ctx.fill();
             ctx.strokeStyle = "#ff1493";
             ctx.stroke();
@@ -1799,7 +1797,7 @@ ig.module("game.entities.button-back").requires("impact.entity", "plugins.direct
             ctx.fillStyle = "white";
             ctx.font = "600 18px Montserrat, sans-serif";
             ctx.textAlign = "left";
-            
+
             const scores = [
                 { label: "☕ EASY", key: "paper-flick-easy-highscore", global: ig.global.highscoreEasy },
                 { label: "🥛 MEDIUM", key: "paper-flick-normal-highscore", global: ig.global.highscoreNormal },
@@ -1808,7 +1806,7 @@ ig.module("game.entities.button-back").requires("impact.entity", "plugins.direct
 
             scores.forEach((s, i) => {
                 var val = 0;
-                try { val = this.storage.get(s.key) || s.global || 0; } catch(e) { val = s.global || 0; }
+                try { val = this.storage.get(s.key) || s.global || 0; } catch (e) { val = s.global || 0; }
                 ctx.fillStyle = "white";
                 ctx.fillText(s.label, 80, 220 + (i * 60));
                 ctx.fillStyle = "#ff1493";
@@ -1816,7 +1814,8 @@ ig.module("game.entities.button-back").requires("impact.entity", "plugins.direct
                 ctx.fillText(val, 400, 220 + (i * 60));
                 ctx.textAlign = "left";
             });
-        } })
+        }
+    })
 }); ig.baked = !0;
 ig.module("game.levels.level-highscore").requires("impact.image", "game.entities.button-back", "game.entities.pointer-selector").defines(function () {
     LevelLevelHighscore = {
@@ -1837,7 +1836,8 @@ ig.module("game.levels.level-highscore").requires("impact.image", "game.entities
 });
 ig.baked = !0;
 ig.module("game.entities.button-ingame-menu").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonIngameMenu = ig.Entity.extend({ size: { x: 74, y: 36 }, type: ig.Entity.TYPE.B, draw: function () {
+    EntityButtonIngameMenu = ig.Entity.extend({
+        size: { x: 74, y: 36 }, type: ig.Entity.TYPE.B, draw: function () {
             var ctx = ig.system.context;
             var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
             var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
@@ -1845,25 +1845,27 @@ ig.module("game.entities.button-ingame-menu").requires("impact.entity", "plugins
             var h = ig.system.getDrawPos(this.size.y);
             ctx.fillStyle = "#ff1493";
             ctx.beginPath();
-            if(ctx.roundRect) { ctx.roundRect(x, y, w, h, 12); } else { ctx.rect(x, y, w, h); }
+            if (ctx.roundRect) { ctx.roundRect(x, y, w, h, 12); } else { ctx.rect(x, y, w, h); }
             ctx.fill();
             ctx.fillStyle = "white";
             ctx.font = "bold 14px Montserrat, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillText("MENU", x + w/2, y + h/2);
-        }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) } })
+            ctx.fillText("MENU", x + w / 2, y + h / 2);
+        }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) }
+    })
 }); ig.baked = !0;
 ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugins.director").defines(function () {
-    EntityButtonIngameScore = ig.Entity.extend({ size: { x: 160, y: 100 }, init: function (b, c, d) { try { this.storage = new ig.Storage } catch (g) { } this.parent(b, c, d) }, update: function () { this.parent() }, draw: function () {
+    EntityButtonIngameScore = ig.Entity.extend({
+        size: { x: 160, y: 100 }, init: function (b, c, d) { try { this.storage = new ig.Storage } catch (g) { } this.parent(b, c, d) }, update: function () { this.parent() }, draw: function () {
             var ctx = ig.system.context;
             var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
             var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
-            
+
             // Draw a glass background for the score
             ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
             ctx.beginPath();
-            if(ctx.roundRect) { ctx.roundRect(x+10, y+10, 140, 70, 15); } else { ctx.rect(x+10, y+10, 140, 70); }
+            if (ctx.roundRect) { ctx.roundRect(x + 10, y + 10, 140, 70, 15); } else { ctx.rect(x + 10, y + 10, 140, 70); }
             ctx.fill();
             ctx.strokeStyle = "rgba(255, 20, 147, 0.4)";
             ctx.lineWidth = 2;
@@ -1875,44 +1877,22 @@ ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugin
             ctx.fillText("SCORE ", x + 25, y + 35);
             ctx.font = "800 24px Montserrat, sans-serif";
             ctx.fillText(ig.global.score, x + 25, y + 60);
-            
+
             try {
                 var best = 0;
                 if (3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel) best = this.storage.get("paper-flick-easy-highscore");
                 else if (5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel) best = this.storage.get("paper-flick-normal-highscore");
                 else if (7 == ig.game.director.currentLevel) best = this.storage.get("paper-flick-hard-highscore");
-                
+
                 ctx.fillStyle = "#ff1493";
                 ctx.font = "600 10px Montserrat, sans-serif";
                 ctx.fillText("BEST: " + best, x + 90, y + 60);
             } catch (e) { }
-        } })
-});
-ig.baked = !0;
-ig.module("game.entities.landed-cup").requires("impact.entity").defines(function () {
-    EntityLandedCup = ig.Entity.extend({
-        size: { x: 30, y: 40 }, 
-        type: ig.Entity.TYPE.NONE,
-        collides: ig.Entity.COLLIDES.NEVER,
-        cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
-        init: function (b, c, d) {
-            this.parent(b, c, d);
-            this.zIndex = 500;
-        },
-        draw: function () {
-            if (this.cupImg && this.cupImg.data) {
-                var ctx = ig.system.context;
-                var cx_img = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
-                var cy_img = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
-                var w_img = this.size.x * ig.system.scale;
-                var h_img = this.size.y * ig.system.scale;
-                ctx.drawImage(this.cupImg.data, cx_img, cy_img, w_img, h_img);
-            }
         }
     })
-}); ig.baked = !0;
-
-ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.director", "game.entities.landed-cup").defines(function () {
+});
+ig.baked = !0;
+ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.director").defines(function () {
     EntitySpawnUnit = ig.Entity.extend({
         size: { x: 20, y: 20 }, offset: { x: 0, y: 0 }, windDirection: 0, spawnobj: !0, scoreNote: !1, testCount: 0, init: function (b, c, d) {
             this.parent(b, c, d); ig.global.spawnBall = !1; this.spawnBall(); this.spawnFan(); this.spawnObject(); this.spawnArrow(); ig.global.hitside = !1; this.spawnFloor(); ig.global.score = 0; ig.global.isScore = !1; ig.global.finishShoot = !0; this.miniSpawnPause = new ig.Timer; this.miniPause =
@@ -1922,17 +1902,7 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 ig.input.pressed("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1)); ig.global.spawnBall && (this.getScore(), ig.global.killByNote && (this.scoreNote = !0), ig.global.killByNote || (this.obj && this.obj.kill(), this.spawnBall(), this.fan.kill(), this.spawnFan(), ig.global.spawnBall = !1, ig.global.finishShoot = !0, this.miniPause.set(0.2), this.arrow.kill(), this.spawnArrow(), this.scoreNote ? null : (this.bin && this.bin.kill(), this.spawnBin()), this.scoreNote = !1)); ig.global.spawnBin && (ig.global.spawnBin = !1); this.parent()
         }, clicked: function () { }, getScore: function () {
             if (ig.global.isScore) {
-                ig.global.score += 1; 
-                
-                var scoreIdx = ig.global.score - 1;
-                var offsetMultiplier = Math.ceil(scoreIdx / 2) * (scoreIdx % 2 === 0 ? -1 : 1);
-                if (scoreIdx === 0) offsetMultiplier = 0;
-                var xOffset = offsetMultiplier * 16;
-                ig.game.spawnEntity(EntityLandedCup, this.bin.pos.x + (this.bin.size.x * 0.2) + xOffset, this.bin.pos.y + (this.bin.size.y * 0.4), {
-                    size: { x: this.bin.size.x * 0.6, y: this.bin.size.y * 0.6 }
-                });
-
-                ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
+                ig.global.score += 1; ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
                     localStorage.local_storage_test = !0, 3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? ig.global.score >= this.storage.get("paper-flick-easy-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap),
                         this.storage.setHighest("paper-flick-easy-highscore", ig.global.score)) : 5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? ig.global.score >= this.storage.get("paper-flick-normal-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap), this.storage.setHighest("paper-flick-normal-highscore", ig.global.score)) : 7 == ig.game.director.currentLevel && ig.global.score >= this.storage.get("paper-flick-hard-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap), this.storage.setHighest("paper-flick-hard-highscore",
                             ig.global.score))
@@ -1947,14 +1917,7 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 } catch (c) {
                     3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreEasy && 0 != ig.global.highscoreEasy && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) :
                         5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreNormal && 0 != ig.global.highscoreNormal && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) : 7 == ig.game.director.currentLevel && 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreHard && 0 != ig.global.highscoreHard && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww)
-                } if (ig.global.score > 0) { window.showScoreModal(ig.global.score); } ig.global.score = 0;
-                
-                var landedCups = ig.game.getEntitiesByType(EntityLandedCup);
-                if (landedCups) {
-                    for(var i=0; i<landedCups.length; i++) {
-                        landedCups[i].kill();
-                    }
-                }
+                } if (ig.global.score > 0) { window.showScoreModal(ig.global.score); } ig.global.score = 0
             }
         }, spawnFloor: function () {
             try {
@@ -1966,22 +1929,22 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 var b =
                     ig.game.director.currentLevel
             } catch (c) { b = 0 } var d = ig.global.windrate; ig.soundHandler.playSound(ig.soundHandler.SOUNDID.threw); switch (b) {
-                case 3: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.993; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(3); break; case 4: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.992; this.ball.enableResize = !0; this.ball.gravityFactor =
-                    1; this.ball.resizeTimer.set(3); break; case 5: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.991; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 6: this.ball.windUp = this.windUp; this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.990; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 7: this.ball.windUp =
-                        this.windUp, this.ball.vel.x = d, this.ball.vel.y = -700, this.ball.accel.y = 0, this.ball.imgscale = 0.988, this.ball.enableResize = !0, this.ball.gravityFactor = 1, this.ball.resizeTimer.set(2.5)
+                case 3: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.994; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(3); break; case 4: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.993; this.ball.enableResize = !0; this.ball.gravityFactor =
+                    1; this.ball.resizeTimer.set(3); break; case 5: this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.992; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 6: this.ball.windUp = this.windUp; this.ball.windUp = this.windUp; this.ball.vel.x = d; this.ball.vel.y = -700; this.ball.accel.y = 0; this.ball.imgscale = 0.991; this.ball.enableResize = !0; this.ball.gravityFactor = 1; this.ball.resizeTimer.set(2.8); break; case 7: this.ball.windUp =
+                        this.windUp, this.ball.vel.x = d, this.ball.vel.y = -700, this.ball.accel.y = 0, this.ball.imgscale = 0.990, this.ball.enableResize = !0, this.ball.gravityFactor = 1, this.ball.resizeTimer.set(2.5)
             }
         }, spawnArrow: function () { try { this.arrow = ig.game.spawnEntity(EntityArrow, 194, 426, {}), this.arrow.windDirection = this.windDirection } catch (b) { } }, spawnFan: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 }
             this.windDirection = Math.floor(2 * Math.random() + 1);
-            this.windUp = Math.floor(800 * Math.random()) + 200; ig.global.windValue = this.windUp; 2 == this.windDirection && (this.windUp = -this.windUp, this.windUp *= 0.8);
-            this.fan = { kill: function() {} }; // fan hidden - wind still active
+            this.windUp = Math.floor(451 * Math.random()) + 50; ig.global.windValue = this.windUp; 2 == this.windDirection && (this.windUp = -this.windUp, this.windUp *= 0.8);
+            this.fan = { kill: function () { } }; // fan hidden - wind still active
         }, spawnBin: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 } switch (b) {
-                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 123, {}); break; // Adjusted Y (original 113 + 10)
-                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 128, {}); break; // Adjusted Y (original 118 + 10)
-                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 118, {}); break; // Adjusted Y (original 108 + 10)
-                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 113, {}); break; // Adjusted Y (original 103 + 10)
-                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 126, {})  // Adjusted Y (original 116 + 10)
+                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 113, {}); break;
+                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 118, {}); break;
+                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 108, {}); break;
+                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 103, {}); break;
+                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 116, {})
             }
         }, spawnObject: function () { if (this.spawnobj) { try { ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) } catch (b) { } this.spawnobj = !1 } else this.obj = ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) }
     })
@@ -2104,19 +2067,19 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 }
             }
             )
-        }; 
+        };
         /* Anti-Piracy Removed */
         MyGame = ig.Game.extend({
             gravity: 500, init: function () {
-                var i5 = 1546575592; 
-                this.setupMarketJsGameCenter(); 
+                var i5 = 1546575592;
+                this.setupMarketJsGameCenter();
                 this.setupControls();
                 this.startGame();
                 this.setupLocalStorage(); this.removeLoadingWheel(); this.injectMobileLink(); this.finalize();
             }
             , setupMarketJsGameCenter: function () {
                 var Q1 = -434261267; if (true) {
- // security bypassed
+                    // security bypassed
                     if (_SETTINGS) {
                         if (_SETTINGS['MarketJSGameCenter']) {
                             if (_SETTINGS['MarketJSGameCenter']['Activator']['Enabled']) {
@@ -2143,19 +2106,19 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
             }
             , injectMobileLink: function () {
                 var V0 = 988637030; if (true) { $('#play').attr('onclick', 'if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();'); }
- // security bypassed
+                // security bypassed
                 else { ig.system.context.fillRect(0, 0, ig.system.width / 4, ig.system.height); console.log('Game Resumed'); this.debugEnable(); }
             }
             , removeLoadingWheel: function () {
                 var Z0 = -1544341287; if (true) {
- // security bypassed
+                    // security bypassed
                     try { $('#ajaxbar').css('background', 'none'); }
                     catch (err) { console.log(err); ig.input.bind(ig.KEY.MOUSE1, 'click'); this.debugEnable(); }
                 }
             }
             , showDebugMenu: function () {
                 var e2 = -996924114; if (true) { console.log('showing debug menu ...'); ig.Entity._debugShowBoxes = true; $('.ig_debug').show(); }
- // security bypassed
+                // security bypassed
                 else { ig.system.context.fillRect(0, 0, ig.system.width / 4, ig.system.height); ig.input.initMouse(); $('#' + divList[i]).hide(); ig.system.startRunLoop.call(ig.system); this.setupMarketJsGameCenter(); }
             }
             , setupLocalStorage: function () { this.storage = new ig.Storage(); }
@@ -2171,7 +2134,7 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
             }
             , fpsCount: function () {
                 var R8 = -1808740507; if (true) { this.setupMarketJsGameCenter(); $('#' + divList[i]).hide(); ig.system.startRunLoop.call(ig.system); }
- // security bypassed
+                // security bypassed
                 else {
                     if (!this.fpsTimer) { this.fpsTimer = new ig.Timer(1); }
                 }
@@ -2183,7 +2146,7 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
             }
             , endGame: function () {
                 var T8 = -499245675; if (true) { this.fpsCounter++; alert('wrong command/type in param force-rotate. Defaulting value to portrait'); this.startGame(); this.setupURLParameters(); console.log('End game'); }
- // security bypassed
+                // security bypassed
                 else { console.log('End game'); ig.soundHandler.stopBackgroundMusic(); }
             }
             , resetPlayerStats: function () {
@@ -2192,14 +2155,14 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
             }
             , setupControls: function () {
                 var C3 = 1657449039; if (true) { ig.input.unbindAll(); ig.input.initMouse(); }
- // security bypassed
+                // security bypassed
                 else { ig.system.context.fillText(this.debugLine - this.debug.length + i + ": " + this.debug[i], 10, 50 + 10 * i); this.debugLine++; ig.game.showOverlay(['play']); this.startGame(); }
                 ig.input.bind(ig.KEY.MOUSE1, 'click'); ig.global.highscoreEasy = 0; ig.global.highscoreNormal = 0; ig.global.highscoreHard = 0;
             }
             , setupURLParameters: function () { this.urlParameters = new ig.UrlParameters(); }
             , pressPlay: function () {
-                this.hideOverlay(['play']); 
-                this.startGame(); 
+                this.hideOverlay(['play']);
+                this.startGame();
             }
             , pauseGame: function () { ig.system.stopRunLoop.call(ig.system); console.log('Game Paused'); }
             , resumeGame: function () {
@@ -2208,10 +2171,10 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
             }
             , showOverlay: function (divList) {
                 var blocked = ['anti-piracy', 'MobileAdInGamePreroll', 'MobileAdInGameHeader', 'MobileAdInGameFooter', 'MobileAdInGameEnd'];
-                for (i = 0; i < divList.length; i++) { 
+                for (i = 0; i < divList.length; i++) {
                     if (blocked.indexOf(divList[i]) !== -1 || divList[i].indexOf('MobileAd') === 0) continue;
-                    if ($('#' + divList[i])) $('#' + divList[i]).show(); 
-                    if (document.getElementById(divList[i])) document.getElementById(divList[i]).style.visibility = "visible"; 
+                    if ($('#' + divList[i])) $('#' + divList[i]).show();
+                    if (document.getElementById(divList[i])) document.getElementById(divList[i]).style.visibility = "visible";
                 }
             }
             , hideOverlay: function (divList) {
@@ -2244,7 +2207,7 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                         ctx.fillText("Gooi de kop koffie op de vensterbank!", ig.system.width / 2, 175);
                         ctx.restore();
                     }
-                } catch(e) {}
+                } catch (e) { }
             }
             , drawDebug: function () {
                 var j9 = 916859280; if (true) { this.entities[i].update(); this.setupURLParameters(); $('#play').attr('onclick', 'if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();'); sizeHandler(); }
