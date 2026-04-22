@@ -1529,7 +1529,6 @@ ig.module("game.entities.ingame-fan").requires("impact.entity", "plugins.directo
 ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.director").defines(function () {
     EntityIngameBin = ig.Entity.extend({
         zIndex: 1E4, type: ig.Entity.TYPE.A, name: "bin", 
-        cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
         init: function (b, c, d) {
             try { var g = ig.game.director.currentLevel } catch (l) { g = 0 } switch (g) {
                 case 3: this.size.x = 64; this.size.y = 81; break;
@@ -1544,14 +1543,6 @@ ig.module("game.entities.ingame-bin").requires("impact.entity", "plugins.directo
             this.parent();
             var ctx = ig.system.context;
             
-            if (this.cupImg && this.cupImg.data) {
-                var cx_img = ig.system.getDrawPos(this.pos.x - this.offset.x - ig.game.screen.x);
-                var cy_img = ig.system.getDrawPos(this.pos.y - this.offset.y - ig.game.screen.y);
-                var w_img = this.size.x * ig.system.scale;
-                var h_img = this.size.y * ig.system.scale;
-                ctx.drawImage(this.cupImg.data, cx_img, cy_img, w_img, h_img);
-            }
-
             var cx = ig.system.getDrawPos(this.pos.x + this.size.x / 2 - ig.game.screen.x);
             var cy = ig.system.getDrawPos(this.pos.y + 25 - ig.game.screen.y);
             var pulse = 1 + 0.15 * Math.sin(this._pulseTimer || 0);
@@ -1594,6 +1585,7 @@ ig.module("game.entities.paper-ball").requires("impact.entity", "plugins.directo
     EntityPaperBall = ig.Entity.extend({
         size: { x: 80, y: 80 }, offset: { x: 0, y: 0 }, type: ig.Entity.TYPE.B, checkAgainst: ig.Entity.TYPE.A, gravityFactor: 0, maxVel: { x: 1E3, y: 1E3 }, bounciness: 0.3, collides: ig.Entity.COLLIDES.ACTIVE, scale: { x: 1, y: 1 }, _offset: { x: 0, y: 0 }, _scale: { x: 1, y: 1 }, _size: { x: 0, y: 0 }, windUp: 0, imgscale: 0.985, enableResize: !1, startkill: !1, startkillcenter: !1, zIndex: 1E3, spawnBin: !1, enableResize: !1, showNote: !1, isBroken: !1,
             animSheet: new ig.AnimationSheet("media/graphics/game/ingame/moyee_cup_final.png", 80, 80),
+            cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
             brokenImg: new ig.Image("media/graphics/game/ingame/moyee_cup_broken.png"),
             getComp: 0, sst: 1, init: function (b, c, d) { this.addAnim("idle", 0.2, [0]); ig.global.hitside = !1; this.parent(b, c, d); this._offset.x = this.offset.x; this._offset.y = this.offset.y; this._size.x = this.size.x; this._size.y = this.size.y; this.setScale(this.scale.x, this.scale.y); this.resizeTimer = new ig.Timer; this.windStartTimer = new ig.Timer(0.3); this.killTimer = new ig.Timer; ig.global.killByNote = !1 }, update: function () {
                 0 != this.vel.y && (this.currentAnim.angle += Math.PI / 9 * (this.vel.x / 500)); this.enableResize && 0 > this.resizeTimer.delta() &&
@@ -1615,7 +1607,24 @@ ig.module("game.entities.paper-ball").requires("impact.entity", "plugins.directo
                     b.drawImage(this.brokenImg.data, -50, -50, 100, 100);
                     b.restore();
                 } else {
-                    var b = ig.system.context; b.save(); b.translate(ig.system.getDrawPos(this.pos.x.round() - this.offset.x - ig.game.screen.x), ig.system.getDrawPos(this.pos.y.round() - this.offset.y - ig.game.screen.y)); b.scale(this._scale.x, this._scale.y); this.currentAnim.draw(0, 0); b.restore();
+                    var ctx = ig.system.context; ctx.save(); 
+                    ctx.translate(ig.system.getDrawPos(this.pos.x.round() - this.offset.x - ig.game.screen.x), ig.system.getDrawPos(this.pos.y.round() - this.offset.y - ig.game.screen.y)); 
+                    ctx.scale(this._scale.x, this._scale.y); 
+                    
+                    if (this.currentAnim && this.currentAnim.angle !== 0) {
+                        var pivotX = this.size.x / 2;
+                        var pivotY = this.size.y / 2;
+                        ctx.translate(pivotX, pivotY);
+                        ctx.rotate(this.currentAnim.angle);
+                        ctx.translate(-pivotX, -pivotY);
+                    }
+
+                    if (this.cupImg && this.cupImg.data) {
+                        ctx.drawImage(this.cupImg.data, 0, 0, this.size.x, this.size.y);
+                    } else {
+                        this.currentAnim.draw(0, 0);
+                    }
+                    ctx.restore();
                 }
             }, kill: function () {
                 this.showNote ?
