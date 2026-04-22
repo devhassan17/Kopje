@@ -1922,9 +1922,9 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 var scoreIdx = ig.global.score - 1;
                 var offsetMultiplier = Math.ceil(scoreIdx / 2) * (scoreIdx % 2 === 0 ? -1 : 1);
                 if (scoreIdx === 0) offsetMultiplier = 0;
-                var xOffset = offsetMultiplier * 25;
-                ig.game.spawnEntity(EntityLandedCup, this.bin.pos.x + xOffset, this.bin.pos.y, {
-                    size: { x: this.bin.size.x, y: this.bin.size.y }
+                var xOffset = offsetMultiplier * 16;
+                ig.game.spawnEntity(EntityLandedCup, this.bin.pos.x + (this.bin.size.x * 0.2) + xOffset, this.bin.pos.y + (this.bin.size.y * 0.4), {
+                    size: { x: this.bin.size.x * 0.6, y: this.bin.size.y * 0.6 }
                 });
 
                 ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
@@ -1968,7 +1968,7 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
         }, spawnArrow: function () { try { this.arrow = ig.game.spawnEntity(EntityArrow, 194, 426, {}), this.arrow.windDirection = this.windDirection } catch (b) { } }, spawnFan: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 }
             this.windDirection = Math.floor(2 * Math.random() + 1);
-            this.windUp = Math.floor(451 * Math.random()) + 50; ig.global.windValue = this.windUp; 2 == this.windDirection && (this.windUp = -this.windUp, this.windUp *= 0.8);
+            this.windUp = Math.floor(800 * Math.random()) + 200; ig.global.windValue = this.windUp; 2 == this.windDirection && (this.windUp = -this.windUp, this.windUp *= 0.8);
             this.fan = { kill: function() {} }; // fan hidden - wind still active
         }, spawnBin: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 } switch (b) {
