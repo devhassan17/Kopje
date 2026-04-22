@@ -1884,7 +1884,30 @@ ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugin
         } })
 });
 ig.baked = !0;
-ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.director").defines(function () {
+ig.module("game.entities.landed-cup").requires("impact.entity").defines(function () {
+    EntityLandedCup = ig.Entity.extend({
+        size: { x: 30, y: 40 }, 
+        type: ig.Entity.TYPE.NONE,
+        collides: ig.Entity.COLLIDES.NEVER,
+        cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
+        init: function (b, c, d) {
+            this.parent(b, c, d);
+            this.zIndex = 500;
+        },
+        draw: function () {
+            if (this.cupImg && this.cupImg.data) {
+                var ctx = ig.system.context;
+                var cx_img = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
+                var cy_img = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
+                var w_img = this.size.x * ig.system.scale;
+                var h_img = this.size.y * ig.system.scale;
+                ctx.drawImage(this.cupImg.data, cx_img, cy_img, w_img, h_img);
+            }
+        }
+    })
+}); ig.baked = !0;
+
+ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.director", "game.entities.landed-cup").defines(function () {
     EntitySpawnUnit = ig.Entity.extend({
         size: { x: 20, y: 20 }, offset: { x: 0, y: 0 }, windDirection: 0, spawnobj: !0, scoreNote: !1, testCount: 0, init: function (b, c, d) {
             this.parent(b, c, d); ig.global.spawnBall = !1; this.spawnBall(); this.spawnFan(); this.spawnObject(); this.spawnArrow(); ig.global.hitside = !1; this.spawnFloor(); ig.global.score = 0; ig.global.isScore = !1; ig.global.finishShoot = !0; this.miniSpawnPause = new ig.Timer; this.miniPause =
@@ -1894,7 +1917,17 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 ig.input.pressed("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1)); ig.global.spawnBall && (this.getScore(), ig.global.killByNote && (this.scoreNote = !0), ig.global.killByNote || (this.obj && this.obj.kill(), this.spawnBall(), this.fan.kill(), this.spawnFan(), ig.global.spawnBall = !1, ig.global.finishShoot = !0, this.miniPause.set(0.2), this.arrow.kill(), this.spawnArrow(), this.scoreNote ? null : (this.bin && this.bin.kill(), this.spawnBin()), this.scoreNote = !1)); ig.global.spawnBin && (ig.global.spawnBin = !1); this.parent()
         }, clicked: function () { }, getScore: function () {
             if (ig.global.isScore) {
-                ig.global.score += 1; ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
+                ig.global.score += 1; 
+                
+                var scoreIdx = ig.global.score - 1;
+                var offsetMultiplier = Math.ceil(scoreIdx / 2) * (scoreIdx % 2 === 0 ? -1 : 1);
+                if (scoreIdx === 0) offsetMultiplier = 0;
+                var xOffset = offsetMultiplier * 25;
+                ig.game.spawnEntity(EntityLandedCup, this.bin.pos.x + xOffset, this.bin.pos.y, {
+                    size: { x: this.bin.size.x, y: this.bin.size.y }
+                });
+
+                ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
                     localStorage.local_storage_test = !0, 3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? ig.global.score >= this.storage.get("paper-flick-easy-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap),
                         this.storage.setHighest("paper-flick-easy-highscore", ig.global.score)) : 5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? ig.global.score >= this.storage.get("paper-flick-normal-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap), this.storage.setHighest("paper-flick-normal-highscore", ig.global.score)) : 7 == ig.game.director.currentLevel && ig.global.score >= this.storage.get("paper-flick-hard-highscore") && (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.clap), this.storage.setHighest("paper-flick-hard-highscore",
                             ig.global.score))
@@ -1909,7 +1942,14 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 } catch (c) {
                     3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreEasy && 0 != ig.global.highscoreEasy && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) :
                         5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreNormal && 0 != ig.global.highscoreNormal && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) : 7 == ig.game.director.currentLevel && 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreHard && 0 != ig.global.highscoreHard && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww)
-                } if (ig.global.score > 0) { window.showScoreModal(ig.global.score); } ig.global.score = 0
+                } if (ig.global.score > 0) { window.showScoreModal(ig.global.score); } ig.global.score = 0;
+                
+                var landedCups = ig.game.getEntitiesByType(EntityLandedCup);
+                if (landedCups) {
+                    for(var i=0; i<landedCups.length; i++) {
+                        landedCups[i].kill();
+                    }
+                }
             }
         }, spawnFloor: function () {
             try {
