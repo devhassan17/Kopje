@@ -5,9 +5,9 @@
 	<title>Kopje Gooien | Moyee Coffee Toss</title>
 	<!-- Force Hide Ads & Anti-Piracy -->
 	<style>
-		#anti-piracy, 
-		div[id^="MobileAd"], 
-		div[id$="-Box"], 
+		#anti-piracy,
+		div[id^="MobileAd"],
+		div[id$="-Box"],
 		div[id$="-Close"],
 		#ad-container,
 		.marketjs-ad {
@@ -153,17 +153,18 @@
 			</div>
 			<div class="opening-center-content">
 				<h1 class="opening-title-text">LSV MINERVA</h1>
-				<h1 class="opening-subtitle-text">TOSTOLL CUP</h1>
+				<h1 class="opening-subtitle-text">Kopje Gooien</h1>
 			</div>
-			<button id="start-btn" class="premium-btn"
-				onclick="checkRegistration()">
+			<button id="start-btn" class="premium-btn" onclick="checkRegistration()">
 				START GAME
 			</button>
 		</div>
 
-		<div id="registration-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+		<div id="registration-modal"
+			style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
 			<div class="modal-content glass-morphism">
-				<img src="media/graphics/opening/Moyee-Logo.png" class="opening-logo" alt="Moyee Logo" style="width:150px; margin-bottom:10px;">
+				<img src="media/graphics/opening/Moyee-Logo.png" class="opening-logo" alt="Moyee Logo"
+					style="width:150px; margin-bottom:10px;">
 				<h2 class="premium-text" style="font-family:'Crimson Text', serif;">WELCOME TO KOPJE GOOIEN</h2>
 				<p style="color:white; margin-bottom:20px;">Please register to start throwing!</p>
 				<input type="text" id="reg-name" placeholder="Enter Your Name" class="premium-input">
@@ -173,7 +174,7 @@
 		</div>
 		<!--<img id="scrollDown" width="220" height="277"></img>-->
 
-		
+
 
 	</div>
 	<!-- <div id="tempdiv"><br><br><br></div> -->
@@ -184,7 +185,8 @@
 
 	<div id="score-modal">
 		<div class="modal-content glass-morphism">
-			<img src="media/graphics/opening/Moyee-Logo.png" class="opening-logo" alt="Moyee Logo" style="width:150px; margin-bottom:10px;">
+			<img src="media/graphics/opening/Moyee-Logo.png" class="opening-logo" alt="Moyee Logo"
+				style="width:150px; margin-bottom:10px;">
 			<h2 class="premium-text">NEW HIGH SCORE!</h2>
 			<div class="score-display">
 				<span class="score-label">Your Score:</span>
@@ -244,32 +246,32 @@
 			}
 		}
 
-		window.checkRegistration = function() {
+		window.checkRegistration = function () {
 			const email = localStorage.getItem('kopje_user_email');
 			if (email) {
-				if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); 
-				if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
+				if (ig.game && ig.game.pressPlay) ig.game.pressPlay();
+				if (ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
 			} else {
 				document.getElementById('registration-modal').style.display = 'flex';
 			}
 		};
 
-		window.submitRegistration = function() {
+		window.submitRegistration = function () {
 			const name = document.getElementById('reg-name').value.trim();
 			const email = document.getElementById('reg-email').value.trim();
-			
+
 			if (!name || !email || !email.includes('@')) {
 				alert('Please enter a valid name and email address.');
 				return;
 			}
-			
+
 			localStorage.setItem('kopje_user_name', name);
 			localStorage.setItem('kopje_user_email', email);
-			
+
 			document.getElementById('registration-modal').style.display = 'none';
-			
-			if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); 
-			if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
+
+			if (ig.game && ig.game.pressPlay) ig.game.pressPlay();
+			if (ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
 		};
 	</script>
 
@@ -277,7 +279,7 @@
 	<script>
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.getRegistrations().then(regs => {
-				for(let reg of regs) reg.unregister();
+				for (let reg of regs) reg.unregister();
 			});
 		}
 	</script>
