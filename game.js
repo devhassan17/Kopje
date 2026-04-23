@@ -1866,7 +1866,7 @@ ig.module("game.levels.level-highscore").requires("impact.image", "game.entities
 ig.baked = !0;
 ig.module("game.entities.button-ingame-menu").requires("impact.entity", "plugins.director").defines(function () {
     EntityButtonIngameMenu = ig.Entity.extend({
-        size: { x: 74, y: 36 }, type: ig.Entity.TYPE.B, draw: function () {
+        size: { x: 100, y: 50 }, type: ig.Entity.TYPE.B, draw: function () {
             var ctx = ig.system.context;
             var x = ig.system.getDrawPos(this.pos.x - ig.game.screen.x);
             var y = ig.system.getDrawPos(this.pos.y - ig.game.screen.y);
@@ -1877,11 +1877,15 @@ ig.module("game.entities.button-ingame-menu").requires("impact.entity", "plugins
             if (ctx.roundRect) { ctx.roundRect(x, y, w, h, 12); } else { ctx.rect(x, y, w, h); }
             ctx.fill();
             ctx.fillStyle = "white";
-            ctx.font = "bold 14px Montserrat, sans-serif";
+            ctx.font = "bold 18px Montserrat, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText("MENU", x + w / 2, y + h / 2);
-        }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); document.getElementById('post-lid-menu').classList.add('overlay-visible'); }
+        }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { 
+            ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); 
+            if(ig.game && ig.game.pauseGame) ig.game.pauseGame();
+            document.getElementById('post-lid-menu').classList.add('overlay-visible'); 
+        }
     })
 }); ig.baked = !0;
 ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugins.director").defines(function () {

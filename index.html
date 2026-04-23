@@ -173,7 +173,7 @@
 					☕ SPEEL!
 				</button>
 				<div style="display: flex; gap: 15px; width: 100%; justify-content: center; margin-top: 10px;">
-					<button class="main-speel-btn" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; border: 1px solid rgba(255,255,255,0.3) !important; border-radius: 25px !important; font-size: 16px !important; padding: 18px !important; min-width: 180px !important; box-shadow: none !important;" onclick="window.location.href='highscore.html'">
+					<button class="main-speel-btn" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; border: 1px solid rgba(255,255,255,0.3) !important; border-radius: 25px !important; font-size: 16px !important; padding: 18px !important; min-width: 180px !important; box-shadow: none !important;" onclick="showHighscores()">
 						🏆 HIGH SCORE
 					</button>
 					<button class="main-speel-btn" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; border: 1px solid rgba(255,255,255,0.3) !important; border-radius: 25px !important; font-size: 16px !important; padding: 18px !important; min-width: 180px !important; box-shadow: none !important;" onclick="window.location.href='leaderboard.html'">
@@ -303,7 +303,17 @@
 		window.startActualGame = function () {
 			document.getElementById('post-lid-menu').classList.remove('overlay-visible');
 			if (ig.game && ig.game.director) {
+				if(ig.game.resumeGame) ig.game.resumeGame();
 				ig.game.director.jumpTo(LevelLevel01);
+				ig.system.context.globalAlpha = 1;
+			}
+		};
+
+		window.showHighscores = function () {
+			document.getElementById('post-lid-menu').classList.remove('overlay-visible');
+			if (ig.game && ig.game.director) {
+				if(ig.game.resumeGame) ig.game.resumeGame();
+				ig.game.director.jumpTo(LevelLevelHighscore);
 				ig.system.context.globalAlpha = 1;
 			}
 		};
