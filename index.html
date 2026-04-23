@@ -306,7 +306,7 @@
 		window.startActualGame = function () {
 			document.getElementById('post-lid-menu').classList.remove('overlay-visible');
 			if (ig.game && ig.game.director) {
-				ig.game.director.nextLevel();
+				ig.game.director.jumpTo(LevelLevel01);
 				ig.system.context.globalAlpha = 1;
 			}
 		};
