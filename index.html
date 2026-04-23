@@ -183,20 +183,35 @@
 						🌐 GLOBAL LEADERBOARD
 					</button>
 				</div>
+				<div id="user-history" style="margin-top: 30px; width: 100%; max-width: 400px; display: none;">
+					<h3 style="color: rgba(255,255,255,0.6); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">Your Last Scores</h3>
+					<div id="history-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+				</div>
 			</div>
 		</div>
 
 		<div id="registration-modal"
-			style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
-			<div class="modal-content glass-morphism">
+			style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000001; justify-content:center; align-items:center; backdrop-filter:blur(15px);">
+			<div class="modal-content glass-morphism" style="max-width: 450px;">
 				<div class="opening-top-logos" style="margin-bottom: 30px;">
 					<img src="media/graphics/opening/Moyee_Final_Logos.png" class="partner-logos" alt="Moyee Logo" style="height: 100px !important;">
 				</div>
-				<h2 class="premium-text" style="font-family:'Crimson Text', serif; margin-top: 0;">WELCOME TO KOPJE GOOIEN</h2>
-				<p style="color:white; margin-bottom:20px;">Please register to start throwing!</p>
-				<input type="text" id="reg-name" placeholder="Enter Your Name" class="premium-input">
-				<input type="email" id="reg-email" placeholder="Enter Your Email" class="premium-input">
-				<button onclick="submitRegistration()" class="submit-btn" style="width:100%;">START GAME</button>
+				<h2 class="premium-text" style="font-family:'Crimson Text', serif; margin-top: 0; font-size: 28px;">GET READY TO THROW!</h2>
+				
+				<div id="reg-step-1">
+					<p style="color:rgba(255,255,255,0.8); margin-bottom:20px;">Register your email to save your scores and compete globally.</p>
+					<input type="text" id="reg-name" placeholder="Full Name" class="premium-input">
+					<input type="email" id="reg-email" placeholder="Email Address" class="premium-input">
+					<button onclick="sendVerificationCode()" class="submit-btn" style="width:100%; margin-top: 10px;">SEND VERIFICATION CODE</button>
+				</div>
+
+				<div id="reg-step-2" style="display:none;">
+					<p style="color:#ff1493; font-weight: 700; margin-bottom:10px;">VERIFICATION CODE SENT!</p>
+					<p style="color:rgba(255,255,255,0.8); margin-bottom:20px;">Please enter the 4-digit code sent to your email.</p>
+					<input type="text" id="reg-code" placeholder="4-Digit Code" class="premium-input" style="text-align: center; letter-spacing: 10px; font-size: 24px;">
+					<button onclick="verifyAndSubmit()" class="submit-btn" style="width:100%; margin-top: 10px;">VERIFY & START GAME</button>
+					<button onclick="resetReg()" style="background:none; border:none; color:rgba(255,255,255,0.5); margin-top:15px; cursor:pointer; text-decoration:underline;">Back to registration</button>
+				</div>
 			</div>
 		</div>
 		<!--<img id="scrollDown" width="220" height="277"></img>-->
@@ -233,14 +248,39 @@
 
 	<script>
 		let pendingScore = 0;
+		let verificationCode = "";
+
 		window.showScoreModal = function (score) {
 			pendingScore = score;
 			document.getElementById('display-score').innerText = score;
 			document.getElementById('score-modal').style.display = 'flex';
+			
+			// Save locally too for immediate history
+			const localScores = JSON.parse(localStorage.getItem('kopje_scores') || '[]');
+			localScores.push({ score, date: new Date().toISOString() });
+			localScores.sort((a, b) => b.score - a.score);
+			localStorage.setItem('kopje_scores', JSON.stringify(localScores.slice(0, 5)));
+			updateHistoryUI();
 		};
 
+		function updateHistoryUI() {
+			const localScores = JSON.parse(localStorage.getItem('kopje_scores') || '[]');
+			const container = document.getElementById('history-list');
+			const historyBox = document.getElementById('user-history');
+			
+			if (localScores.length > 0) {
+				historyBox.style.display = 'block';
+				container.innerHTML = localScores.map(s => `
+					<div style="background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+						<span style="color: white; font-weight: 700; font-size: 18px;">${s.score} <small style="font-weight: 400; opacity: 0.5;">pts</small></span>
+						<span style="color: rgba(255,255,255,0.4); font-size: 11px;">${new Date(s.date).toLocaleDateString()}</span>
+					</div>
+				`).join('');
+			}
+		}
+
 		async function submitGlobalScore() {
-			const name = document.getElementById('player-name').value.trim() || 'Anonymous';
+			const name = localStorage.getItem('kopje_user_name') || 'Anonymous';
 			const email = localStorage.getItem('kopje_user_email') || '';
 			const button = document.querySelector('.submit-btn');
 			button.innerText = 'SUBMITTING...';
@@ -261,30 +301,25 @@
 				}
 				throw new Error('Server submission failed');
 			} catch (e) {
-				console.warn('Falling back to local storage:', e);
-				// Local Storage Fallback
-				const localScores = JSON.parse(localStorage.getItem('kopje_scores') || '[]');
-				localScores.push(scoreData);
-				localScores.sort((a, b) => b.score - a.score);
-				localStorage.setItem('kopje_scores', JSON.stringify(localScores.slice(0, 10)));
-
-				setTimeout(() => {
-					window.location.href = 'leaderboard.html';
-				}, 500);
+				console.warn('Network error, score saved locally');
+				window.location.href = 'leaderboard.html';
 			}
 		}
 
 		window.checkRegistration = function () {
 			const email = localStorage.getItem('kopje_user_email');
-			if (email) {
+			const verified = localStorage.getItem('kopje_user_verified');
+			
+			if (email && verified) {
 				if (ig.game && ig.game.pressPlay) ig.game.pressPlay();
 				if (ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
 			} else {
 				document.getElementById('registration-modal').style.display = 'flex';
+				resetReg();
 			}
 		};
 
-		window.submitRegistration = function () {
+		window.sendVerificationCode = function() {
 			const name = document.getElementById('reg-name').value.trim();
 			const email = document.getElementById('reg-email').value.trim();
 
@@ -293,14 +328,36 @@
 				return;
 			}
 
+			// Simulation of sending email
+			verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
+			alert("VERIFICATION CODE: " + verificationCode + "\n\n(In a production environment, this would be sent to your email)");
+			
 			localStorage.setItem('kopje_user_name', name);
 			localStorage.setItem('kopje_user_email', email);
+			
+			document.getElementById('reg-step-1').style.display = 'none';
+			document.getElementById('reg-step-2').style.display = 'block';
+		};
 
-			document.getElementById('registration-modal').style.display = 'none';
-			document.getElementById('play').classList.remove('overlay-visible');
+		window.verifyAndSubmit = function() {
+			const inputCode = document.getElementById('reg-code').value.trim();
+			if (inputCode === verificationCode) {
+				localStorage.setItem('kopje_user_verified', 'true');
+				
+				document.getElementById('registration-modal').style.display = 'none';
+				document.getElementById('play').classList.remove('overlay-visible');
 
-			if (ig.game && ig.game.pressPlay) ig.game.pressPlay();
-			if (ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
+				if (ig.game && ig.game.pressPlay) ig.game.pressPlay();
+				if (ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
+			} else {
+				alert('Invalid verification code. Please try again.');
+			}
+		};
+
+		window.resetReg = function() {
+			document.getElementById('reg-step-1').style.display = 'block';
+			document.getElementById('reg-step-2').style.display = 'none';
+			document.getElementById('reg-code').value = '';
 		};
 
 		window.startActualGame = function () {
@@ -320,6 +377,9 @@
 				ig.system.context.globalAlpha = 1;
 			}
 		};
+
+		// Initial load
+		updateHistoryUI();
 	</script>
 
 	<!-- Service Worker Disabled for Cache Stability -->
