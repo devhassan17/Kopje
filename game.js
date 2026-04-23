@@ -1501,7 +1501,7 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
                 ig.system.context.globalAlpha = 1, this.kill()
         }, update: function () { this.parent(); this.updateKittyOpening() }, draw: function () { this.parent(); ig.global.wm || (this.nextLevelTimer && 0 > this.nextLevelTimer.delta() && (ig.system.context.globalAlpha = -this.nextLevelTimer.delta()), this.drawKittyOpening()) }, updateKittyOpening: function () {
             this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15)); this.kittyTimer && 0 < this.kittyTimer.delta() && (0 == this.kittyAnim ? (this.kittyAnim = 1, this.kittyTimer.reset()) :
-                (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(2))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, document.getElementById('post-lid-menu').classList.add('overlay-visible'), this.kill())
+                (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(4))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, document.getElementById('post-lid-menu').classList.add('overlay-visible'), this.kill())
         }, drawKittyOpening: function () {
             var ctx = ig.system.context;
             
@@ -1511,7 +1511,7 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
             
             // Typing Animation for "Is u Lid?"
             var fullText = "Is u Lid?";
-            var elapsed = this.nextLevelTimer ? (2 + this.nextLevelTimer.delta()) : 0;
+            var elapsed = this.nextLevelTimer ? (4 + this.nextLevelTimer.delta()) : 0;
             // Typing speed: about 0.1s per character
             var charsToShow = Math.floor(elapsed / 0.1);
             var displayText = fullText.substring(0, Math.min(fullText.length, charsToShow));
