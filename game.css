@@ -117,13 +117,13 @@ body {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: clamp(20px, 5vw, 40px) !important;
+    gap: 50px !important; /* Fixed gap for better alignment */
     width: 100% !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 30px !important;
 }
 
 .partner-logos {
-    height: clamp(80px, 20vw, 150px) !important;
+    height: clamp(70px, 15vw, 120px) !important; /* Unified height */
     width: auto !important;
     filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5)) !important;
 }
@@ -139,7 +139,7 @@ body {
 
 .menu-header {
     text-align: center !important;
-    margin: 30px 0 !important;
+    margin: 80px 0 40px 0 !important; /* Moved down */
 }
 
 .premium-title {
