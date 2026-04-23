@@ -147,17 +147,21 @@
 
 		<div id="orientate"><img src="media/graphics/orientate/landscape.jpg" /></div>
 		<div id="play" class="play">
-			<div class="opening-top-logos">
-				<img src="media/graphics/opening/logos.png" class="partner-logos" alt="Partner Logos">
-				<img src="media/graphics/opening/Moyee-Logo.png" class="brand-logo" alt="Moyee Logo">
+			<div class="menu-header">
+				<h1 class="menu-title">Kopje Gooien</h1>
+				<p class="menu-subtitle">Gooi de kop koffie op de vensterbank!</p>
 			</div>
-			<div class="opening-center-content">
-				<h1 class="opening-title-text">LSV MINERVA</h1>
-				<h1 class="opening-subtitle-text">Kopje Gooien</h1>
+			<div class="menu-buttons">
+				<button class="menu-btn spear-btn" onclick="checkRegistration()">
+					☕ SPEEL!
+				</button>
+				<button class="menu-btn score-btn" onclick="window.location.href='highscore.html'">
+					🏆 HIGH SCORE
+				</button>
+				<button class="menu-btn leader-btn" onclick="window.location.href='leaderboard.html'">
+					🌐 GLOBAL LEADERBOARD
+				</button>
 			</div>
-			<button id="start-btn" class="premium-btn" onclick="checkRegistration()">
-				START GAME
-			</button>
 		</div>
 
 		<div id="registration-modal"
