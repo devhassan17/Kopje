@@ -2143,7 +2143,6 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 var i5 = 1546575592;
                 this.setupMarketJsGameCenter();
                 this.setupControls();
-                this.startGame();
                 this.setupLocalStorage(); this.removeLoadingWheel(); this.injectMobileLink(); this.finalize();
             }
             , setupMarketJsGameCenter: function () {
