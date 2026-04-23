@@ -5,13 +5,12 @@ export default async function handler(request, response) {
     // Aggregate plays and high scores by email
     const { rows } = await sql`
       SELECT 
-        email, 
+        COALESCE(email, 'Unregistered') as email, 
         MAX(name) as name, 
         COUNT(*) as total_plays, 
         MAX(score) as highest_score,
         MAX(created_at) as last_played
       FROM leaderboards 
-      WHERE email IS NOT NULL AND email != ''
       GROUP BY email
       ORDER BY highest_score DESC
     `;

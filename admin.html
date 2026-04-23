@@ -122,7 +122,8 @@
                     container.appendChild(row);
                 });
             } catch (e) {
-                document.getElementById('admin-data').innerHTML = '<tr><td colspan="4" class="loading">Error loading stats.</td></tr>';
+                console.error(e);
+                document.getElementById('admin-data').innerHTML = `<tr><td colspan="4" class="loading">Error loading stats: ${e.message}</td></tr>`;
             }
         }
 
