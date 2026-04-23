@@ -34,8 +34,11 @@ export default async function handler(request, response) {
         pass: settings.smtp_pass
       },
       tls: {
-        rejectUnauthorized: false // Helps with connection reliability on cloud servers
-      }
+        rejectUnauthorized: false,
+        minVersion: 'TLSv1.2'
+      },
+      debug: true,
+      logger: true
     });
 
     // 3. Prepare Email
