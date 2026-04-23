@@ -1501,33 +1501,9 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
                 ig.system.context.globalAlpha = 1, this.kill()
         }, update: function () { this.parent(); this.updateKittyOpening() }, draw: function () { this.parent(); ig.global.wm || (this.nextLevelTimer && 0 > this.nextLevelTimer.delta() && (ig.system.context.globalAlpha = -this.nextLevelTimer.delta()), this.drawKittyOpening()) }, updateKittyOpening: function () {
             this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15)); this.kittyTimer && 0 < this.kittyTimer.delta() && (0 == this.kittyAnim ? (this.kittyAnim = 1, this.kittyTimer.reset()) :
-                (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(2))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, document.getElementById('post-lid-menu').style.display = 'flex')
+                (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(2))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, ig.game.director.nextLevel(), ig.system.context.globalAlpha = 1)
         }, drawKittyOpening: function () {
-            var ctx = ig.system.context;
-            
-            // 1. Vibrant Pink Background
-            ctx.fillStyle = "#ff1493";
-            ctx.fillRect(0, 0, ig.system.width, ig.system.height);
-            
-            // 2. Typing Animation for "Is u Lid?"
-            var fullText = "Is u Lid?";
-            var elapsed = this.nextLevelTimer ? (2 + this.nextLevelTimer.delta()) : 0;
-            // Typing speed: about 0.1s per character
-            var charsToShow = Math.floor(elapsed / 0.1);
-            var displayText = fullText.substring(0, Math.min(fullText.length, charsToShow));
-            
-            ctx.fillStyle = "white";
-            ctx.font = "bold 72px 'Crimson Text', serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            
-            // Draw with a subtle text shadow for depth
-            ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-            ctx.shadowBlur = 15;
-            ctx.fillText(displayText, ig.system.width / 2, ig.system.height / 2);
-            ctx.shadowBlur = 0;
-            
-            ig.system.context.globalAlpha = 1;
+            var b = ig.system.context.createLinearGradient(0, 0, 0, ig.system.height); b.addColorStop(0, "#091211"); b.addColorStop(1, "#000000"); ig.system.context.fillStyle = b; ig.system.context.fillRect(0, 0, ig.system.width, ig.system.height); if (0 <= this.kittyAnim) { var targetW = 250; var targetH = targetW * (this.kittyImage.height / this.kittyImage.width); ig.system.context.drawImage(this.kittyImage.data, ig.system.width / 2 - targetW / 2, ig.system.height / 2 - targetH / 2, targetW, targetH); } ig.system.context.globalAlpha = 1
         }
     })
 }); ig.baked = !0;
@@ -1923,7 +1899,7 @@ ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugin
 ig.baked = !0;
 ig.module("game.entities.landed-cup").requires("impact.entity").defines(function () {
     EntityLandedCup = ig.Entity.extend({
-        size: { x: 30, y: 40 }, 
+        size: { x: 30, y: 40 },
         type: ig.Entity.TYPE.NONE,
         collides: ig.Entity.COLLIDES.NEVER,
         cupImg: new ig.Image("media/graphics/game/ingame/moyee_cup_final.png"),
@@ -1954,8 +1930,8 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 ig.input.pressed("click") && (this.ball && (this.floor.kill(), this.spawnFloor()), this.activeBall(), ig.global.finishShoot = !1)); ig.global.spawnBall && (this.getScore(), ig.global.killByNote && (this.scoreNote = !0), ig.global.killByNote || (this.obj && this.obj.kill(), this.spawnBall(), this.fan.kill(), this.spawnFan(), ig.global.spawnBall = !1, ig.global.finishShoot = !0, this.miniPause.set(0.2), this.arrow.kill(), this.spawnArrow(), this.scoreNote ? null : (this.bin && this.bin.kill(), this.spawnBin()), this.scoreNote = !1)); ig.global.spawnBin && (ig.global.spawnBin = !1); this.parent()
         }, clicked: function () { }, getScore: function () {
             if (ig.global.isScore) {
-                ig.global.score += 1; 
-                
+                ig.global.score += 1;
+
                 var scoreIdx = ig.global.score - 1;
                 var offsetMultiplier = Math.ceil(scoreIdx / 2) * (scoreIdx % 2 === 0 ? -1 : 1);
                 if (scoreIdx === 0) offsetMultiplier = 0;
@@ -1980,10 +1956,10 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                     3 == ig.game.director.currentLevel || 4 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreEasy && 0 != ig.global.highscoreEasy && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) :
                         5 == ig.game.director.currentLevel || 6 == ig.game.director.currentLevel ? 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreNormal && 0 != ig.global.highscoreNormal && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww) : 7 == ig.game.director.currentLevel && 0 < this.ball.pos.x && this.ball.pos.x < ig.system.width && ig.global.score == ig.global.highscoreHard && 0 != ig.global.highscoreHard && ig.soundHandler.playSound(ig.soundHandler.SOUNDID.ohww)
                 } if (ig.global.score > 0) { window.showScoreModal(ig.global.score); } ig.global.score = 0;
-                
+
                 var landedCups = ig.game.getEntitiesByType(EntityLandedCup);
                 if (landedCups) {
-                    for(var i=0; i<landedCups.length; i++) {
+                    for (var i = 0; i < landedCups.length; i++) {
                         landedCups[i].kill();
                     }
                 }
