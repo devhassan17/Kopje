@@ -1517,7 +1517,8 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
             var displayText = fullText.substring(0, Math.min(fullText.length, charsToShow));
             
             ctx.fillStyle = "white";
-            ctx.font = "bold 72px 'Crimson Text', serif";
+            var fontSize = Math.floor(ig.system.width * 0.18); // Large, responsive font size
+            ctx.font = "bold " + fontSize + "px 'Crimson Text', serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             
