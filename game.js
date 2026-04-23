@@ -1499,37 +1499,29 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
         size: { x: 218, y: 325 }, kittyAnim: 0, kittyImage: new ig.Image("media/graphics/opening/Moyee-Logo.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
             if (!ig.wm) if (_SETTINGS.DeveloperBranding.Splash.Enabled) { this.initTimer = new ig.Timer(0.1); try { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.kittyopeningSound) } catch (b) { console.log(b) } } else ig.game.director.nextLevel(),
                 ig.system.context.globalAlpha = 1, this.kill()
-        }, update: function () { this.parent(); this.updateKittyOpening() }, draw: function () { this.parent(); ig.global.wm || (this.nextLevelTimer && 0 > this.nextLevelTimer.delta() && (ig.system.context.globalAlpha = -this.nextLevelTimer.delta()), this.drawKittyOpening()) }, updateKittyOpening: function () {
-            this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15)); this.kittyTimer && 0 < this.kittyTimer.delta() && (0 == this.kittyAnim ? (this.kittyAnim = 1, this.kittyTimer.reset()) :
-                (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(4))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, document.getElementById('play').classList.remove('overlay-visible'), document.getElementById('post-lid-menu').classList.add('overlay-visible'), this.kill())
+        }, update: function () { this.parent(); this.updateKittyOpening() }, draw: function () { this.parent(); }, updateKittyOpening: function () {
+            this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15), document.getElementById('opening-animation').classList.add('overlay-visible')); 
+            this.kittyTimer && 0 < this.kittyTimer.delta() && (0 == this.kittyAnim ? (this.kittyAnim = 1, this.kittyTimer.reset()) : (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(4))); 
+            
+            if (this.nextLevelTimer) {
+                var fullText = "Is u Lid?";
+                var elapsed = 4 + this.nextLevelTimer.delta();
+                var charsToShow = Math.floor(elapsed / 0.1);
+                var displayText = fullText.substring(0, Math.min(fullText.length, charsToShow));
+                var el = document.getElementById('opening-text');
+                if (el) el.innerText = displayText;
+            }
+
+            this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (
+                this.nextLevelTimer = null, 
+                document.getElementById('opening-animation').classList.remove('overlay-visible'),
+                document.getElementById('play').classList.remove('overlay-visible'), 
+                document.getElementById('post-lid-menu').classList.add('overlay-visible'), 
+                this.kill()
+            )
         }, drawKittyOpening: function () {
-            var ctx = ig.system.context;
-            
-            // Vibrant Pink Background
-            ctx.fillStyle = "#ff1493";
-            ctx.fillRect(0, 0, ig.system.width, ig.system.height);
-            
-            // Typing Animation for "Is u Lid?"
-            var fullText = "Is u Lid?";
-            var elapsed = this.nextLevelTimer ? (4 + this.nextLevelTimer.delta()) : 0;
-            // Typing speed: about 0.1s per character
-            var charsToShow = Math.floor(elapsed / 0.1);
-            var displayText = fullText.substring(0, Math.min(fullText.length, charsToShow));
-            
-            ctx.fillStyle = "white";
-            var fontSize = Math.floor(ig.system.width * 0.18); // Large, responsive font size
-            ctx.font = "bold " + fontSize + "px 'Crimson Text', serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            
-            // Draw with a subtle text shadow for depth
-            ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-            ctx.shadowBlur = 15;
-            ctx.fillText(displayText, ig.system.width / 2, ig.system.height / 2);
-            ctx.shadowBlur = 0;
-            
-            ig.system.context.globalAlpha = 1;
-        }
+            // Logic moved to HTML overlay for full-width support
+        },
     })
 }); ig.baked = !0;
 ig.module("game.entities.pointer").requires("impact.entity").defines(function () {
