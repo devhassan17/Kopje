@@ -1596,7 +1596,7 @@ ig.module("game.entities.paper-ball").requires("impact.entity", "plugins.directo
             0 != this.vel.y && (this.currentAnim.angle += Math.PI / 9 * (this.vel.x / 500)); this.enableResize && 0 > this.resizeTimer.delta() &&
                 (this.sst *= this.imgscale, this.setScale(this.sst, this.sst)); this.startkillcenter && (this.isBroken = !1); 0 < this.windStartTimer.delta() && (0 < this.windUp ? (this.vel.x += 5, this.windUp -= 5, 0 > this.windUp && (this.windUp = 0)) : 0 > this.windUp && (this.vel.x -= 5, this.windUp += 5, 0 < this.windUp && (this.windUp = 0))); (this.startkill || this.outRange()) && 0 < this.killTimer.delta() && this.kill(); 7 == ig.game.director.currentLevel && 50 > this.pos.x && 50 < this.vel.y && (this.vel.x = 200); this.parent()
         }, check: function (b) {
-            if ("bin" == b.name && this.pos.y > b.pos.y + 10) return;
+            if ("bin" == b.name && this.pos.y > b.pos.y + 5) return;
             "bin" ==
                 b.name ? this.pos.x + this.size.x / 2 > b.pos.x + b.size.x * 0.40 && this.pos.x + this.size.x / 2 < b.pos.x + b.size.x * 0.60 ? (this.vel.x = 0, this.vel.y = 0, this.isBroken = !1, ig.global.isScore = !0, this.startkillcenter || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hitIn), this.startkill = this.startkillcenter = !0, this.killTimer.set(0.08), this.showNote = !0)) : this.pos.x + this.size.x / 2 < b.pos.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = -50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : this.pos.x + this.size.x / 2 > b.pos.x + b.size.x ? (ig.global.hitside = !0, this.vel.y = -200, this.vel.x = 50, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit), this.startkill = !0, this.killTimer.set(1.2))) : (this.pos.x + this.size.x / 2 < b.pos.x + b.size.x && this.pos.x + this.size.x / 2 > b.pos.x + b.size.x / 2 ? (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = -b.size.x / 3) : (this.vel.x = 0, this.vel.y = 0, this.vel.y = -200, this.vel.x = b.size.x / 2), this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.hit),
                     this.startkill = !0, this.killTimer.set(0.9))) : "floor" == b.name && (this.isBroken = !0, this.startkill || (ig.soundHandler.playSound(ig.soundHandler.SOUNDID.paper), this.startkill = !0, this.killTimer.set(1.0)), this.vel.x = 0)
@@ -1985,11 +1985,11 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
             this.fan = { kill: function () { } }; // fan hidden - wind still active
         }, spawnBin: function () {
             try { var b = ig.game.director.currentLevel } catch (c) { b = 0 } switch (b) {
-                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 163, {}); break; // Moved up by 20px
-                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 168, {}); break; // Moved up by 20px
-                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 158, {}); break; // Moved up by 20px
-                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 153, {}); break; // Moved up by 20px
-                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 166, {})  // Moved up by 20px
+                case 3: this.bin = ig.game.spawnEntity(EntityIngameBin, 173, 148, {}); break; // Moved up by 15px
+                case 4: this.bin = ig.game.spawnEntity(EntityIngameBin, 213, 153, {}); break; // Moved up by 15px
+                case 5: this.bin = ig.game.spawnEntity(EntityIngameBin, 229, 143, {}); break; // Moved up by 15px
+                case 6: this.bin = ig.game.spawnEntity(EntityIngameBin, 262, 138, {}); break; // Moved up by 15px
+                case 7: this.bin = ig.game.spawnEntity(EntityIngameBin, 198, 151, {})  // Moved up by 15px
             }
         }, spawnObject: function () { if (this.spawnobj) { try { ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) } catch (b) { } this.spawnobj = !1 } else this.obj = ig.game.spawnEntity(EntityIngameObject, 0, 0, {}) }
     })
