@@ -1503,7 +1503,31 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
             this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15)); this.kittyTimer && 0 < this.kittyTimer.delta() && (0 == this.kittyAnim ? (this.kittyAnim = 1, this.kittyTimer.reset()) :
                 (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(2))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, ig.game.director.nextLevel(), ig.system.context.globalAlpha = 1)
         }, drawKittyOpening: function () {
-            var b = ig.system.context.createLinearGradient(0, 0, 0, ig.system.height); b.addColorStop(0, "#091211"); b.addColorStop(1, "#000000"); ig.system.context.fillStyle = b; ig.system.context.fillRect(0, 0, ig.system.width, ig.system.height); if (0 <= this.kittyAnim) { var targetW = 250; var targetH = targetW * (this.kittyImage.height / this.kittyImage.width); ig.system.context.drawImage(this.kittyImage.data, ig.system.width / 2 - targetW / 2, ig.system.height / 2 - targetH / 2, targetW, targetH); } ig.system.context.globalAlpha = 1
+            var ctx = ig.system.context;
+            
+            // 1. Vibrant Pink Background
+            ctx.fillStyle = "#ff1493";
+            ctx.fillRect(0, 0, ig.system.width, ig.system.height);
+            
+            // 2. Typing Animation for "Is u Lid?"
+            var fullText = "Is u Lid?";
+            var elapsed = this.nextLevelTimer ? (2 + this.nextLevelTimer.delta()) : 0;
+            // Typing speed: about 0.1s per character
+            var charsToShow = Math.floor(elapsed / 0.1);
+            var displayText = fullText.substring(0, Math.min(fullText.length, charsToShow));
+            
+            ctx.fillStyle = "white";
+            ctx.font = "bold 72px 'Crimson Text', serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            
+            // Draw with a subtle text shadow for depth
+            ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+            ctx.shadowBlur = 15;
+            ctx.fillText(displayText, ig.system.width / 2, ig.system.height / 2);
+            ctx.shadowBlur = 0;
+            
+            ig.system.context.globalAlpha = 1;
         }
     })
 }); ig.baked = !0;
