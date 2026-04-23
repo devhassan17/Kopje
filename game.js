@@ -1476,7 +1476,7 @@ ig.module("game.entities.button-more-games").requires("impact.entity").defines(f
 }); ig.baked = !0;
 ig.module("game.entities.opening-shield").requires("impact.entity").defines(function () {
     EntityOpeningShield = ig.Entity.extend({
-        size: { x: 48, y: 48 }, move: 0, mIconAnim: 0, shieldAnim: 0, titleAnim: 0, shieldImage: new ig.Image("media/graphics/opening/shield.png"), mIconImage: new ig.Image("media/graphics/opening/m_icon.png"), titleImage: new ig.Image("media/graphics/opening/title.png"), moyeeLogo: new ig.Image("media/graphics/opening/moyee_logo_white_final.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
+        size: { x: 48, y: 48 }, move: 0, mIconAnim: 0, shieldAnim: 0, titleAnim: 0, shieldImage: new ig.Image("media/graphics/opening/shield.png"), mIconImage: new ig.Image("media/graphics/opening/m_icon.png"), titleImage: new ig.Image("media/graphics/opening/title.png"), moyeeLogo: new ig.Image("media/graphics/opening/Moyee-Logo.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
             if (!ig.wm) if (_SETTINGS.DeveloperBranding.Splash.Enabled) {
                 this.initTimer = new ig.Timer(0.1);
                 try { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.openingSound) } catch (b) { console.log(b) }
@@ -1496,7 +1496,7 @@ ig.module("game.entities.opening-shield").requires("impact.entity").defines(func
 }); ig.baked = !0;
 ig.module("game.entities.opening-kitty").requires("impact.entity").defines(function () {
     EntityOpeningKitty = ig.Entity.extend({
-        size: { x: 218, y: 325 }, kittyAnim: 0, kittyImage: new ig.Image("media/graphics/opening/moyee_logo_white_final.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
+        size: { x: 218, y: 325 }, kittyAnim: 0, kittyImage: new ig.Image("media/graphics/opening/Moyee-Logo.png"), init: function (b, c, d) { this.parent(b, c, d) }, ready: function () {
             if (!ig.wm) if (_SETTINGS.DeveloperBranding.Splash.Enabled) { this.initTimer = new ig.Timer(0.1); try { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.kittyopeningSound) } catch (b) { console.log(b) } } else ig.game.director.nextLevel(),
                 ig.system.context.globalAlpha = 1, this.kill()
         }, update: function () { this.parent(); this.updateKittyOpening() }, draw: function () { this.parent(); ig.global.wm || (this.nextLevelTimer && 0 > this.nextLevelTimer.delta() && (ig.system.context.globalAlpha = -this.nextLevelTimer.delta()), this.drawKittyOpening()) }, updateKittyOpening: function () {
