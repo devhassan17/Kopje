@@ -146,7 +146,7 @@
 		<div id="game"><canvas id="canvas"></canvas></div>
 
 		<div id="orientate"><img src="media/graphics/orientate/landscape.jpg" /></div>
-		<div id="play" class="play-overlay">
+		<div id="play" class="play-overlay overlay-visible">
 			<div class="overlay-tint"></div>
 			<div class="opening-top-logos">
 				<img src="media/graphics/opening/logos.png" class="partner-logos" alt="Partner Logos">
@@ -163,7 +163,7 @@
 			</div>
 		</div>
 
-		<div id="post-lid-menu" class="play-overlay" style="display:none; background: url('media/graphics/opening/Menu_Background.png') center center no-repeat !important; background-size: cover !important;">
+		<div id="post-lid-menu" class="play-overlay" style="background: url('media/graphics/opening/Menu_Background.png') center center no-repeat !important; background-size: cover !important;">
 			<div class="overlay-tint" style="background: rgba(0,0,0,0.2) !important;"></div>
 			<div class="menu-header" style="margin-top: 60px;">
 				<h1 class="premium-title" style="text-transform: none !important;">Kopje Gooien</h1>
@@ -291,9 +291,18 @@
 			localStorage.setItem('kopje_user_email', email);
 
 			document.getElementById('registration-modal').style.display = 'none';
+			document.getElementById('play').classList.remove('overlay-visible');
 
 			if (ig.game && ig.game.pressPlay) ig.game.pressPlay();
 			if (ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();
+		};
+
+		window.startActualGame = function () {
+			document.getElementById('post-lid-menu').classList.remove('overlay-visible');
+			if (ig.game && ig.game.director) {
+				ig.game.director.nextLevel();
+				ig.system.context.globalAlpha = 1;
+			}
 		};
 	</script>
 

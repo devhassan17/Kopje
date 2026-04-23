@@ -77,13 +77,17 @@ body {
     background: url('media/graphics/opening/Moyee_background.jpg') center center no-repeat !important;
     background-size: cover !important;
     z-index: 999999 !important;
-    display: flex !important;
+    display: none;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: space-around !important;
     font-family: 'Crimson Text', serif !important;
     padding: 60px 20px !important;
     box-sizing: border-box !important;
+}
+
+.overlay-visible {
+    display: flex !important;
 }
 
 .overlay-tint {
