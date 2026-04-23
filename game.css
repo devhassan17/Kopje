@@ -117,15 +117,19 @@ body {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 50px !important; /* Fixed gap for better alignment */
+    gap: 30px !important; /* Reduced gap */
     width: 100% !important;
     margin-bottom: 30px !important;
 }
 
 .partner-logos {
-    height: clamp(70px, 15vw, 120px) !important; /* Unified height */
+    height: clamp(60px, 12vw, 100px) !important;
     width: auto !important;
     filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5)) !important;
+}
+
+.moyee-m-logo {
+    height: clamp(90px, 18vw, 150px) !important; /* Made Moyee logo bigger */
 }
 
 .m-text-logo {
