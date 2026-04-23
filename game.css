@@ -19,7 +19,7 @@
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    background: url('media/graphics/opening/Moyee_background.jpg') center center no-repeat !important;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('media/graphics/opening/Moyee_background.jpg') center center no-repeat !important;
     background-size: cover !important;
     z-index: 999999 !important;
     display: flex !important;

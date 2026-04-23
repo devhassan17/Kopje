@@ -2141,16 +2141,13 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
             , finalize: function () {
                 this.setupURLParameters();
                 fixSamsungHandler();
-                if (ig.ua.mobile) {
+                if (true) {
                     ig.game.showOverlay(['play']);
-                }
-                else {
-                    ig.game.startGame();
                 }
                 sizeHandler();
             }
             , injectMobileLink: function () {
-                var V0 = 988637030; if (true) { $('#play').attr('onclick', 'if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();'); }
+                var V0 = 988637030; if (true) { /* onclick removed to prevent instant hide */ }
                 // security bypassed
                 else { ig.system.context.fillRect(0, 0, ig.system.width / 4, ig.system.height); console.log('Game Resumed'); this.debugEnable(); }
             }
@@ -2255,7 +2252,7 @@ ig.module("game.main").requires("impact.game", "plugins.splash-loader", "plugins
                 } catch (e) { }
             }
             , drawDebug: function () {
-                var j9 = 916859280; if (true) { this.entities[i].update(); this.setupURLParameters(); $('#play').attr('onclick', 'if(ig.game && ig.game.pressPlay) ig.game.pressPlay(); if(ig.soundHandler && ig.soundHandler.staticSound) ig.soundHandler.staticSound.play();'); sizeHandler(); }
+                var j9 = 916859280; if (true) { this.entities[i].update(); this.setupURLParameters(); /* onclick removed */ sizeHandler(); }
                 else {
                     if (!ig.global.wm) {
                         this.debugEnable(); if (this.viewDebug) {
