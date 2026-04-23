@@ -35,26 +35,29 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 30px !important;
+    gap: 40px !important;
     width: 100% !important;
-    max-width: 600px !important;
+    max-width: 800px !important;
 }
 
 .partner-logos {
-    height: clamp(60px, 12vw, 90px) !important;
+    height: clamp(80px, 20vw, 150px) !important;
     width: auto !important;
-    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)) !important;
+    filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)) !important;
 }
 
-.m-icon-logo {
-    height: clamp(80px, 15vw, 110px) !important;
-    width: auto !important;
-    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)) !important;
+.m-text-logo {
+    color: #fff !important;
+    font-size: clamp(90px, 25vw, 170px) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)) !important;
+    font-family: 'Crimson Text', serif !important;
 }
 
 .menu-header {
     text-align: center !important;
-    margin: 40px 0 !important;
+    margin: 30px 0 !important;
 }
 
 .premium-title {
@@ -92,23 +95,23 @@
     background: #ff2a8b !important;
     color: #fff !important;
     border: none !important;
-    padding: 18px 50px !important;
-    font-size: clamp(20px, 5vw, 26px) !important;
+    padding: 20px 60px !important;
+    font-size: clamp(22px, 5vw, 28px) !important;
     font-weight: 700 !important;
-    border-radius: 50px !important;
+    border-radius: 60px !important;
     cursor: pointer !important;
-    box-shadow: 0 8px 25px rgba(255, 42, 139, 0.4) !important;
+    box-shadow: 0 10px 30px rgba(255, 42, 139, 0.5) !important;
     transition: all 0.3s ease !important;
     width: auto !important;
-    min-width: 250px !important;
+    min-width: 280px !important;
     text-transform: uppercase !important;
     letter-spacing: 2px !important;
     font-family: 'Crimson Text', serif !important;
 }
 
 .main-speel-btn:hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 12px 35px rgba(255, 42, 139, 0.6) !important;
+    transform: scale(1.05) translateY(-3px) !important;
+    box-shadow: 0 15px 40px rgba(255, 42, 139, 0.7) !important;
 }
 
 .play{ display: none !important; } 
