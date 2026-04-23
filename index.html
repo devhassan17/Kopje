@@ -147,18 +147,10 @@
 
 		<div id="orientate"><img src="media/graphics/orientate/landscape.jpg" /></div>
 		<div id="play" class="play">
-			<div class="glass-container">
-				<div class="character-wrapper">
-					<img src="media/graphics/opening/moyee_cup_final.png" alt="Moyee Cup" class="premium-cup" />
-				</div>
-				<button id="start-btn" class="premium-btn"
-					onclick="checkRegistration()">
-					START GAME
-				</button>
-				<div class="footer-branding">
-					<h2 id="designed-heading">Designed by Moyee Coffee</h2>
-				</div>
-			</div>
+			<button id="start-btn" class="premium-btn"
+				onclick="checkRegistration()">
+				START GAME
+			</button>
 		</div>
 
 		<div id="registration-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
@@ -237,7 +229,6 @@
 				localStorage.setItem('kopje_scores', JSON.stringify(localScores.slice(0, 10)));
 
 				setTimeout(() => {
-					alert('Score saved locally! (Server currently unavailable)');
 					window.location.href = 'leaderboard.html';
 				}, 500);
 			}

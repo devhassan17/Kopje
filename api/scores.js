@@ -1,23 +1,13 @@
 import { sql } from '@vercel/postgres';
 
 export default async function handler(request, response) {
-  // Initialize/Update table schema
+  // Resilient schema management
   try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS leaderboards (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(50) NOT NULL,
-        email VARCHAR(100),
-        score INTEGER NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
-    // Ensure email column exists for older tables
-    try {
-      await sql`ALTER TABLE leaderboards ADD COLUMN IF NOT EXISTS email VARCHAR(100);`;
-    } catch (e) {}
+    await sql`CREATE TABLE IF NOT EXISTS leaderboards (id SERIAL PRIMARY KEY, name VARCHAR(50), score INTEGER, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`;
+    // Attempt to add email column if it's missing (fails gracefully if already exists)
+    try { await sql`ALTER TABLE leaderboards ADD COLUMN email VARCHAR(100);`; } catch (e) {}
   } catch (error) {
-    console.error('Database initialization error:', error);
+    console.error('Database Init Warning:', error);
   }
 
   // Handle GET (fetch top 10 scores for public leaderboard)
