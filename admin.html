@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard | Kopje Gooien</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff1493;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --bg-dark: #091211;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--primary-pink);
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(255, 20, 147, 0.4);
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+
+        th {
+            text-align: left;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+        }
+
+        tr {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+
+        tr:hover {
+            transform: scale(1.01);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 25px 20px;
+        }
+
+        td:first-child { border-radius: 20px 0 0 20px; }
+        td:last-child { border-radius: 0 20px 20px 0; }
+
+        .email { font-weight: 700; color: #fff; }
+        .name { color: rgba(255, 255, 255, 0.7); }
+        .count { color: var(--primary-pink); font-weight: 900; font-size: 1.2rem; }
+        .score { color: #fff; font-weight: 900; font-size: 1.5rem; }
+
+        .loading {
+            text-align: center;
+            font-size: 1.5rem;
+            padding: 50px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Last Name Used</th>
+                    <th>Total Plays</th>
+                    <th>Highest Score</th>
+                </tr>
+            </thead>
+            <tbody id="admin-data">
+                <tr><td colspan="4" class="loading">Loading user statistics...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/admin');
+                const data = await res.json();
+                
+                const container = document.getElementById('admin-data');
+                container.innerHTML = '';
+
+                if (data.length === 0) {
+                    container.innerHTML = '<tr><td colspan="4" class="loading">No registered users yet.</td></tr>';
+                    return;
+                }
+
+                data.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="email">${user.email}</td>
+                        <td class="name">${user.name}</td>
+                        <td class="count">${user.total_plays}</td>
+                        <td class="score">${user.highest_score}</td>
+                    `;
+                    container.appendChild(row);
+                });
+            } catch (e) {
+                document.getElementById('admin-data').innerHTML = '<tr><td colspan="4" class="loading">Error loading stats.</td></tr>';
+            }
+        }
+
+        loadStats();
+    </script>
+</body>
+</html>

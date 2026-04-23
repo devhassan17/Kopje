@@ -1,21 +1,26 @@
 import { sql } from '@vercel/postgres';
 
 export default async function handler(request, response) {
-  // Initialize table if it doesn't exist (Only for first run)
+  // Initialize/Update table schema
   try {
     await sql`
       CREATE TABLE IF NOT EXISTS leaderboards (
         id SERIAL PRIMARY KEY,
         name VARCHAR(50) NOT NULL,
+        email VARCHAR(100),
         score INTEGER NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `;
+    // Ensure email column exists for older tables
+    try {
+      await sql`ALTER TABLE leaderboards ADD COLUMN IF NOT EXISTS email VARCHAR(100);`;
+    } catch (e) {}
   } catch (error) {
-    console.error('Table creation error:', error);
+    console.error('Database initialization error:', error);
   }
 
-  // Handle GET (fetch top 10 scores)
+  // Handle GET (fetch top 10 scores for public leaderboard)
   if (request.method === 'GET') {
     try {
       const { rows } = await sql`
@@ -32,7 +37,7 @@ export default async function handler(request, response) {
 
   // Handle POST (submit new score)
   if (request.method === 'POST') {
-    const { name, score } = request.body;
+    const { name, score, email } = request.body;
     
     if (!name || score === undefined) {
       return response.status(400).json({ error: 'Name and score are required' });
@@ -40,8 +45,8 @@ export default async function handler(request, response) {
 
     try {
       await sql`
-        INSERT INTO leaderboards (name, score) 
-        VALUES (${name}, ${score})
+        INSERT INTO leaderboards (name, score, email) 
+        VALUES (${name}, ${score}, ${email || null})
       `;
       return response.status(201).json({ message: 'Score submitted successfully' });
     } catch (error) {
