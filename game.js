@@ -1881,7 +1881,7 @@ ig.module("game.entities.button-ingame-menu").requires("impact.entity", "plugins
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText("MENU", x + w / 2, y + h / 2);
-        }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); ig.ua.mobile ? ig.game.director.jumpTo(LevelTestMobile) : ig.game.director.jumpTo(LevelTestDesktop) }
+        }, init: function (b, c, d) { this.parent(b, c, d) }, update: function () { this.parent() }, clicked: function () { ig.soundHandler.playSound(ig.soundHandler.SOUNDID.click); document.getElementById('post-lid-menu').classList.add('overlay-visible'); }
     })
 }); ig.baked = !0;
 ig.module("game.entities.button-ingame-score").requires("impact.entity", "plugins.director").defines(function () {
