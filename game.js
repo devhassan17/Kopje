@@ -1501,7 +1501,7 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
                 ig.system.context.globalAlpha = 1, this.kill()
         }, update: function () { this.parent(); this.updateKittyOpening() }, draw: function () { this.parent(); ig.global.wm || (this.nextLevelTimer && 0 > this.nextLevelTimer.delta() && (ig.system.context.globalAlpha = -this.nextLevelTimer.delta()), this.drawKittyOpening()) }, updateKittyOpening: function () {
             this.initTimer && 0 < this.initTimer.delta() && (this.initTimer = null, this.kittyTimer = new ig.Timer(0.15)); this.kittyTimer && 0 < this.kittyTimer.delta() && (0 == this.kittyAnim ? (this.kittyAnim = 1, this.kittyTimer.reset()) :
-                (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(4))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, document.getElementById('post-lid-menu').classList.add('overlay-visible'), this.kill())
+                (this.kittyTimer = null, this.nextLevelTimer = new ig.Timer(4))); this.nextLevelTimer && 0 < this.nextLevelTimer.delta() && (this.nextLevelTimer = null, document.getElementById('play').classList.remove('overlay-visible'), document.getElementById('post-lid-menu').classList.add('overlay-visible'), this.kill())
         }, drawKittyOpening: function () {
             var ctx = ig.system.context;
             
