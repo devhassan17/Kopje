@@ -123,13 +123,13 @@ body {
 }
 
 .partner-logos {
-    height: clamp(60px, 12vw, 100px) !important;
+    height: clamp(80px, 15vw, 130px) !important;
     width: auto !important;
     filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5)) !important;
 }
 
 .moyee-m-logo {
-    height: clamp(90px, 18vw, 150px) !important; /* Made Moyee logo bigger */
+    height: clamp(120px, 22vw, 190px) !important; /* Made Moyee logo even bigger */
 }
 
 .m-text-logo {
