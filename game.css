@@ -74,16 +74,24 @@ body {
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    background: url('media/graphics/opening/Moyee_background.jpg') center center no-repeat !important;
-    background-size: cover !important;
     z-index: 999999 !important;
-    display: none;
+    display: none !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: space-around !important;
     font-family: 'Crimson Text', serif !important;
     padding: 60px 20px !important;
     box-sizing: border-box !important;
+}
+
+#play {
+    background: url('media/graphics/opening/Moyee_background.jpg') center center no-repeat !important;
+    background-size: cover !important;
+}
+
+#post-lid-menu {
+    background: url('media/graphics/opening/Menu_Background.png') center center no-repeat !important;
+    background-size: cover !important;
 }
 
 .overlay-visible {
