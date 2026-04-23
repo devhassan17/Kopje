@@ -256,7 +256,8 @@
 			
 			// Save locally too for immediate history
 			const localScores = JSON.parse(localStorage.getItem('kopje_scores') || '[]');
-			localScores.push({ score, date: new Date().toISOString() });
+			const name = localStorage.getItem('kopje_user_name') || 'Anonymous';
+			localScores.push({ name, score, date: new Date().toISOString() });
 			localScores.sort((a, b) => b.score - a.score);
 			localStorage.setItem('kopje_scores', JSON.stringify(localScores.slice(0, 5)));
 			updateHistoryUI();
