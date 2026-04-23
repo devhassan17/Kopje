@@ -11,7 +11,7 @@ export default async function handler(request, response) {
         MAX(score) as highest_score,
         MAX(created_at) as last_played
       FROM leaderboards 
-      WHERE email IS NOT NULL
+      WHERE email IS NOT NULL AND email != ''
       GROUP BY email
       ORDER BY highest_score DESC
     `;
