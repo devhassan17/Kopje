@@ -28,10 +28,13 @@ export default async function handler(request, response) {
     const transporter = nodemailer.createTransport({
       host: settings.smtp_host,
       port: parseInt(settings.smtp_port) || 587,
-      secure: settings.smtp_port == 465,
+      secure: parseInt(settings.smtp_port) === 465,
       auth: {
         user: settings.smtp_user,
         pass: settings.smtp_pass
+      },
+      tls: {
+        rejectUnauthorized: false // Helps with connection reliability on cloud servers
       }
     });
 
