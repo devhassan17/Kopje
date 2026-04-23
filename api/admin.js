@@ -2,6 +2,9 @@ import { sql } from '@vercel/postgres';
 
 export default async function handler(request, response) {
   try {
+    // Ensure table exists before querying
+    await sql`CREATE TABLE IF NOT EXISTS leaderboards (id SERIAL PRIMARY KEY, name VARCHAR(50), score INTEGER, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, email VARCHAR(100));`;
+    
     // Aggregate plays and high scores by email
     const { rows } = await sql`
       SELECT 
@@ -16,6 +19,7 @@ export default async function handler(request, response) {
     `;
     return response.status(200).json(rows);
   } catch (error) {
-    return response.status(500).json({ error: error.message });
+    console.error('Admin API Error:', error);
+    return response.status(500).json({ error: error.message || 'Internal Server Error' });
   }
 }
