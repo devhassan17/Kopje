@@ -1935,9 +1935,9 @@ ig.module("game.entities.spawn-unit").requires("impact.entity", "plugins.directo
                 var scoreIdx = ig.global.score - 1;
                 var offsetMultiplier = Math.ceil(scoreIdx / 2) * (scoreIdx % 2 === 0 ? -1 : 1);
                 if (scoreIdx === 0) offsetMultiplier = 0;
-                var xOffset = offsetMultiplier * 16;
-                ig.game.spawnEntity(EntityLandedCup, this.bin.pos.x + (this.bin.size.x * 0.2) + xOffset, this.bin.pos.y - 10, {
-                    size: { x: this.bin.size.x * 0.6, y: 50 }
+                var xOffset = offsetMultiplier * 12;
+                ig.game.spawnEntity(EntityLandedCup, this.bin.pos.x + (this.bin.size.x * 0.3) + xOffset, this.bin.pos.y + 5, {
+                    size: { x: this.bin.size.x * 0.4, y: 35 }
                 });
 
                 ig.game.spawnEntity(EntityIngameNotepad, this.bin.pos.x, this.bin.pos.y, {}); ig.game.spawnEntity(EntityIngameNotepadbig, 0, 0, {}); try {
