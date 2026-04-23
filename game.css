@@ -1,17 +1,72 @@
-@font-face{    font-family:'sassy';    src:url('media/graphics/font/sassy.ttf');} html,body{	background-color:#000;	margin:0;	padding:0;	position:relative;	font-family:"Arial";	width:100%;} #game{	position:absolute;	left:0;	top:0;	z-index:0;
+@font-face {
+    font-family: 'sassy';
+    src: url('media/graphics/font/sassy.ttf');
+}
+
+html,
+body {
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    font-family: "Arial";
+    width: 100%;
+}
+
 #game {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background: #000;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+
+    #game {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: #000;
+    }
+
+    #canvas {
+        object-fit: contain;
+        /* Professional scaling */
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+#ajaxbar {
+    background: #000 url('media/graphics/opening/Moyee-Logo.png') center no-repeat !important;
+    background-size: 300px auto !important;
 }
 
 #canvas {
-    object-fit: contain; /* Professional scaling */
-    max-width: 100%;
-    max-height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    -ms-interpolation-mode: nearest-neighbor;
+    -webkit-transform: scale3d(1, 1, 1);
+    z-index: 1;
 }
-} #ajaxbar{	background:#000 url('media/graphics/opening/Moyee-Logo.png') center no-repeat !important; background-size: 300px auto !important;} #canvas{	position:absolute;	left:0;	top:0;	width:100%;	height:100%;	 	-ms-interpolation-mode:nearest-neighbor;	 	-webkit-transform:scale3d(1,1,1);	z-index:1;} #orientate{	position:absolute;	float:left;	width:100%;	height:100%;	top:0;	left:0;	z-index:10002;	display:none;} #orientate img{	position:absolute;	float:left;	width:100%;	height:100%;} 
+
+#orientate {
+    position: absolute;
+    float: left;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10002;
+    display: none;
+}
+
+#orientate img {
+    position: absolute;
+    float: left;
+    width: 100%;
+    height: 100%;
+}
 
 .play-overlay {
     position: absolute !important;
@@ -19,7 +74,7 @@
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('media/graphics/opening/Moyee_background.jpg') center center no-repeat !important;
+    background: url('media/graphics/opening/Moyee_background.jpg') center center no-repeat !important;
     background-size: cover !important;
     z-index: 999999 !important;
     display: flex !important;
@@ -43,7 +98,7 @@
 .partner-logos {
     height: clamp(80px, 20vw, 150px) !important;
     width: auto !important;
-    filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)) !important;
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5)) !important;
 }
 
 .m-text-logo {
@@ -51,7 +106,7 @@
     font-size: clamp(90px, 25vw, 170px) !important;
     font-weight: 700 !important;
     line-height: 1 !important;
-    filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)) !important;
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5)) !important;
     font-family: 'Crimson Text', serif !important;
 }
 
@@ -64,7 +119,7 @@
     color: #fff !important;
     font-size: clamp(48px, 12vw, 84px) !important;
     margin: 0 !important;
-    text-shadow: 0 5px 30px rgba(0,0,0,0.9) !important;
+    text-shadow: 0 5px 30px rgba(0, 0, 0, 0.9) !important;
     line-height: 1.1 !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
@@ -75,7 +130,7 @@
     color: #fff !important;
     font-size: clamp(40px, 10vw, 76px) !important;
     margin: 0 !important;
-    text-shadow: 0 5px 30px rgba(0,0,0,0.9) !important;
+    text-shadow: 0 5px 30px rgba(0, 0, 0, 0.9) !important;
     line-height: 1.1 !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
@@ -114,12 +169,15 @@
     box-shadow: 0 15px 40px rgba(255, 42, 139, 0.7) !important;
 }
 
-.play{ display: none !important; } 
+.play {
+    display: none !important;
+}
 
 /* Score Modal & Leaderboard Styles */
 :root {
     --primary-pink: #ff1493;
-    --glass-bg: rgba(0, 0, 0, 0.9); /* Darker for better contrast */
+    --glass-bg: rgba(0, 0, 0, 0.9);
+    /* Darker for better contrast */
     --glass-border: rgba(255, 20, 147, 0.5);
     --glow: 0 0 20px rgba(255, 20, 147, 0.4);
 }
@@ -127,11 +185,12 @@
 #score-modal {
     display: none;
     position: fixed;
-    top: 0; 
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85); /* Darker backdrop */
+    background: rgba(0, 0, 0, 0.85);
+    /* Darker backdrop */
     backdrop-filter: blur(8px);
     z-index: 2000000;
     justify-content: center;
@@ -140,9 +199,11 @@
 
 .glass-morphism {
     background: var(--glass-bg);
-    border: 2px solid var(--glass-border); /* Thicker border */
+    border: 2px solid var(--glass-border);
+    /* Thicker border */
     backdrop-filter: blur(25px);
-    border-radius: 40px; /* More rounded */
+    border-radius: 40px;
+    /* More rounded */
     padding: 50px 40px;
     box-shadow: 0 0 60px rgba(255, 20, 147, 0.3);
     text-align: center;
@@ -152,8 +213,15 @@
 }
 
 @keyframes modal-pop {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .premium-text {
