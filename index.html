@@ -319,24 +319,44 @@
 			}
 		};
 
-		window.sendVerificationCode = function() {
+		window.sendVerificationCode = async function() {
 			const name = document.getElementById('reg-name').value.trim();
 			const email = document.getElementById('reg-email').value.trim();
+			const btn = event.target;
 
 			if (!name || !email || !email.includes('@')) {
 				alert('Please enter a valid name and email address.');
 				return;
 			}
 
-			// Simulation of sending email
-			verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
-			alert("VERIFICATION CODE: " + verificationCode + "\n\n(In a production environment, this would be sent to your email)");
-			
-			localStorage.setItem('kopje_user_name', name);
-			localStorage.setItem('kopje_user_email', email);
-			
-			document.getElementById('reg-step-1').style.display = 'none';
-			document.getElementById('reg-step-2').style.display = 'block';
+			btn.innerText = 'SENDING...';
+			btn.disabled = true;
+
+			try {
+				const res = await fetch('/api/verify', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, name })
+				});
+				
+				const data = await res.json();
+				if (res.ok) {
+					verificationCode = data.code;
+					localStorage.setItem('kopje_user_name', name);
+					localStorage.setItem('kopje_user_email', email);
+					
+					document.getElementById('reg-step-1').style.display = 'none';
+					document.getElementById('reg-step-2').style.display = 'block';
+				} else {
+					alert(data.error || 'Failed to send code');
+					btn.innerText = 'SEND VERIFICATION CODE';
+					btn.disabled = false;
+				}
+			} catch (e) {
+				alert('Network error. Please try again.');
+				btn.innerText = 'SEND VERIFICATION CODE';
+				btn.disabled = false;
+			}
 		};
 
 		window.verifyAndSubmit = function() {
